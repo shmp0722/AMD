@@ -11,7 +11,8 @@ function ACH_Preprocess(subDir, option)
 %            2: analyzing second diffusion measure 'dwi2nd.nii.gz'
 %
 %
-% SO @ACH 2015
+% SO @ACH 
+% SO 20150512 fixed small bugs 
 
 if notDefined('subDir')
     [basedir, subDir] = fileparts(pwd);
@@ -44,9 +45,12 @@ ni1 = niftiSetQto(ni,ni.sto_xyz);
 writeFileNifti(ni1);
 
 %%  mrAnatAverageAcpcNifti
-% Make sure that Acpc alighnment was done
-%if not finish yet, mrAnatAverageAcpcNifti.m
-
+% Make sure if Acpc alighnment was done
+%
+% if you do not finish it, mrAnatAverageAcpcNifti.m
+% 
+% This mrAnatAverageAcpcNifti requires spm8 (is not latest ver.)
+%
 
 %% Selecting different file names between 1st and 2nd scans
 switch option

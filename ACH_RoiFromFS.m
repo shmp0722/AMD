@@ -1,75 +1,101 @@
-function ACH_RoiFromFS
-
+function ACH_RoiFromFS(subjID)
 %
-% fs_roisFromAllLabels(fsIn,outDir,type,refT1)
-% 
 %   EXAMPLE USAGE:
-%   fsIn   = '/path/to/aparc+aseg.mgz';
-%   outDir = '/save/directory/rois';
-%   type   = 'mat';
-%   refT1  = '/path/to/t1Anatomical.nii.gz';
-%   fs_roisFromAllLabels(fsIn,outDir,type,refT1);
+%   subjID = 'Yoshimine';
+%   ACH_RoiFromFS(subjID)
 %
-
+%
+%   REQUIREMENT
+%   Freesurfer segmentation files
+%   See fs_autosegmentatinToITK
+%
+%   SO @ACH 2015
 
 %% Get slmost all rois from FS segmentation file
 
-% for Ctl-RT
-  fsDir   = '/home/ganka/dMRI_data/freesurfer/Ctl-RT-20150426/mri';
-  segFile = {'aparc+aseg.mgz','aparc.a2009s+aseg.mgz','aseg.mgz'};
-  
-  outDir = '/home/ganka/dMRI_data/Ctl-RT-20150426/TestROIs';
-  if ~exist(outDir);
-      mkdir(outDir)
-  end
-  
-  type   = 'mat';
-  refT1  = '/home/ganka/dMRI_data/Ctl-RT-20150426/t1.nii.gz';
-  
-  for ii = 1:length(segFile)
-      fsIn  = fullfile(fsDir,segFile{ii});
-      fs_roisFromAllLabels(fsIn,outDir,type,refT1);
-  end
+% for individual subject
+fsDir          = getenv('SUBJECTS_DIR');
+fsMriDir   = fullfile(fsDir,subjID,'/mri');
+segFile = {'aparc+aseg.mgz','aparc.a2009s+aseg.mgz','aseg.mgz'};
 
-  %% Get V1, V2 and MT ROIs
-  SUBJECTS_DIR = '/home/ganka/dMRI_data/freesurfer/Ctl-RT-20150426';
-  
-  fs_subject = 'Ctl-RT-20150426';
-  labelFileName = fullfile(SUBJECTS_DIR,'label/lh.V1.label');
-  
-  niftiRoiName  = '/home/ganka/dMRI_data/Ctl-RT-20150426/TestROIs/lh_V1';
-  
-  [niftiRoiName, niftiRoi] = fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName);
+% confirm save directory existance
+outDir = fullfile('/home/ganka/dMRI_data',subjID,'ROIs');
+if ~exist(outDir);
+    mkdir(outDir)
+end
 
-%% V1 R  
-  
-  labelFileName = fullfile(SUBJECTS_DIR,'label/rh.V1.label');
-  niftiRoiName  = '/home/ganka/dMRI_data/Ctl-RT-20150426/TestROIs/rh_V1';
+type   = 'mat';
+refT1  = fullfile('/home/ganka/dMRI_data',subjID,'t1.nii.gz');
 
+for ii = 1:length(segFile)
+    fsIn  = fullfile(fsMriDir,segFile{ii});
+    fs_roisFromAllLabels(fsIn,outDir,type,refT1);
+end
 
-  fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
-%% V2 LR
-  labelFileName = fullfile(SUBJECTS_DIR,'label/lh.V2.label');
-  niftiRoiName  = '/home/ganka/dMRI_data/Ctl-RT-20150426/TestROIs/lh_V2';
-  fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
-  
-  labelFileName = fullfile(SUBJECTS_DIR,'label/rh.V2.label');
-  niftiRoiName  = '/home/ganka/dMRI_data/Ctl-RT-20150426/TestROIs/rh_V2';
-  fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
-%% MT LR
-  labelFileName = fullfile(SUBJECTS_DIR,'label/lh.MT.label');
-   niftiRoiName  = '/home/ganka/dMRI_data/Ctl-RT-20150426/TestROIs/lh_MT';
-  fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
-  
-  labelFileName = fullfile(SUBJECTS_DIR,'label/rh.MT.label');
-  niftiRoiName  = '/home/ganka/dMRI_data/Ctl-RT-20150426/TestROIs/rh_MT';
-  fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
-%% transform nii.gz to .mat 
+%% Get V1, V2 and MT ROIs
+%   fsDir          = getenv('SUBJECTS_DIR');
+SUBJECTS_DIR = fullfile(fsDir,subjID);
 
-      nifti       = 'lh_MT.nii.gz';
-        maskValue   =  0;       % All nonZero values are used for the mask
-        outName     = 'lh_MT.mat';
-        outType     = 'mat';
-        binary      = true;
-        save        = true;
-        dtiRoiFromNifti(nifti,maskValue,outName,outType,save);
+% Get a label file
+labelFileDir =  fullfile(SUBJECTS_DIR,'label');
+labelFileNames = {'lh.V1.label','rh.V1.label','lh.MT.label','rh.MT.label'};
+
+for ii = 1:length(labelFileNames)
+    labelFileName = fullfile(labelFileDir,labelFileNames{ii});
+    
+    % define save file and path
+    MatRoiDir = fullfile('/home/ganka/dMRI_data/',subjID,'ROIs');
+    niftiRoiNames  = {'lh_V1','rh_V1','lh_MT','rh_MT'};
+    niftiRoiName   = fullfile(MatRoiDir,niftiRoiNames{ii});
+    
+    % run fs_labelFileToNiftiRoi
+    [niftiRoiName, niftiRoi] = fs_labelFileToNiftiRoi(subjID,labelFileName,niftiRoiName);
+end
+
+return
+
+%% original by manual ROI generation script
+% for Yoshimine
+
+%   %% Get V1, V2 and MT ROIs
+%   SUBJECTS_DIR = '/home/ganka/dMRI_data/freesurfer/subjID';
+%
+%   fs_subject = 'subjID';
+%   labelFileName = fullfile(SUBJECTS_DIR,'label/lh.V1.label');
+%
+%   niftiRoiName  = '/home/ganka/dMRI_data/subjID/TestROIs/lh_V1';
+%
+%   [niftiRoiName, niftiRoi] = fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName);
+%
+% %% V1 R
+%
+%   labelFileName = fullfile(SUBJECTS_DIR,'label/rh.V1.label');
+%   niftiRoiName  = '/home/ganka/dMRI_data/subjID/TestROIs/rh_V1';
+%
+%
+%   fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
+% %% V2 LR
+%   labelFileName = fullfile(SUBJECTS_DIR,'label/lh.V2.label');
+%   niftiRoiName  = '/home/ganka/dMRI_data/subjID/TestROIs/lh_V2';
+%   fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
+%
+%   labelFileName = fullfile(SUBJECTS_DIR,'label/rh.V2.label');
+%   niftiRoiName  = '/home/ganka/dMRI_data/subjID/TestROIs/rh_V2';
+%   fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
+% %% MT LR
+%   labelFileName = fullfile(SUBJECTS_DIR,'label/lh.MT.label');
+%    niftiRoiName  = '/home/ganka/dMRI_data/subjID/TestROIs/lh_MT';
+%   fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
+%
+%   labelFileName = fullfile(SUBJECTS_DIR,'label/rh.MT.label');
+%   niftiRoiName  = '/home/ganka/dMRI_data/subjID/TestROIs/rh_MT';
+%   fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
+% %% transform nii.gz to .mat
+%
+%       nifti       = 'lh_MT.nii.gz';
+%         maskValue   =  0;       % All nonZero values are used for the mask
+%         outName     = 'lh_MT.mat';
+%         outType     = 'mat';
+%         binary      = true;
+%         save        = true;
+%         dtiRoiFromNifti(nifti,maskValue,outName,outType,save);

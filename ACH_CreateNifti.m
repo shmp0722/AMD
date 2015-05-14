@@ -16,8 +16,8 @@ function ACH_CreateNifti
 %% change file format 
 
 % if notDefined('SUBJECT')
- [~, subDir] = fileparts(pwd);
- SUBJECT = fullfile('/home/ganka/dMRI_data/',subDir);
+ [Home, subDir] = fileparts(pwd);
+ SUBJECT = fullfile(Home,subDir);
  T1 = fullfile(SUBJECT,'T1');
  dwi1st = fullfile(SUBJECT,'dwi1st');
  dwi2nd = fullfile(SUBJECT,'dwi2nd');
@@ -27,7 +27,7 @@ function ACH_CreateNifti
 outFormat = 'nii.gz';
 
 % create nii.gz files 
-if ~exist('t1.nii.gz')
+if ~exist(fullfile(SUBJECT,'t1.nii.gz'))
  dicm2nii(T1, SUBJECT, outFormat)
 end
 dicm2nii(dwi1st, dwi1st, outFormat)
@@ -59,7 +59,7 @@ copyfile(fullfile(dwi2nd,Bval.name),fullfile(RawFolder,'dwi2nd.bval'));
 copyfile(fullfile(dwi2nd,Dwi2nd.name),fullfile(RawFolder,'dwi2nd.nii.gz'));
 
 % T1
-if ~exist('t1.nii.gz')
+if ~exist(fullfile(SUBJECT,'t1.nii.gz'))
  T1 = dir(fullfile(SUBJECT,'t1*iso.nii.gz'));
  copyfile(T1.name,'t1.nii.gz');
 end
