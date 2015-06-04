@@ -13,6 +13,10 @@ function ACH_RoiFromFS(subjID)
 
 %% Get slmost all rois from FS segmentation file
 
+if notDefined('subID')
+    [~, subjID] = fileparts(pwd);
+end
+
 % for individual subject
 fsDir          = getenv('SUBJECTS_DIR');
 fsMriDir   = fullfile(fsDir,subjID,'/mri');

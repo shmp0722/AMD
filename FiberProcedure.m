@@ -8,8 +8,6 @@ function FiberProcedure
 %  Generate 5000 fibers from OC to LGN which is optic tract
 %  LGN to V1 100000 fibers which is optic radiation
 %
-
-
 %% next step; using AFQ_removeFiberOutliers reduce fiber numbers 
 % by Max length (4) and Max distance (4),
 

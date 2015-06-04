@@ -51,13 +51,15 @@ copyfile(fullfile(dwi1st,Bval.name),fullfile(RawFolder,'dwi1st.bval'));
 copyfile(fullfile(dwi1st,Dwi1st.name),fullfile(RawFolder,'dwi1st.nii.gz'));
 clear Bval Bvec
 % dwi2nd
-Bvec = dir(fullfile(dwi2nd,'*.bvec')); 
-Bval = dir(fullfile(dwi2nd,'*.bval'));
-Dwi2nd = dir(fullfile(dwi2nd,'*iso.nii.gz'));
-copyfile(fullfile(dwi2nd,Bvec.name),fullfile(RawFolder,'dwi2nd.bvec'));
-copyfile(fullfile(dwi2nd,Bval.name),fullfile(RawFolder,'dwi2nd.bval'));
-copyfile(fullfile(dwi2nd,Dwi2nd.name),fullfile(RawFolder,'dwi2nd.nii.gz'));
-
+if ~exist('Bval') % waiting for finishing previous step completely 
+    Bvec = dir(fullfile(dwi2nd,'*.bvec'));
+    Bval = dir(fullfile(dwi2nd,'*.bval'));
+    Dwi2nd = dir(fullfile(dwi2nd,'*iso.nii.gz'));
+    copyfile(fullfile(dwi2nd,Bvec.name),fullfile(RawFolder,'dwi2nd.bvec'));
+    copyfile(fullfile(dwi2nd,Bval.name),fullfile(RawFolder,'dwi2nd.bval'));
+    copyfile(fullfile(dwi2nd,Dwi2nd.name),fullfile(RawFolder,'dwi2nd.nii.gz'));
+    clear Bval Bvec
+end
 % T1
 if ~exist(fullfile(SUBJECT,'t1.nii.gz'))
  T1 = dir(fullfile(SUBJECT,'t1*iso.nii.gz'));

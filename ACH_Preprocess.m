@@ -19,7 +19,7 @@ if notDefined('subDir')
 end
 
 if notDefined('option')
-    option = 0;
+    option = 1; % 
 end
 
 %% Set the optimal parameter for SIEMENS scan at Tamagawa
@@ -39,11 +39,6 @@ subjectpath = fullfile(basedir, subDir);
 cd(subjectpath);
 t1File = fullfile(subjectpath, 't1.nii.gz');
 
-%% Set xform to raw t1 File
-ni = readFileNifti(t1File);
-ni1 = niftiSetQto(ni,ni.sto_xyz);
-writeFileNifti(ni1);
-
 %%  mrAnatAverageAcpcNifti
 % Make sure if Acpc alighnment was done
 %
@@ -51,6 +46,11 @@ writeFileNifti(ni1);
 % 
 % This mrAnatAverageAcpcNifti requires spm8 (is not latest ver.)
 %
+%% Set xform to raw t1 File
+ni = readFileNifti(t1File);
+ni1 = niftiSetQto(ni,ni.sto_xyz);
+writeFileNifti(ni1);
+
 
 %% Selecting different file names between 1st and 2nd scans
 switch option
