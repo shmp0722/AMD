@@ -9,14 +9,13 @@ function FS_autosegment(subID)
 %   subID  = 'AMD-YA-20150426';
 %   FS_autosegment(subID)
 
-%%
+%% pick up current subject
 if notDefined('subID')
-    [~, subID] = fileparts(pwd);
+    [homeDir, subID] = fileparts(pwd);
 end
 
 %% set t1 and subject ID 
-t1 = fullfile('/home/ganka/dMRI_data',subID,'t1.nii.gz');
-% T1 = niftiRead(t1);
+t1 = fullfile(homeDir,subID,'t1.nii.gz');
 % subID = 'AMD-YA-20150426';
 
 % run freesurfer auto segmentation

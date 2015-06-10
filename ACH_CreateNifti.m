@@ -50,6 +50,7 @@ copyfile(fullfile(dwi1st,Bvec.name),fullfile(RawFolder,'dwi1st.bvec'));
 copyfile(fullfile(dwi1st,Bval.name),fullfile(RawFolder,'dwi1st.bval'));
 copyfile(fullfile(dwi1st,Dwi1st.name),fullfile(RawFolder,'dwi1st.nii.gz'));
 clear Bval Bvec
+
 % dwi2nd
 if ~exist('Bval') % waiting for finishing previous step completely 
     Bvec = dir(fullfile(dwi2nd,'*.bvec'));
