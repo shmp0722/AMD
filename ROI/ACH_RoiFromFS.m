@@ -13,8 +13,8 @@ function ACH_RoiFromFS(subjID)
 
 %% Get slmost all rois from FS segmentation file
 
-if notDefined('subID')
-    [~, subjID] = fileparts(pwd);
+if notDefined('subjID')
+    [HOME, subjID] = fileparts(pwd);
 end
 
 % for individual subject
@@ -23,13 +23,14 @@ fsMriDir   = fullfile(fsDir,subjID,'/mri');
 segFile = {'aparc+aseg.mgz','aparc.a2009s+aseg.mgz','aseg.mgz'};
 
 % confirm save directory existance
-outDir = fullfile('/home/ganka/dMRI_data',subjID,'ROIs');
+outDir = fullfile(HOME,subjID,'ROIs');
+%%
 if ~exist(outDir);
     mkdir(outDir)
 end
 
 type   = 'mat';
-refT1  = fullfile('/home/ganka/dMRI_data',subjID,'t1.nii.gz');
+refT1  = fullfile(HOME,subjID,'t1.nii.gz');
 
 for ii = 1:length(segFile)
     fsIn  = fullfile(fsMriDir,segFile{ii});
@@ -44,21 +45,31 @@ SUBJECTS_DIR = fullfile(fsDir,subjID);
 labelFileDir =  fullfile(SUBJECTS_DIR,'label');
 labelFileNames = {'lh.V1.label','rh.V1.label','lh.MT.label','rh.MT.label'};
 
+% provide nifti and mat ROI
 for ii = 1:length(labelFileNames)
     labelFileName = fullfile(labelFileDir,labelFileNames{ii});
     
     % define save file and path
-    MatRoiDir = fullfile('/home/ganka/dMRI_data/',subjID,'ROIs');
+    MatRoiDir = fullfile(HOME,subjID,'ROIs');
     niftiRoiNames  = {'lh_V1','rh_V1','lh_MT','rh_MT'};
     niftiRoiName   = fullfile(MatRoiDir,niftiRoiNames{ii});
     
-    % run fs_labelFileToNiftiRoi
-    [niftiRoiName, niftiRoi] = fs_labelFileToNiftiRoi(subjID,labelFileName,niftiRoiName);
+    % run fs_labelFileToNiftiRoi to make nifti roi
+    [~, niftiRoi] = fs_labelFileToNiftiRoi(subjID,labelFileName,niftiRoiName);
+    
+    % make mat roi from nifti
+      nifti       = [niftiRoi.fname,'.nii.gz'];
+      maskValue   =  0;       % All nonZero values are used for the mask
+      outName     = [niftiRoi.fname,'.mat'];
+      outType     = 'mat';
+      binary      = true;
+      save        = true;
+      dtiRoiFromNifti(nifti,maskValue,outName,outType,binary,save);
 end
 
 return
 
-%% original by manual ROI generation script
+%% original manual ROI generation script
 % for Yoshimine
 
 %   %% Get V1, V2 and MT ROIs
