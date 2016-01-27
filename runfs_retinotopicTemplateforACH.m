@@ -23,7 +23,7 @@ for ii = subID
     end
         
     %% run main function fs_retinotopicTemplate
-    fs_retinotopicTemplate(Cur_subject, out_path, [])
+    fs_retinotopicTemplate(Cur_subject, out_path)
     
 end
 % matlabpool close

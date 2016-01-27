@@ -41,11 +41,11 @@ end
 %   fsDir          = getenv('SUBJECTS_DIR');
 SUBJECTS_DIR = fullfile(fsDir,subjID);
 
-% Get a label file
+% Grab the label file
 labelFileDir =  fullfile(SUBJECTS_DIR,'label');
 labelFileNames = {'lh.V1.label','rh.V1.label','lh.MT.label','rh.MT.label'};
 
-% provide nifti and mat ROI
+% Create nifti and mat ROI
 for ii = 1:length(labelFileNames)
     labelFileName = fullfile(labelFileDir,labelFileNames{ii});
     

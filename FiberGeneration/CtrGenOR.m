@@ -5,11 +5,11 @@ function CtrGenOR(nums)
 % SO@ACH 2015
 
 %% Take subject names
-[dMRI, List] = SubJect;
+[dMRI, List, AMD, AMD_Ctl, RP, Ctl,LHON,JMD] = SubJect;
 
 % pick up your interesting subject
 if notDefined('nums'),
-    nums = [1:8];
+    nums = 1:length(List);
 end
 
 for ii = 1:length(nums)
@@ -33,11 +33,11 @@ ctrParams.roiDir = '/ROIs';
 ctrParams.subs = Subs;
 
 % set parameter
-% ctrParams.roi1 = {'Lt-LGN4','Rt-LGN4'};
-% ctrParams.roi2 = {'lh_V1_smooth3mm_Half','rh_V1_smooth3mm_Half'};
+ctrParams.roi1 = {'Lt-LGN4','Rt-LGN4'};
+ctrParams.roi2 = {'lh_V1_smooth3mm_Half','rh_V1_smooth3mm_Half'};
 
-ctrParams.roi1 = {'Rt-LGN4'};
-ctrParams.roi2 = {'rh_V1_smooth3mm_Half'};
+% ctrParams.roi1 = {'Rt-LGN4'};
+% ctrParams.roi2 = {'rh_V1_smooth3mm_Half'};
 
 ctrParams.nSamples = 100000;
 ctrParams.maxNodes = 240;
