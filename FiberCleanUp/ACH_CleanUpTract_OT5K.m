@@ -52,7 +52,8 @@ for ii = subID
         % Pick .txt and .pdb filename
         dTxtF = {'*ctrSampler_OT_5K*Lt-LGN4*.txt'
             '*ctrSampler_OT_5K_*Rt-LGN4*.txt'};
-        dTxt = dir(dTxtF{j});
+        dTxt = dir(fullfile(fgDir,  dTxtF{j}));
+        dTxt = fullfile(fgDir,dTxt(1).name);
         dPdb = fullfile(fgDir,fgOutname);
         
         % give a filename to the output fiber group
@@ -61,7 +62,7 @@ for ii = subID
         
         % score the fibers to particular number
         ContCommand = sprintf('contrack_score.glxa64 -i %s -p %s --thresh %d --sort %s', ...
-            dTxt(end).name, outputfibername, nFiber, dPdb);
+            dTxt, outputfibername, nFiber, dPdb);
         %         contrack_score.glxa64 -i ctrSampler.txt -p scoredFgOut_top5000.pdb --thresh 5000 --sort fgIn.pdb
         % run contrack
         system(ContCommand);
@@ -78,7 +79,7 @@ for ii = subID
         
         if ~isempty(fg.fibers)
             % remove outlier
-            [fgclean, ~]=AFQ_removeFiberOutliers(fg,4,4,25,'mean',1, 5,[]);
+            [fgclean, ~]=AFQ_removeFiberOutliers(fg,3,4,25,'mean',1, 5,[]);
             %         % keep pathwayInfo and Params.stat for contrack scoring
             %         for l = 1:length(fgclean.params)
             %             fgclean.params{1,l}.stat=fgclean.params{1,l}.stat(keep2);

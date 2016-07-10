@@ -33,7 +33,7 @@ end
 % take values
 fbName = {'L-OT','R-OT','L-OR','R-OR','LOR0-3','ROR0-3','LOR15-30','ROR15-30'...
     'LOR30-90','ROR30-90'};
-% package to cnotain
+% package to contain
 nodes =  length(ACH{10,fibID}.vals.fa);
 fa = nan(length(subDir), nodes);
 md = fa;

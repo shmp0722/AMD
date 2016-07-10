@@ -53,6 +53,9 @@ ctrParams.xecuteSh = 0;
 
 %% Generate OR usinig Sherbondy's contrack
 [cmd, ~] = ctrInitBatchTrack(ctrParams);
+
+
+%%
 system(cmd);
 clear ctrParams
 

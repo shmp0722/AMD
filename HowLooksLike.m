@@ -37,10 +37,20 @@ for whichSubject = subID;
     LOT_Name = fullfile(OTdir,'*Lt-LGN4*AFQ*');
     LOT = dir(LOT_Name);
     
-    L_OT = fgRead(fullfile(OTdir,LOT.name));
-%     L_OT = AFQ_removeFiberOutliers(L_OT,4,4,25);
-    R_OT = fgRead(fullfile(OTdir,ROT.name));
-%     R_OT = AFQ_removeFiberOutliers(R_OT,4,4,25);
+    % if there are several tracts
+    if length(LOT)==1
+        L_OT = fgRead(fullfile(OTdir,LOT.name));
+    else
+        L_OT = fgRead(fullfile(OTdir,LOT(1).name));
+    end
+    %     L_OT = AFQ_removeFiberOutliers(L_OT,4,4,25);
+    if length(ROT)==1
+        R_OT = fgRead(fullfile(OTdir,ROT.name));
+    else
+        R_OT = fgRead(fullfile(OTdir,ROT(1).name));
+    end
+    
+    %     R_OT = AFQ_removeFiberOutliers(R_OT,4,4,25);
     
     ROR = dir(fullfile(ORdir, '*Rt*MD4.pdb'));
     LOR = dir(fullfile(ORdir, '*Lt*MD4.pdb'));
@@ -48,7 +58,7 @@ for whichSubject = subID;
     R_OR = fgRead(fullfile(ORdir,ROR.name));
     L_OR = fgRead(fullfile(ORdir,LOR.name));
     
-    %% Render fibers    
+    %% Render fibers
     figure;hold on;
     Dt6 = dtiLoadDt6(dt6);
     C = jet(4);

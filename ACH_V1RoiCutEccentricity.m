@@ -1,6 +1,5 @@
 function ACH_V1RoiCutEccentricity(subID, MinDegree, MaxDegree)
-% This function divide V1 ROI in periferal and foveal part based on
-% retiontopic eccentrisity.
+% z
 %
 % You need to run fs_retinotopicTemplate and get eccecntricity map before this function.  
 % See; fs_retinotopicTemplate

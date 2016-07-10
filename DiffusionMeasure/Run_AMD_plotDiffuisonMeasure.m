@@ -1,7 +1,7 @@
 function Run_AMD_plotDiffuisonMeasure(ShowFlag)
 
 %
-% Well , kets get the diffusivity plots!
+% Well , lets get the diffusivity plots!
 % THis work is about to finish. 
 %
 % SO @ACH 2015.9

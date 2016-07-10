@@ -5,7 +5,7 @@ function runfs_retinotopicTemplateforACH(subID)
 % See; fs_retinotopicTemplate
 %
 
-%% 
+%%
 [homeDir,subDir] = SubJect;
 
 if notDefined('subID')
@@ -14,16 +14,16 @@ if notDefined('subID')
 end
 
 %% run fs_retinotopicTemplate
-for ii = subID
-    Cur_subject = subDir{ii};
-    out_path = fullfile(homeDir,subDir{ii},'fs_Retinotopy2');
-    
-    if ~exist(out_path); 
-        mkdir(out_path);
-    end
-        
-    %% run main function fs_retinotopicTemplate
-    fs_retinotopicTemplate(Cur_subject, out_path)
-    
+
+Cur_subject = subDir{subID};
+out_path = fullfile(homeDir,subDir{subID},'fs_Retinotopy2');
+
+if ~exist(out_path);
+    mkdir(out_path);
+end
+
+%% run main function fs_retinotopicTemplate
+fs_retinotopicTemplate(Cur_subject, out_path)
+
 end
 % matlabpool close

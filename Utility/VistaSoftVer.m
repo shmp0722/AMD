@@ -1,7 +1,7 @@
 function VistaSoftVer(Ver)
 
 %
-% Changing vistasoft branch to avoid GUI errors.
+% Change vistasoft ver. to avoid GUI errors.
 %
 % SO @ACH 2015
 %

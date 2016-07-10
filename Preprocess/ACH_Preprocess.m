@@ -58,27 +58,37 @@ switch option
         rawdtiFile = fullfile(subjectpath, 'raw', 'dwi.nii.gz');
         dwParams.bvecsFile = fullfile(subjectpath, 'raw', 'dwi.bvec');
         dwParams.bvalsFile = fullfile(subjectpath, 'raw', 'dwi.bval');
+        dwParams.fitMethod = 'both';
         dwParams.dt6BaseName= dt6_base_names{1};
+        dwParams.outDir = fullfile(subjectpath, 'raw');
     case 1,
         rawdtiFile = fullfile(subjectpath, 'raw', 'dwi1st.nii.gz');
         dwParams.bvecsFile = fullfile(subjectpath, 'raw', 'dwi1st.bvec');
         dwParams.bvalsFile = fullfile(subjectpath, 'raw', 'dwi1st.bval');
+        dwParams.fitMethod = 'both';
         dwParams.dt6BaseName= dt6_base_names{2};
+        dwParams.outDir = fullfile(subjectpath, 'raw');
     case 2,
         rawdtiFile = fullfile(subjectpath, 'raw', 'dwi2nd.nii.gz');
         dwParams.bvecsFile = fullfile(subjectpath, 'raw', 'dwi2nd.bvec');
         dwParams.bvalsFile = fullfile(subjectpath, 'raw', 'dwi2nd.bval');
+        dwParams.fitMethod = 'both';
         dwParams.dt6BaseName= dt6_base_names{3};
+        dwParams.outDir = fullfile(subjectpath, 'raw');
     case 3,
         rawdtiFile = fullfile(subjectpath, 'raw', 'dwi3rd.nii.gz');
         dwParams.bvecsFile = fullfile(subjectpath, 'raw', 'dwi3rd.bvec');
         dwParams.bvalsFile = fullfile(subjectpath, 'raw', 'dwi3rd.bval');
+        dwParams.fitMethod = 'both';
         dwParams.dt6BaseName= dt6_base_names{4};
+        dwParams.outDir = fullfile(subjectpath, 'raw');
     case 4,
         rawdtiFile = fullfile(subjectpath, 'raw', 'dwi4th.nii.gz');
         dwParams.bvecsFile = fullfile(subjectpath, 'raw', 'dwi4th.bvec');
         dwParams.bvalsFile = fullfile(subjectpath, 'raw', 'dwi4th.bval');
+        dwParams.fitMethod = 'both';
         dwParams.dt6BaseName= dt6_base_names{5};
+        dwParams.outDir = fullfile(subjectpath, 'raw');
 end
 
 %% Set rawdtiFile xform 

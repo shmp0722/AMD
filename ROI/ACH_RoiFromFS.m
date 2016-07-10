@@ -14,7 +14,11 @@ function ACH_RoiFromFS(subjID)
 %% Get slmost all rois from FS segmentation file
 
 if notDefined('subjID')
-    [HOME, subjID] = fileparts(pwd);
+    [~, subjID] = fileparts(pwd);
+end
+
+if notDefined('HOME')
+    [HOME, ~] = fileparts(pwd);
 end
 
 % for individual subject
