@@ -168,7 +168,7 @@ b = [B,A];
 if b(1)<0;b(1)=0;end;
 % switch vals
 %     case {}
-b=[0.2,1.1];
+b=[0,0.8];
 set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
 
 bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
