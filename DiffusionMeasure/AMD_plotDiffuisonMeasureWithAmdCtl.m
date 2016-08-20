@@ -1,4 +1,4 @@
-zfunction AMD_plotDiffuisonMeasureWithAmdCtl(vals,fibID,SavePath)
+function AMD_plotDiffuisonMeasureWithAmdCtl(vals,fibID,SavePath)
 % Plot figure 5 showing individual FA value along the core of OR and optic tract.
 %
 % Repository dependencies
@@ -148,8 +148,6 @@ G = figure; hold on;
 X = 1:length(h);
 c = lines(length(h));
 
-bar(X,h*3,1.0,'EdgeColor','none')
-
 % Control
 st = nanstd(val_AC);
 m   = nanmean(val_AC,1);
@@ -189,16 +187,18 @@ B =  round(min(Y(10:40))-0.2,1);
 
 b = [B,A];
 
-if b(1)<0;b(1)=0;end;
-set(gca,'ylim',b,'yTick',b);
+% if b(1)<0;b(1)=0;end;
+b(1)=0;
+set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
 
+bar(X,h*0.1,1.0,'EdgeColor','none')
 
 hold off;
 
 % Save current figure
 if ~isempty(SavePath) 
     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
-    saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
+%     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
 end
 
 return
