@@ -99,7 +99,29 @@ switch vals
 
 end
 
+%
+% CTL_data = val_AC;
+% RP_data  = val_RP;
 AMD_data  = val_AMD;
+
+%% compare tract profile with AMD_Ctl
+
+% % ANOVA
+%  group =2;
+%  M = length(AMD_Ctl);
+%  pac = nan(M,group);
+%  
+%  
+% for jj= 1: nodes
+%     pac(:,1)= val_AC(:,jj);
+%     pac(1:8,2)= val_AMD(:,jj);    
+%     [p(jj),~,stats(jj)] = anova1(pac,[],'off');
+% %     co = multcompare(stats(jj),'display','off');
+% %     C{jj}=co;
+% end
+% Portion =  p<0.05; % where is most effected
+% 
+% Portion = Portion+0;
 
 
 %% Wilcoxon Single rank test
@@ -157,21 +179,21 @@ ylabel(upper(vals))
 xlabel('Location')
 
 % set Y limit 
-Xlim = (m+2*st);
-A =  round(max(Xlim(10:40))+0.2,1);
 
-Y = (m-2*st);
-B =  round(min(Y(10:40))-0.2,1);
+% Xlim = (m+2*st);
+% A =  round(max(Xlim(10:40))+0.2,1);
+% 
+% Y = (m-2*st);
+% B =  round(min(Y(10:40))-0.2,1);
+% 
+% b = [B,A];
 
-b = [B,A];
-
-if b(1)<0;b(1)=0;end;
-% switch vals
-%     case {}
-b=[0.2,1.1];
+% if b(1)<0;b(1)=0;end;
+switch fibID
+    case {}
 set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
 
-bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
+bar(X,h*0.1,1.0,'EdgeColor','none')
 
 hold off;
 
@@ -182,23 +204,3 @@ if ~isempty(SavePath)
 end
 
 return
-
-
-%% compare tract profile with AMD_Ctl
-
-% % ANOVA
-%  group =2;
-%  M = length(AMD_Ctl);
-%  pac = nan(M,group);
-%  
-%  
-% for jj= 1: nodes
-%     pac(:,1)= val_AC(:,jj);
-%     pac(1:8,2)= val_AMD(:,jj);    
-%     [p(jj),~,stats(jj)] = anova1(pac,[],'off');
-% %     co = multcompare(stats(jj),'display','off');
-% %     C{jj}=co;
-% end
-% Portion =  p<0.05; % where is most effected
-% 
-% Portion = Portion+0;
