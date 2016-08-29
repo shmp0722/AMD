@@ -1,4 +1,4 @@
-function VistaSoftVer(Ver)
+!function VistaSoftVer(Ver)
 
 %
 % Change vistasoft ver. to avoid GUI errors.

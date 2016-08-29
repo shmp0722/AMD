@@ -1,4 +1,4 @@
-function AMD_plotDiffuisonMeasureWithAmdCtl(vals,fibID,SavePath)
+doofunction AMD_plotDiffuisonMeasureWithAmdCtl(vals,fibID,SavePath)
 % Plot figure 5 showing individual FA value along the core of OR and optic tract.
 %
 % Repository dependencies
