@@ -1,4 +1,4 @@
-function AMD_plotDiffuisonMeasureWithAmdCtl(vals,fibID,SavePath)
+function Merged_AMD_plot_DiffuisonProperty_wAmdCtl(vals,fibID,SavePath)
 % Plot figure 5 showing individual FA value along the core of OR and optic tract.
 %
 % Repository dependencies
@@ -44,7 +44,7 @@ md = fa;
 ad = fa;
 rd = fa;
 
-% unite values 
+%% unite values 
 for subID = 1:length(ACH);
     if isempty(ACH{subID,fibID});
         fa(subID,:) =nan(1,nodes);
@@ -71,6 +71,38 @@ for subID = 1:length(ACH);
     end;
 end
 
+%%
+% make one sheet diffusivity
+% merge both hemisphere
+for subID = 1:length(ACH);
+    if isempty(ACH{subID,fibID});
+        fa(subID,:) =nan(1,nodes);
+    else
+        fa(subID,:) =  mean([ACH{subID,fibID}.vals.fa;...
+            ACH{subID,fibID+1}.vals.fa]);
+    end;
+    
+    if isempty(ACH{subID,fibID});
+        md(subID,:) =nan(1,nodes);
+    else
+        md(subID,:) = mean([ ACH{subID,fibID}.vals.md;...
+            ACH{subID,fibID+1}.vals.md]);
+    end;
+    
+    if isempty(ACH{subID,fibID});
+        rd(subID,:) =nan(1,nodes);
+    else
+        rd(subID,:) = mean([ ACH{subID,fibID}.vals.rd;...
+            ACH{subID,fibID+1}.vals.rd]);
+    end;
+    
+    if isempty(ACH{subID,fibID});
+        ad(subID,:) =nan(1,nodes);
+    else
+        ad(subID,:) = mean([ ACH{subID,fibID}.vals.ad;...
+            ACH{subID,fibID+1}.vals.ad]);
+    end;
+end
 
 
 %%
@@ -104,7 +136,6 @@ end
 
 AMD_data  = val_AMD;
 
-
 %% Wilcoxon Single rank test
 % container
 group =2;
@@ -124,7 +155,7 @@ end
 % logical 2 double
 h = h+0;
 
-%%
+%% OT FA  
 G = figure; hold on;
 X = 1:length(h);
 c = lines(length(h));
@@ -155,27 +186,20 @@ end
 m   = nanmean(AMD_data,1);
 plot(X,m,'Color',c(3,:) ,'linewidth',3)
 
-T = title(sprintf('%s comparing to AMD_C', fbName{fibID}));
+T = title(sprintf('%s comparing to AMD_C', fbName{fibID}(3:end)));
 ylabel(upper(vals))
 xlabel('Location')
 
-% set Y limit 
-Xlim = (m+2*st);
-A =  round(max(Xlim(10:40))+0.2,1);
-
-Y = (m-2*st);
-B =  round(min(Y(10:40))-0.2,1);
-
-b = [B,A];
-
+% axis
 if b(1)<0;b(1)=0;end;
 % switch vals
 %     case {}
-b=[0,0.8];
-set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
-
+switch fibID
+    case {1}
+b=[0.1,0.8];
+% set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
+set(gca,'ylim',b,'yTick',b,'xLim',[11,40],'xtickLabel','');
 bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
-
 hold off;
 
 % Save current figure

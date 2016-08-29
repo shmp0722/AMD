@@ -62,7 +62,6 @@ title('central 0-3 wo Peripheral 30-90')
 camlight
 hold off;
 
-
 % Central 0-3 substracted 
 figure; hold on;
 
@@ -97,8 +96,29 @@ hold off;
 AFQ_RenderRoi(DivRoi03,C(2,:))
 AFQ_RenderRoi(DivRoi3090,C(1,:))
 
-%%
+%% Next we7re gonna check this
 
+dt6File = dtiLoadDt6('/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_2nd/dt6.mat');
+RoiFileName = Roi3090wo03;
+
+dt6File=dtiLoadDt6(dt6File); 
+%2. Compute FA, MD, RD properties for ROI
+[val1,val2,val3,val4,val5,val6] = dtiGetValFromTensors(dt6File.dt6, roi.coords, inv(dt6File.xformToAcpc),'dt6','nearest');
+dt6 = [val1,val2,val3,val4,val5,val6];
+[vec,val] = dtiEig(dt6);
+
+[fa,md,rd,ad] = dtiComputeFA(val);
+
+%3Return mean (across nonnan) values
+FA(1)=min(fa(~isnan(fa))); FA(2)=mean(fa(~isnan(fa))); FA(3)=max(fa(~isnan(fa))); %isnan is needed  because sometimes if all the three eigenvalues are negative, the FA becomes NaN. These voxels are noisy. 
+MD(1)=min(md); MD(2)=mean(md); MD(3)=max(md); 
+radialADC(1)=min(rd); radialADC(2)=mean(rd); radialADC(3)=max(rd); 
+axialADC(1)=min(ad); axialADC(2)=mean(ad); axialADC(3)=max(ad); 
+
+
+[FA,MD,radialADC,axialADC] = dtiROIProperties(dt6File, RoiFileName);
+
+%%
 % Load up the dt6
 dt = dtiLoadDt6('/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/dt6.mat');
 
