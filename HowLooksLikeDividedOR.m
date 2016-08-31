@@ -32,20 +32,28 @@ for whichSubject = subID;
     
     %% Load fiber groups
     % Optic tract
-    ROT_Name = fullfile(OTdir,'*Rt-LGN4*AFQ*');
+    ROT_Name = fullfile(OTdir,'*Rt-LGN4*AFQ*.mat');
     ROT = dir(ROT_Name);
-    LOT_Name = fullfile(OTdir,'*Lt-LGN4*AFQ*');
+    
+    LOT_Name = fullfile(OTdir,'*Lt-LGN4*AFQ*.mat');
     LOT = dir(LOT_Name);
     
-    L_OT = fgRead(fullfile(OTdir,LOT.name));
-    %     L_OT = AFQ_removeFiberOutliers(L_OT,4,4,25);
-    R_OT = fgRead(fullfile(OTdir,ROT.name));
-    %     R_OT = AFQ_removeFiberOutliers(R_OT,4,4,25);
+    if length(LOT)==1
+        L_OT = fgRead(fullfile(OTdir,LOT.name));
+    elseif length(LOT)>=2
+        L_OT = fgRead(fullfile(OTdir,LOT(1).name));
+    end
     
+    if length(ROT)==1 
+            R_OT = fgRead(fullfile(OTdir,ROT.name));
+    elseif length(ROT)>=2
+            R_OT = fgRead(fullfile(OTdir,ROT(1).name));
+    end
+        
     ROR = dir(fullfile(ORdir, '*Rt*MD4.pdb'));
     LOR = dir(fullfile(ORdir, '*Lt*MD4.pdb'));
     
-    if length(ROR)>0,
+    if ~isempty(ROR)
         for ll = 1:length(ROR)
             R_OR{ll} = fgRead(fullfile(ORdir,ROR(ll).name));
             L_OR{ll} = fgRead(fullfile(ORdir,LOR(ll).name));

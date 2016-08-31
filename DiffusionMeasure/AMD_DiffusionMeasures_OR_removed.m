@@ -28,7 +28,9 @@ subs = {...
     'AMD-Ctl12-YT-f59yo-20150222'};   
 
 %%
+    showfig = 1;
 
+%% Make OR roi and save all rois
 for ii = 1:length(subs)
     SubDir = fullfile(AFQdata,subs{ii});
     OTdir  = fullfile(SubDir,'/dwi_1st/fibers/conTrack/OT_5K');
@@ -85,29 +87,27 @@ for ii = 1:length(subs)
     
     
     % Make new ROI
-    R_03_intersect =  dtiNewRoi('R_03_intersect',[], intersect(R_OR03_roi.coords,R_OR3090_roi.coords,'rows')) ;
+    R_intersect =  dtiNewRoi('R_03_intersect',[], intersect(R_OR03_roi.coords,R_OR3090_roi.coords,'rows')) ;
     R_03_setdiff  = dtiNewRoi('R_03_setdiff',[], setdiff(R_OR03_roi.coords,R_OR3090_roi.coords,'rows')) ;    
-    R_90_setdiff  = dtiNewRoi('R_03_setdiff',[], setdiff(R_OR3090_roi.coords,R_OR03_roi.coords,'rows')) ;
+    R_90_setdiff  = dtiNewRoi('R_90_setdiff',[], setdiff(R_OR3090_roi.coords,R_OR03_roi.coords,'rows')) ;
 
-    L_03_intersect =  dtiNewRoi('L_03_intersect',[], intersect(L_OR03_roi.coords,L_OR3090_roi.coords,'rows')) ;
+    L_intersect =  dtiNewRoi('L_03_intersect',[], intersect(L_OR03_roi.coords,L_OR3090_roi.coords,'rows')) ;
     L_03_setdiff  = dtiNewRoi('L_03_setdiff',[], setdiff(L_OR03_roi.coords,L_OR3090_roi.coords,'rows')) ;    
-    L_90_setdiff  = dtiNewRoi('L_03_setdiff',[], setdiff(L_OR3090_roi.coords,L_OR03_roi.coords,'rows')) ;
-    
-    
+    L_90_setdiff  = dtiNewRoi('L_90_setdiff',[], setdiff(L_OR3090_roi.coords,L_OR03_roi.coords,'rows')) ;   
     
     
     
     % Render a figure 
-    if shofig == 1
+    if showfig == 1
 %            C = lines(6)
            C = hot(6);
            figure; hold on;
            % right
-           AFQ_RenderRoi(R_03_intersect,C(1,:))
+           AFQ_RenderRoi(R_intersect,C(1,:))
            AFQ_RenderRoi(R_03_setdiff,C(2,:))
            AFQ_RenderRoi(R_90_setdiff,C(3,:))
            % left
-           AFQ_RenderRoi(L_03_intersect,C(1,:))
+           AFQ_RenderRoi(L_intersect,C(1,:))
            AFQ_RenderRoi(L_03_setdiff,C(2,:))
            AFQ_RenderRoi(L_90_setdiff,C(3,:))
            
@@ -132,6 +132,14 @@ for ii = 1:length(subs)
     ROIdir = fullfile(SubDir,'dwi_1st/fgROIs');
     if ~exist(ROIdir,'dir');mkdir(ROIdir);end
     
+    rois ={...
+        R_intersect,R_03_setdiff,R_90_setdiff,...
+        L_intersect,L_03_setdiff,L_90_setdiff,...
+        };
+    
+    for  kk = 1:length(rois)        
+    dtiWriteRoi(rois{kk},[fullfile(ROIdir,rois{kk}.name),'.mat'])
+    end
     
     
     

@@ -53,26 +53,27 @@ for hemisphere = 1:2
         [fgOut1] = SO_AlignFiberDirection(fgOut1,'AP');
         
         % remove outlier fiber
-        k=4; % max distance
-        maxDist = k;
-        maxLen = 4;
-        numNodes = 25;
-        M = 'mean';
-        count = 1;
-        show = 1;
-        
-        [fgclean ,keep] =  AFQ_removeFiberOutliers(fgOut1,maxDist,maxLen,numNodes,M,count,show);
-        
-        for l =1:length(fgclean.params)
-            fgclean.params{1,l}.stat=fgclean.params{1,l}.stat(keep);
+         % max distance
+        for k=2:3
+            maxDist = k;
+            maxLen = 4;
+            numNodes = 25;
+            M = 'mean';
+            count = 1;
+            show = 1;
+            
+            [fgclean ,keep] =  AFQ_removeFiberOutliers(fgOut1,maxDist,maxLen,numNodes,M,count,show);
+            
+            for l =1:length(fgclean.params)
+                fgclean.params{1,l}.stat=fgclean.params{1,l}.stat(keep);
+            end
+            fgclean.pathwayInfo = fgclean.pathwayInfo(keep);
+            
+            % save new fg.pdb file
+            fibername       = sprintf('%s_MD%d.pdb',fgclean.name,maxDist);
+            mtrExportFibers(fgclean,fullfile(fgDir,fibername),[],[],[],2);
+            clear fgclean
         end
-        fgclean.pathwayInfo = fgclean.pathwayInfo(keep);
-        
-        % save new fg.pdb file
-        fibername       = sprintf('%s_MD%d.pdb',fgclean.name,maxDist);
-        mtrExportFibers(fgclean,fullfile(fgDir,fibername),[],[],[],2);
-        clear fgclean
-        
     end
 end
 return

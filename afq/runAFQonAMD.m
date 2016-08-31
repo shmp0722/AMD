@@ -55,6 +55,5 @@ fullfile('/home/ganka/git/AMD/afq');
 %% Run AFQ on these subjects
 afq = AFQ_run(sub_dirs, sub_group, afq);
 save afq
-% return
+return
  afq = AFQ_SegmentCallosum(afq);
- save afq afq_0830
