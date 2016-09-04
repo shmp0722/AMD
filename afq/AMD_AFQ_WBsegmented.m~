@@ -1,30 +1,21 @@
 function AMD_AFQ_WBsegmented
+%
 % Plot patient data against controls
 %
 %
-% Example:
+% See: AFQ_PlotPatientMeans
 %
-% load /biac4/wandell/data/WH/analysis/AFQ_WestonHavens_Full.mat
-% afq_controls = afq;
-% load /biac4/wandell/data/WH/kalanit/PS/AFQ_PS.mat
-% afq_patient = afq;
-% AFQ_PlotPatientMeans(afq_patient,afq_controls,'T1_map_lsq_2DTI',[],'age', [53 73])
-% AFQ_PlotPatientMeans(afq_patient,afq_controls,'fa',[],'age', [53 73])
-% AFQ_PlotPatientMeans(afq_patient,afq_controls,'md',[],'age', [53 73])
 
-
-%% load afq
+%% load afq structure
 
 load /home/ganka/git/AMD/afq/afq.mat
 
+%% Which nodes and vals to analyze
 
-%% Which nodes to analyze
-% if notDefined('nodes')
-    nodes = 21:80;
-% end
+% exclude first and last 10 nodes from 
+nodes = 21:80;
 
-% Define output directory
-%     outdir = '/media/HDPC-UT/dMRI_data/Results/AO';
+
 
 % If no value was defined than find all the values that match for controls
 % and the patient
@@ -141,21 +132,21 @@ for v = 1:length(valname)
 
 
 %% make fgnames shorter
-    newfgNames = {'l-TR','r-TR','l-C','r-C','l-CC','r-CC','l-CH','r-CH','CFMa',...
-        'CFMi','l-IFOF','r-IFOF','l-ILF','r-ILF','l-SLF','r-SLF','l-U','r-U',...
-        'l-A','r-A'};
+%     newfgNames = {'l-TR','r-TR','l-C','r-C','l-CC','r-CC','l-CH','r-CH','CFMa',...
+%         'CFMi','l-IFOF','r-IFOF','l-ILF','r-ILF','l-SLF','r-SLF','l-U','r-U',...
+%         'l-A','r-A'};
     
     %     set(gca,'xtick',1:nfg,'xticklabel',newfgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
-    set(gca,'xtick',1:nfg,'xticklabel',newfgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
+    set(gca,'xtick',1:nfg,'xticklabel',fgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
     set(gca, 'XTickLabelRotation',90)
     ylabel(upper(valtitle{v}));
     
     h = colorbar('AxisLocation','out');
     h.Label.String = 'z score';
     
-    save
+    saveas(gca,sprintf('%s.eps',upper(valtitle{v})),'psc2')
 end
-return
+returns
 %% Ok, let's take just callosal fibers
 % Loop over the different values
 mrvNewGraphWin;
