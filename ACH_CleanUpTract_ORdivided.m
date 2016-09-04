@@ -54,7 +54,7 @@ for hemisphere = 1:2
         
         % remove outlier fiber
          % max distance
-        for k=2:3
+        for k=2:4
             maxDist = k;
             maxLen = 4;
             numNodes = 25;

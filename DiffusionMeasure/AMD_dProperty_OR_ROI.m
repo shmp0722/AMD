@@ -32,14 +32,14 @@ if notDefined('showfig')
     showfig = 0;end
 
 %% boxes
-   Intsct = struct;
-    Central = struct;
-    Peripheral = struct;
-    
-    FA = nan(1,length(subs));
-    MD = FA;
-    AD = FA;
-    RD = FA;
+Intsct = struct;
+Central = struct;
+Peripheral = struct;
+% 
+% FA = nan(length(subs),1);
+% MD = FA;
+% AD = FA;
+% RD = FA;
 
 %% Make OR roi and save all rois
 for ii = 1:length(subs)
@@ -58,21 +58,26 @@ for ii = 1:length(subs)
     end
     
     
-    if length(or) ==6
+%     if length(or) ==6
         % Load fiber groups
         ROR03 = dir(fullfile(ORdir, '*Ecc0to3*-Lh_NOT_MD4.pdb'));
         LOR03= dir(fullfile(ORdir, '*Ecc0to3*-Rh_NOT_MD4.pdb'));
         
-        ROR1530 = dir(fullfile(ORdir, '*15to30*-Lh_NOT_MD4.pdb'));
-        LOR1530= dir(fullfile(ORdir, '*15to30*-Rh_NOT_MD4.pdb'));
+        if ii==19
+            ROR1530 = dir(fullfile(ORdir, '*15to30*-Lh_NOT_MD3.pdb'));
+            LOR1530= dir(fullfile(ORdir, '*15to30*-Rh_NOT_MD3.pdb'));
+        else
+            ROR1530 = dir(fullfile(ORdir, '*15to30*-Lh_NOT_MD4.pdb'));
+            LOR1530= dir(fullfile(ORdir, '*15to30*-Rh_NOT_MD4.pdb'));
+        end
         
         ROR3090 = dir(fullfile(ORdir, '*30to90*-Lh_NOT_MD4.pdb'));
         LOR3090= dir(fullfile(ORdir, '*30to90*-Rh_NOT_MD4.pdb'));
         
-    else
-        sprintf('- few or too much fiber groups, check OR directory \n \n- %s',ORdir)
-        return
-    end
+%     else
+%         sprintf('- few or too much fiber groups, check OR directory \n \n- %s',ORdir)
+%         return
+%     end
     
     
     R_OR03 = fgRead(fullfile(ORdir,ROR03.name));
@@ -147,8 +152,8 @@ for ii = 1:length(subs)
     end
     
     %% save ROIs
-    if notDefined('saveROI'); saveROI = 0;end
-        
+    if notDefined('saveROI'); saveROI = 1;end
+    
     %%
     if saveROI ==1
         ROIdir = fullfile(SubDir,'dwi_1st/fgROIs');
@@ -165,10 +170,6 @@ for ii = 1:length(subs)
     end
     
     %%
-    % AMD = struct;
- 
-    
-    
     rois ={...
         R_intersect,R_03_setdiff,R_90_setdiff,...
         L_intersect,L_03_setdiff,L_90_setdiff};
@@ -178,30 +179,46 @@ for ii = 1:length(subs)
     [faR,mdR,adR,rdR]  = dtiGetValFromTensors(dt6.dt6, rois{1}.coords, inv(dt6.xformToAcpc),'fa md ad rd');
     [faL,mdL,adL,rdL]  = dtiGetValFromTensors(dt6.dt6, rois{4}.coords, inv(dt6.xformToAcpc),'fa md ad rd');
     
-    Intsct.FA{1,ii}=mean([faR;faL]);
-    Intsct.AD{1,ii}=mean([adR;adL]);
-    Intsct.RD{1,ii}=mean([rdR;rdL]);
-    Intsct.MD{1,ii}=mean([mdR;mdL]);
+    %     Intsct.FA(ii,1)=nanmean([faR;faL]);
+    %     Intsct.AD(ii,1)=nanmean([adR;adL]);
+    %     Intsct.RD(ii,1)=nanmean([rdR;rdL]);
+    %     Intsct.MD(ii,1)=nanmean([mdR;mdL]);
+    
+    Intsct.FA(ii,1:length([faR;faL]))=[faR;faL];
+    Intsct.AD(ii,1:length([adR;adL]))=[adR;adL];
+    Intsct.RD(ii,1:length([rdR;rdL]))=[rdR;rdL];
+    Intsct.MD(ii,1:length([rdR;rdL]))=[mdR;mdL];
     
     [faR,mdR,adR,rdR]  = dtiGetValFromTensors(dt6.dt6, rois{2}.coords, inv(dt6.xformToAcpc),'fa md ad rd');
     [faL,mdL,adL,rdL]  = dtiGetValFromTensors(dt6.dt6, rois{5}.coords, inv(dt6.xformToAcpc),'fa md ad rd');
     
-    Central.FA{1,ii}=mean([faR;faL]);
-    Central.AD{1,ii}=mean([adR;adL]);
-    Central.RD{1,ii}=mean([rdR;rdL]);
-    Central.MD{1,ii}=mean([mdR;mdL]);
+    %     Central.FA(ii,1)=nanmean([faR;faL]);
+    %     Central.AD(ii,1)=nanmean([adR;adL]);
+    %     Central.RD(ii,1)=nanmean([rdR;rdL]);
+    %     Central.MD(ii,1)=nanmean([mdR;mdL]);
+    
+    Central.FA(ii,1:length([faR;faL]))=([faR;faL]);
+    Central.AD(ii,1:length([faR;faL]))=[adR;adL];
+    Central.RD(ii,1:length([faR;faL]))=[rdR;rdL];
+    Central.MD(ii,1:length([faR;faL]))=[mdR;mdL];
     
     [faR,mdR,adR,rdR]  = dtiGetValFromTensors(dt6.dt6, rois{3}.coords, inv(dt6.xformToAcpc),'fa md ad rd');
     [faL,mdL,adL,rdL]  = dtiGetValFromTensors(dt6.dt6, rois{6}.coords, inv(dt6.xformToAcpc),'fa md ad rd');
     
-    Peripheral.FA{1,ii}=mean([faR;faL]);
-    Peripheral.AD{1,ii}=mean([adR;adL]);
-    Peripheral.RD{1,ii}=mean([rdR;rdL]);
-    Peripheral.MD{1,ii}=mean([mdR;mdL]);
+    Peripheral.FA(ii,1:length([faR;faL]))=([faR;faL]);
+    Peripheral.AD(ii,1:length([faR;faL]))=([adR;adL]);
+    Peripheral.RD(ii,1:length([faR;faL]))=([rdR;rdL]);
+    Peripheral.MD(ii,1:length([faR;faL]))=([mdR;mdL]);
     
 end
+%%
+% Central.FA(Central.FA==0) = nan;
 
-
-
+%%
+mkdir /home/ganka/git/AMD/DiffusionMeasure/voxelwise2
+cd /home/ganka/git/AMD/DiffusionMeasure/voxelwise2
+save Central Central
+save Intsct Intsct
+save Peripheral Peripheral
 
 
