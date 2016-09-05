@@ -7,6 +7,8 @@ load Peripheral
 load Intsct
 
 %% Convert zero to nan
+% Replace all zeros (vox
+for i = 1:20; Central.FA(i,Central.FA(i,:)==0)=nan;end
 
 Central.FA(Central.FA ==0)=nan;
 Central.MD(Central.MD ==0)=nan;
@@ -27,39 +29,56 @@ Peripheral.RD(Peripheral.RD ==0)=nan;
 
 [h,p] = ttest2(Central.FA(1:8,:),Central.FA(9:20,:),'Vartype','unequal');
 
-%%
+%% Cental
 mrvNewGraphWin
 hold on;
 x = [1,2];
-
 y = nanmean(Central.FA,2);
 
-h =bar(x,[mean(y(1:8)),mean(y(9:20))],0.3)
+h =bar(x,[mean(y(1:8)),mean(y(9:20))],0.3);
 % [h,p] = ttest2(Central.FA(1:8),Central.FA(9:end),'Vartype','unequal');
 
-title('Merged Central 0-3')
+title('Central wo intersecting voxels')
 ylabel('FA')
 set(gca,'xtick',[1,2],'xtickLabel',{'Patient','Healthy'})
 set(gca,'ytick',[0:0.1:0.3]);
 hold off;
 
+saveas(gca,'CentralwoIntersectingVoxels.eps','psc2')
+
+%% Intersect
 mrvNewGraphWin
 hold on;
-bar([1:2],[mean(Intsct.FA(1:8)),mean(Intsct.FA(9:end))],0.3)
+x = [1,2];
+y = nanmean(Intsct.FA,2);
 
-title('Intersect')
-hold off
+h =bar(x,[mean(y(1:8)),mean(y(9:20))],0.3);
 
+title('Intersecting voxels')
+ylabel('FA')
+set(gca,'xtick',[1,2],'xtickLabel',{'Patient','Healthy'})
+set(gca,'ytick',[0:0.1:0.3]);
+hold off;
+
+saveas(gca,'IntersectingVoxels.eps','psc2')
+%% Peripheral
 mrvNewGraphWin
 hold on;
-bar([1:2],[mean(Peripheral.FA(1:8)),mean(Peripheral.FA(9:end))],0.3)
-title('Peripheral')
-hold off
+x = [1,2];
+y = nanmean(Peripheral.FA,2);
 
-%%
+h =bar(x,[mean(y(1:8)),mean(y(9:20))],0.3);
+
+title('Peripheral wo intersecting voxels')
+ylabel('FA')
+set(gca,'xtick',[1,2],'xtickLabel',{'Patient','Healthy'})
+set(gca,'ytick',[0:0.1:0.3]);
+hold off;
+
+saveas(gca,'PeripheralwoIntersectingVoxels.eps','psc2')
 
 
-set(gca,'xlim',[0,3],'xtick',{'','Patient','Healthy',''})
+
 
 %%
 AFQdata = '/media/HDPC-UT/dMRI_data';

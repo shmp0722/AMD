@@ -7,25 +7,30 @@ load Peripheral
 load Intsct
 
 %% Convert zero to nan
+%
+% Replace all zeros (voxels not in OR) with nan to exclude those voxels from
+% the statistical tests.
+% Remove voxels from Central portion
+FN = fieldnames(Central);
+for ii = 1:length(FN)
+    for i = 1:size(Central.FA,1);
+        Central.(FN{ii})(i,Central.(FN{ii})(i,:)==0)=nan;
+    end
+end
+% Remove voxels from peripheral portion
+FN = fieldnames(Peripheral);
+for ii = 1:length(FN)
+    for i = 1:size(Peripheral.FA,1);
+        Peripheral.(FN{ii})(i,Peripheral.(FN{ii})(i,:)==0)=nan;
+    end
+end
 
-Central.FA(Central.FA ==0)=nan;
-Central.MD(Central.MD ==0)=nan;
-Central.AD(Central.AD ==0)=nan;
-Central.RD(Central.RD ==0)=nan;
-
-Intsct.FA(Intsct.FA ==0)=nan;
-Intsct.MD(Intsct.MD ==0)=nan;
-Intsct.AD(Intsct.AD ==0)=nan;
-Intsct.RD(Intsct.RD ==0)=nan;
-
-Peripheral.FA(Peripheral.FA ==0)=nan;
-Peripheral.MD(Peripheral.MD ==0)=nan;
-Peripheral.AD(Peripheral.AD ==0)=nan;
-Peripheral.RD(Peripheral.RD ==0)=nan;
-
-%%
-
-[h,p] = ttest2(Central.FA(1:8,:),Central.FA(9:20,:),'Vartype','unequal');
+%% Try a statisitcal test (t-test)
+FA.patients = Central.FA(1:8,:);
+FA.patients = FA.patients(~isnan(FA.patients));
+FA.controls = Central.FA(9:20,:);
+FA.controls = FA.controls(~isnan(FA.controls));
+[h,p] = ttest2(FA.patients,FA.controls,'Vartype','unequal');
 
 %% Cental
 mrvNewGraphWin
