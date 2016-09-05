@@ -26,11 +26,13 @@ for ii = 1:length(FN)
 end
 
 %% Try a statisitcal test (t-test)
-FA.patients = Central.FA(1:8,:);
-FA.patients = FA.patients(~isnan(FA.patients));
-FA.controls = Central.FA(9:20,:);
-FA.controls = FA.controls(~isnan(FA.controls));
-[h,p] = ttest2(FA.patients,FA.controls,'Vartype','unequal');
+for ii = 1:length(FN)
+patients.(FN{ii}) = Central.(FN{ii})(1:8,:);
+patients.(FN{ii}) = patients.(FN{ii})(~isnan(patients.(FN{ii})));
+controls.(FN{ii}) = Central.(FN{ii})(9:20,:);
+controls.(FN{ii}) = controls.(FN{ii})(~isnan(controls.(FN{ii})));
+[tests.(FN{ii}).h,tests.(FN{ii}).p] = ttest2(patients.(FN{ii}),controls.(FN{ii}),'Vartype','unequal');
+end
 
 %% Cental
 mrvNewGraphWin
