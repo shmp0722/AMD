@@ -1,7 +1,7 @@
 function VoxelWise2
 
 %%
-cd('/home/ganka/git/AMD/DiffusionMeasure/voxelwise2')
+% cd('/home/ganka/git/AMD/DiffusionMeasure/voxelwise2')
 load Central
 load Peripheral
 load Intsct
@@ -43,25 +43,38 @@ for ii = 1:length(FN)
     [Peripheral.tests.(FN{ii}).h, ...
      Peripheral.tests.(FN{ii}).p] = ttest2(Peripheral.patients.(FN{ii}),Peripheral.controls.(FN{ii}),'Vartype','unequal');
 end
+%% ttest(2groups)
+ 
+ hist(Central.patients.FA)
+ hist(Central.controls.FA)
+ [h,p,ci,stats] =ttest2( Central.patients.FA,Central.controls.FA)
 
+ 
+ [h,p,ci,stats] =ttest2( Peripheral.patients.FA,Peripheral.controls.FA)
+
+%%
 % FIX FIX FIX Shumpei we need to make sure what comes after here is consistent with the new code above. %
-%% Central
+%% controls vs AMD
 mrvNewGraphWin
 hold on;
-plot([.9,1.9],[mean(Central.controls.FA);mean(Central.patients.FA)],'ro','markerfacecolor','r','markersize',15);
-% Errorbars
-% plot([[.9,1.9],[.9, 1.9]], ...
-%     [[mean(Central.controls.FA);mean(Central.patients.FA)]-[std(Central.controls.FA);std(Central.patients.FA)], ...
-%     [[mean(Central.controls.FA);mean(Central.patients.FA)]+[std(Central.controls.FA);std(Central.patients.FA)]]], ...
-%     'ro','markerfacecolor','r','markersize',15);
 
-plot([1.1, 2.1],[mean(Peripheral.controls.FA);mean(Peripheral.patients.FA)],'bo','markerfacecolor','b','markersize',15);
-title('Central wo intersecting voxels')
+% Errorbars
+Err = [std(Central.controls.FA),std(Central.patients.FA)];
+eb1 = errorbar([.9,1.9],[mean(Central.controls.FA);mean(Central.patients.FA)],Err,'ro','markerfacecolor','r','markersize',15);
+
+Err = [std(Peripheral.controls.FA),std(Peripheral.patients.FA)];
+eb2 = errorbar([1.1, 2.1],[mean(Peripheral.controls.FA);mean(Peripheral.patients.FA)],'bo','markerfacecolor','b','markersize',15);
+
+% title('Central wo intersecting voxels')
 ylabel('FA')
-set(gca,'xtick',[1,2],'xtickLabel',{'Control','Patient'}, 'xlim', [.5 2.5] ...
-       ,'ytick',[0.2 0.3], 'ylim',[0.2 0.3],'tickdir','out');
+set(gca,'xtick',[1,2],'xtickLabel',{'Control','Patient'}, 'xlim', [.5 2.5],... 
+'ytick',[0 2.5], 'ylim',[0 2.5],'tickdir','out');
+
+lg1 = legend([eb1,eb2],'Central','Peripheral','Posi');
+set(lg1,'Position',[0.78 0.83 0.2 0.1])
 hold off;
 
+%%
 saveas(gca,'CentralwoIntersectingVoxels.eps','psc2')
 
 %% Intersect
@@ -122,3 +135,12 @@ subs = {...
     'AMD-Ctl10-TH-65yo-dMRI-Anatomy-dMRI'
     'AMD-Ctl11-YMS-64yo-dMRI-Anatomy'
     'AMD-Ctl12-YT-f59yo-20150222'}; 
+
+
+%%
+% plot([.9,1.9],[mean(Central.controls.FA);mean(Central.patients.FA)],'ro','markerfacecolor','r','markersize',15);
+% Errorbars
+% plot([[.9,1.9],[.9, 1.9]], ...
+%     [[mean(Central.controls.FA);mean(Central.patients.FA)]-[std(Central.controls.FA);std(Central.patients.FA)], ...
+%     [[mean(Central.controls.FA);mean(Central.patients.FA)]+[std(Central.controls.FA);std(Central.patients.FA)]]], ...
+%     'ro','markerfacecolor','r','markersize',15);
