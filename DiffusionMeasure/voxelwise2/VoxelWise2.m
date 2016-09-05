@@ -27,26 +27,39 @@ end
 
 %% Try a statisitcal test (t-test)
 for ii = 1:length(FN)
-patients.(FN{ii}) = Central.(FN{ii})(1:8,:);
-patients.(FN{ii}) = patients.(FN{ii})(~isnan(patients.(FN{ii})));
-controls.(FN{ii}) = Central.(FN{ii})(9:20,:);
-controls.(FN{ii}) = controls.(FN{ii})(~isnan(controls.(FN{ii})));
-[tests.(FN{ii}).h,tests.(FN{ii}).p] = ttest2(patients.(FN{ii}),controls.(FN{ii}),'Vartype','unequal');
+    Central.patients.(FN{ii}) = Central.(FN{ii})(1:8,:);
+    Central.patients.(FN{ii}) = Central.patients.(FN{ii})(~isnan(Central.patients.(FN{ii})));
+    Central.controls.(FN{ii}) = Central.(FN{ii})(9:20,:);
+    Central.controls.(FN{ii}) = Central.controls.(FN{ii})(~isnan(Central.controls.(FN{ii})));
+    [Central.tests.(FN{ii}).h, ...
+     Central.tests.(FN{ii}).p] = ttest2(Central.patients.(FN{ii}),Central.controls.(FN{ii}),'Vartype','unequal');
 end
 
-%% Cental
+for ii = 1:length(FN)
+    Peripheral.patients.(FN{ii}) = Peripheral.(FN{ii})(1:8,:);
+    Peripheral.patients.(FN{ii}) = Peripheral.patients.(FN{ii})(~isnan(Peripheral.patients.(FN{ii})));
+    Peripheral.controls.(FN{ii}) = Peripheral.(FN{ii})(9:20,:);
+    Peripheral.controls.(FN{ii}) = Peripheral.controls.(FN{ii})(~isnan(Peripheral.controls.(FN{ii})));
+    [Peripheral.tests.(FN{ii}).h, ...
+     Peripheral.tests.(FN{ii}).p] = ttest2(Peripheral.patients.(FN{ii}),Peripheral.controls.(FN{ii}),'Vartype','unequal');
+end
+
+% FIX FIX FIX Shumpei we need to make sure what comes after here is consistent with the new code above. %
+%% Central
 mrvNewGraphWin
 hold on;
-x = [1,2];
-y = nanmean(Central.FA,2);
+plot([.9,1.9],[mean(Central.controls.FA);mean(Central.patients.FA)],'ro','markerfacecolor','r','markersize',15);
+% Errorbars
+% plot([[.9,1.9],[.9, 1.9]], ...
+%     [[mean(Central.controls.FA);mean(Central.patients.FA)]-[std(Central.controls.FA);std(Central.patients.FA)], ...
+%     [[mean(Central.controls.FA);mean(Central.patients.FA)]+[std(Central.controls.FA);std(Central.patients.FA)]]], ...
+%     'ro','markerfacecolor','r','markersize',15);
 
-h =bar(x,[mean(y(1:8)),mean(y(9:20))],0.3);
-% [h,p] = ttest2(Central.FA(1:8),Central.FA(9:end),'Vartype','unequal');
-
+plot([1.1, 2.1],[mean(Peripheral.controls.FA);mean(Peripheral.patients.FA)],'bo','markerfacecolor','b','markersize',15);
 title('Central wo intersecting voxels')
 ylabel('FA')
-set(gca,'xtick',[1,2],'xtickLabel',{'Patient','Healthy'})
-set(gca,'ytick',[0:0.1:0.3]);
+set(gca,'xtick',[1,2],'xtickLabel',{'Control','Patient'}, 'xlim', [.5 2.5] ...
+       ,'ytick',[0.2 0.3], 'ylim',[0.2 0.3],'tickdir','out');
 hold off;
 
 saveas(gca,'CentralwoIntersectingVoxels.eps','psc2')
