@@ -16,7 +16,7 @@ dt6 = dtiLoadDt6(fullfile(home,'dwi_1st/dt6.mat'));
 
 t1 = niftiRead(dt6.files.t1);
 b0 = niftiRead(dt6.files.b0);
-%% load fiber ROIs 
+%% Render fiber ROIs 
 
 fiberDir = fullfile(home,'dwi_1st/fibers/conTrack/OR_divided');
 roiDIR = fullfile(home,'dwi_1st/fgROIs');
@@ -28,8 +28,8 @@ mrvNewGraphWin; hold on;
 
 % ROIs loop
 for i= 1:3%length(rois)
-ROI = dtiReadRoi(fullfile(roiDIR,rois(i).name));
-AFQ_RenderRoi(ROI,C(i,:));
+    ROI = dtiReadRoi(fullfile(roiDIR,rois(i).name));
+    AFQ_RenderRoi(ROI,C(i,:));
 end
 
 % % adding ROIs for gfiber generation
@@ -46,9 +46,8 @@ end
 AFQ_AddImageTo3dPlot(t1,[0,0,-25])
 AFQ_AddImageTo3dPlot(t1,[-3,0,0])
 
-line([-75,-65],[-100 -100],[-25 -25],'Color',[1 1 1],'Linewidth',2)
-line([-70, -70],[-95 -105],[-25 -25],'Color',[1 1 1],'Linewidth',2)
-
+line([-75,-65],[-100 -100],[-25 -25],'Color',[1 1 1],'Linewidth',1)
+line([-70, -70],[-95 -105],[-25 -25],'Color',[1 1 1],'Linewidth',1)
 
 view([-116 30])
 
@@ -58,104 +57,48 @@ camlight left
 axis image
 axis off
 
-legend
 hold off;
 
+%%  difine and read ORs
+% FullfbDir = '/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers/conTrack/OR_100K';
+% FullfbName = 'fg_OR_100K_Lt-LGN4_lh_V1_smooth3mm_Half_2015-06-24_19.34.09-Rh_NOT_MD4.pdb';
+OT = '/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers/conTrack/OT_5K';      
+OTfb = 'fg_OT_5K_85_Optic-Chiasm_Lt-LGN4_2015-07-13_18.48.12-41_Right-Cerebral-White-Matter_Ctrk100_AFQ_51.mat';
+
+DivfbDir = '/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers/conTrack/OR_divided';
+fbPeri = 'fg_OR_divided_Lt-LGN4_lh_Ecc30to90_2015-09-02_14.55.17-Rh_NOT_MD4.pdb';
+fbCenter = 'fg_OR_divided_Lt-LGN4_lh_Ecc0to3_2015-09-02_14.55.17-Rh_NOT_MD4.pdb';
+
+% FgFull = fgRead(fullfile(FullfbDir,FullfbName));
+fb3  = fgRead(fullfile(DivfbDir,fbPeri));
+fb2    = fgRead(fullfile(DivfbDir,fbCenter));
+OTfb = fgRead(fullfile(OT,OTfb));
+
 %%
-% Central 0-3 substracted 
-figure; hold on;
+mrvNewGraphWin; hold on;
 
-AFQ_RenderRoi(Roi03wo3090,C(2,:));
-AFQ_RenderRoi(Roi3090wo03);
-AFQ_RenderRoi(Roi03w3090,C(3,:))
+% AFQ_RenderFibers(OTfb,'numfibers',100,'newfig',0,'color',C(5,:))
+AFQ_RenderFibers(fb2,'numfibers',100,'newfig',0,'color',C(2,:))
+AFQ_RenderFibers(fb3,'numfibers',100,'newfig',0,'color',C(3,:))
 
+
+AFQ_AddImageTo3dPlot(t1,[0,0,-25])
+AFQ_AddImageTo3dPlot(t1,[-3,0,0])
+
+% scale
+line([-75,-65],[-100 -100],[-25 -25],'Color',[1 1 1],'Linewidth',1)
+line([-70, -70],[-95 -105],[-25 -25],'Color',[1 1 1],'Linewidth',1)
+
+% 
+view([-116 30])
+
+% view([0 90])
+title('OR')
 camlight left
-% axis auto
-view([-36,68])
+axis image
+axis off
 
-hold off
-
-% Peripheral 30-90 
-figure; hold on;
-AFQ_RenderRoi(Roi3090wo03);
-view([0 90])
-camlight 
-title('peripheral 30-90 wo 0-3')
-% camlight headlight
-hold off
-
-% Take a look whole OR
-figure;hold on;
-AFQ_RenderRoi(FullRoi)
-AFQ_RenderRoi(Full_w03,C(2,:))
-
-camlight
 hold off;
-
-
-AFQ_RenderRoi(DivRoi03,C(2,:))
-AFQ_RenderRoi(DivRoi3090,C(1,:))
-
-%% Next we7re gonna check this
-
-dt6File = dtiLoadDt6('/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_2nd/dt6.mat');
-RoiFileName = Roi3090wo03;
-
-dt6File=dtiLoadDt6(dt6File); 
-%2. Compute FA, MD, RD properties for ROI
-[val1,val2,val3,val4,val5,val6] = dtiGetValFromTensors(dt6File.dt6, roi.coords, inv(dt6File.xformToAcpc),'dt6','nearest');
-dt6 = [val1,val2,val3,val4,val5,val6];
-[vec,val] = dtiEig(dt6);
-
-[fa,md,rd,ad] = dtiComputeFA(val);
-
-%3Return mean (across nonnan) values
-FA(1)=min(fa(~isnan(fa))); FA(2)=mean(fa(~isnan(fa))); FA(3)=max(fa(~isnan(fa))); %isnan is needed  because sometimes if all the three eigenvalues are negative, the FA becomes NaN. These voxels are noisy. 
-MD(1)=min(md); MD(2)=mean(md); MD(3)=max(md); 
-radialADC(1)=min(rd); radialADC(2)=mean(rd); radialADC(3)=max(rd); 
-axialADC(1)=min(ad); axialADC(2)=mean(ad); axialADC(3)=max(ad); 
-
-
-[FA,MD,radialADC,axialADC] = dtiROIProperties(dt6File, RoiFileName);
-
-%%
-% Load up the dt6
-dt = dtiLoadDt6('/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/dt6.mat');
-
-% These coordsinates are in ac-pc (millimeter) space. We want to transform
-% them to image indices.
-img_coordsFull = unique(floor(mrAnatXformCoords(inv(dt.xformToAcpc), Full.coords)), 'rows');
-img_coordsw03 = unique(floor(mrAnatXformCoords(inv(dt.xformToAcpc), Full_w03.coords)), 'rows');
-img_coordsw3090 = unique(floor(mrAnatXformCoords(inv(dt.xformToAcpc), Full_w3090.coords)), 'rows');
-
-% Now we can calculate FA
-fa = dtiComputeFA(dt.dt6);
-
-% Now lets take these coordinates and turn them into an image. First we
-% will create an image of zeros
-OR_img = zeros(size(fa));
-% Convert these coordinates to image indices
-ind = sub2ind(size(fa), img_coords(:,1), img_coords(:,2),img_coords(:,3));
-% Now replace every coordinate that has the optic radiations with a 1
-OR_img(ind) = 1;
-
-% Now you have an image. Just for your own interest if you want to make a
-% 3d rendering
-isosurface(OR_img,.5);
-
-% For each voxel that does not contain the optic radiations we will zero
-% out its value
-fa(~OR_img) = 0;
-
-% Now we want to save this as a nifti image; The easiest way to do this is
-% just to steal all the information from another image. For example the b0
-% image
-dtiWriteNiftiWrapper(fa, dt.xformToAcpc, 'L-OR-MD3-FA.nii.gz');
-end
-
-
-
-
 
 
 
