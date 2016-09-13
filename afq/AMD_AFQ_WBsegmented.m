@@ -8,7 +8,7 @@ function AMD_AFQ_WBsegmented
 
 %% load afq structure
 
-load /home/ganka/git/AMD/afq/afq.mat
+load /home/ganka/git/AMD/afq/afq_13-Sep-2016.mat
 
 %% Which nodes and vals to analyze
 

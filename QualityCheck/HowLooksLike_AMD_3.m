@@ -44,46 +44,61 @@ for ii = subID; % 7 , 17
         L_OT = fgRead(fullfile(OTdir,LOT(1).name));
     end
     
-    if length(ROT)==1 
-            R_OT = fgRead(fullfile(OTdir,ROT.name));
+    if length(ROT)==1
+        R_OT = fgRead(fullfile(OTdir,ROT.name));
     elseif length(ROT)>=2
-            R_OT = fgRead(fullfile(OTdir,ROT(1).name));
+        R_OT = fgRead(fullfile(OTdir,ROT(1).name));
     end
     
-%     %% OR check
-%     ROR = dir(fullfile(ORdir, '*Rt*MD4.pdb'));
-%     LOR = dir(fullfile(ORdir, '*Lt*MD4.pdb'));
-%     
-%     if ~isempty(ROR)
-%         for ll = 1:length(ROR)
-%             R_OR{ll} = fgRead(fullfile(ORdir,ROR(ll).name));
-%             L_OR{ll} = fgRead(fullfile(ORdir,LOR(ll).name));
-%         end
-        
-        %% Render fibers
-        figure;hold on;
-        Dt6 = dtiLoadDt6(dt6);
-        C = jet(2);
-%         C = jet(2+length(ROR)+length(LOR));
-        
-        AFQ_RenderFibers(R_OT,'numfibers',100,'color',C(1,:),'newfig',0)
-        AFQ_RenderFibers(L_OT,'numfibers',100,'color',C(2,:),'newfig',0)
-        
-%         for ll = 1:length(ROR)
-%             AFQ_RenderFibers(R_OR{ll},'numfibers',100,'color',C(2+ll,:),'newfig',0)
-%         end
-%         
-%         for ll = 1:length(ROR)
-%             AFQ_RenderFibers(L_OR{ll},'numfibers',100,'color',C(4+ll,:),'newfig',0)
-%         end
-%     end
-    %%
+    %% OR check
+    %     ROR = dir(fullfile(ORdir, '*Rt*MD4.pdb'));
+    %     LOR = dir(fullfile(ORdir, '*Lt*MD4.pdb'));
+    
+    ROR_C = dir(fullfile(ORdir, '*Rt*Ecc0to3*MD3.pdb'));
+    LOR_C = dir(fullfile(ORdir, '*Lt*Ecc0to3*MD3.pdb'));
+    
+    ROR_P = dir(fullfile(ORdir, '*Rt*Ecc30to90*MD3.pdb'));
+    LOR_P = dir(fullfile(ORdir, '*Lt*Ecc30to90*MD3.pdb'));
+    
+    %     if ~isempty(ROR_C)
+    for ll = 1:length(ROR_C)
+        RORC{ll} = fgRead(fullfile(ORdir,ROR_C(ll).name));
+        LORC{ll} = fgRead(fullfile(ORdir,LOR_C(ll).name));
+    end
+    
+    for ll = 1:length(ROR_P)
+        RORP{ll} = fgRead(fullfile(ORdir,ROR_P(ll).name));
+        LORP{ll} = fgRead(fullfile(ORdir,LOR_P(ll).name));
+    end
+    
+    %% Render figure
+    figure;hold on;
+    Dt6 = dtiLoadDt6(dt6);
+    C = jet(10);
+    %         C = jet(2+length(ROR)+length(LOR));
+    
+    AFQ_RenderFibers(R_OT,'numfibers',100,'color',C(1,:),'newfig',0)
+    AFQ_RenderFibers(L_OT,'numfibers',100,'color',C(1,:),'newfig',0)
+    
+    for ll = 1:length(RORC)
+        AFQ_RenderFibers(RORC{ll},'numfibers',100,'color',C(10,:),'newfig',0)
+        AFQ_RenderFibers(LORC{ll},'numfibers',100,'color',C(10,:),'newfig',0)
+    end
+    
+    for ll = 1:length(RORP)
+        AFQ_RenderFibers(RORP{ll},'numfibers',100,'color',C(5,:),'newfig',0)
+        AFQ_RenderFibers(LORP{ll},'numfibers',100,'color',C(5,:),'newfig',0)
+    end
+    
+    %
     t1 = niftiRead(Dt6.files.t1);
     AFQ_AddImageTo3dPlot(t1,[0 0 -15]);
     axis image
-%     light
+    axis off
+    light
     
-    title(sprintf('%s', subDir{ii}));
-%     view(-184,40)
+    title(sprintf('%s MD3', subDir{ii}));
+    %     view(-184,40)
 end
-return
+% end
+% return
