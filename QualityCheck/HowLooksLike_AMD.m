@@ -15,7 +15,7 @@ function HowLooksLike_AMD
 
 %%
 % if notDefined('subID')
-    subID = AMD;
+    subID = [AMD,AMD_Ctl];
 % end
 %% load fiber groups (fg) and ROI files% select the subject{i}
 
@@ -82,6 +82,6 @@ for ii = subID;
 %     light
     
     title(sprintf('%s', subDir{ii}));
-    view(-184,40)
+%     view(-184,40)
 end
 return

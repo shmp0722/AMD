@@ -1,10 +1,9 @@
 function runAFQonAMD
-% set directories
-% to compare 6JMD to 5normal these data were aquired at Tamagawa Univ.
-% Siemens scanner.
+%
+% run AFQ pipeline on AMD and AMD controls
+%
+% SO@ACH 
 
-
-%%
 AFQdata = '/media/HDPC-UT/dMRI_data';
 
 subs = {...
@@ -31,7 +30,7 @@ subs = {...
     
 
 
-% Make directory structure for each subject
+%% Make directory structure for each subject
 for ii = 1:length(subs)
     sub_dirs{ii} = fullfile(AFQdata, subs{ii},'dwi_1st');
 end
@@ -54,6 +53,18 @@ fullfile('/home/ganka/git/AMD/afq');
 % afq.params.track.faMaskThresh = 0.09;
 %% Run AFQ on these subjects
 afq = AFQ_run(sub_dirs, sub_group, afq);
-save afq
-return
- afq = AFQ_SegmentCallosum(afq);
+
+%% Add callosal fibers
+afq = AFQ_SegmentCallosum(afq);
+
+%% Add new fibers
+%
+% afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, [cleanFibers = true], ...
+%          [computeVals = true], [showFibers = false], [segFgName = 'WholeBrainFG.mat'] ...
+%          [overwrite = false])
+%
+
+%%
+
+
+

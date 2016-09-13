@@ -79,7 +79,7 @@ for ii = subID
         
         if ~isempty(fg.fibers)
             % remove outlier
-            [fgclean, ~]=AFQ_removeFiberOutliers(fg,3,4,25,'mean',1, 5,[]);
+            [fgclean, ~] = AFQ_removeFiberOutliers(fg,3,4,25,'mean',1, 5,[]);
             %         % keep pathwayInfo and Params.stat for contrack scoring
             %         for l = 1:length(fgclean.params)
             %             fgclean.params{1,l}.stat=fgclean.params{1,l}.stat(keep2);
