@@ -14,7 +14,13 @@ function BackUpProgress
 
 %% only added or vhanged files -u
 % dMRI
+
 cmd = '!rsync -auv /media/HDPC-UT/dMRI_data/ /media/HDPC-UT_/dMRI_data/';
+
+% if backup HDD is almost full. Use --delete option. This will delete
+% deleted sourse files. 
+% cmd = '!rsync -auv --delete /media/HDPC-UT/dMRI_data/ /media/HDPC-UT_/dMRI_data/';
+
 eval(cmd)
 
 % qMRI

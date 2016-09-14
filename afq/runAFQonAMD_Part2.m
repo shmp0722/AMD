@@ -29,3 +29,4 @@ afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
 %%
 outname = fullfile(AFQ_get(afq,'outdir'),['afq_' date]);
 save(outname,'afq');
+
