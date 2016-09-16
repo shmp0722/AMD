@@ -28,7 +28,7 @@ subs = {...
     'AMD-Ctl11-YMS-64yo-dMRI-Anatomy'
     'AMD-Ctl12-YT-f59yo-20150222'};
 
-%% 
+%% Optic tract
 for ii = 1:20
     s1 = dir(fullfile(AFQdata,subs{ii},'dwi_1st/fibers/OT_MD32/LOT*'));
     s2 = dir(fullfile(AFQdata,subs{ii},'dwi_1st/fibers/OT_MD32/ROT*'));
@@ -58,5 +58,58 @@ for ii = 1:20
     fgWrite(OT1,fullfile(AFQdata,subs{ii},'dwi_1st/fibers', [OT1.name,'.mat']))
     fgWrite(OT2,fullfile(AFQdata,subs{ii},'dwi_1st/fibers', [OT2.name,'.mat']))
 end
+
+%% Optic radiation
+for ii = 1:20
+    l1 = dir(fullfile(AFQdata,subs{ii},'dwi_1st/fibers/conTrack/OR_divided/*lh_Ecc0to3*MD4.pdb'));
+    l2 = dir(fullfile(AFQdata,subs{ii},'dwi_1st/fibers/conTrack/OR_divided/*lh_Ecc30to90*MD4.pdb'));
+    
+    r1 = dir(fullfile(AFQdata,subs{ii},'dwi_1st/fibers/conTrack/OR_divided/*rh_Ecc0to3*MD4.pdb'));
+    r2 = dir(fullfile(AFQdata,subs{ii},'dwi_1st/fibers/conTrack/OR_divided/*rh_Ecc30to90*MD4.pdb'));
+    
+    LORC = fgRead(fullfile(AFQdata,subs{ii},'dwi_1st/fibers/conTrack/OR_divided',l1.name));
+    LORC.name = 'LORC_MD4';
+    LORC.pathwayInfo =[];
+    
+    LORP = fgRead(fullfile(AFQdata,subs{ii},'dwi_1st/fibers/conTrack/OR_divided',l2.name));
+    LORP.name = 'LORP_MD4';
+    LORP.pathwayInfo =[];
+    
+    RORC = fgRead(fullfile(AFQdata,subs{ii},'dwi_1st/fibers/conTrack/OR_divided',r1.name));
+    RORC.name = 'RORC_MD4';
+    RORC.pathwayInfo =[];
+    
+    RORP = fgRead(fullfile(AFQdata,subs{ii},'dwi_1st/fibers/conTrack/OR_divided',r2.name));
+    RORP.name = 'RORP_MD4';
+    RORP.pathwayInfo =[];
+    
+    
+%     % AFQ requires more than 5 fibers. if a fiber group is less
+%     NumFibers = length(OT1.fibers);
+%     while length(OT1.fibers)<6;
+%         for jj = 1:NumFibers
+%             OT1.fibers{length(OT2.fibers)+1} = OT1.fibers{jj};
+%         end
+%     end
+%     
+%     OT2 = fgRead(fullfile(AFQdata,subs{ii},'dwi_1st/fibers/OT_MD32',s2.name));
+%     OT2.name = 'ROT_MD32';
+%     OT2.pathwayInfo =[];
+%     
+%     NumFibers = length(OT2.fibers);
+%     while length(OT2.fibers)<6;
+%         for jj = 1:NumFibers
+%             OT2.fibers{length(OT2.fibers)+1} = OT2.fibers{jj};
+%         end
+%     end
+    
+% wright fiber group to under fiber directory
+    fgWrite(LORC,fullfile(AFQdata,subs{ii},'dwi_1st/fibers', [LORC.name,'.mat']))
+    fgWrite(LORP,fullfile(AFQdata,subs{ii},'dwi_1st/fibers', [LORP.name,'.mat']))
+    
+    fgWrite(LORC,fullfile(AFQdata,subs{ii},'dwi_1st/fibers', [RORC.name,'.mat']))
+    fgWrite(LORP,fullfile(AFQdata,subs{ii},'dwi_1st/fibers', [RORP.name,'.mat']))
+end
+
 
 

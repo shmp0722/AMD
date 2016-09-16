@@ -1,16 +1,22 @@
-function ACH_CleanUpTract_OT5K_3(subID)
+function ACH_CleanUpTract_OT5K_3(subject)
 % To get the Optic Tract is able to analyse.
 
 %%
 [homeDir ,subDir, AMD, AMD_Ctl, RP, Ctl] = SubJect;
 
-if notDefined('subID'),
-    subID = 1:length(subDir);
+% %%
+% if ischar(subject); end 
+% 
+% if isnumeric(subject);
+%     subject = 
+
+if notDefined('subject'),
+    subject = 1:length(subDir);
 end
 
 %% dtiIntersectFibers
 % exclude fibers using waypoint ROI
-for ii = subID
+for ii = subject
     % INPUTS
     SubDir=fullfile(homeDir,subDir{ii});
     fgDir = (fullfile(SubDir,'/dwi_1st/fibers/conTrack/OT_5K'));    

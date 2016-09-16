@@ -1,4 +1,4 @@
-function CtrGenOR_Divided(subjectID)
+function CtrGenOR_Divided(nums)
 
 % Generate optic radiation and optic tract with conTrack
 %
@@ -8,32 +8,42 @@ function CtrGenOR_Divided(subjectID)
 % [dMRI, List] = SubJect;
 [dMRI, List, AMD, AMD_Ctl, RP, Ctl] = SubJect;
 
-% nums = [23:24, 34:43]; 
+
 % pick up your interesting subject
-if notDefined('subjectID'),
-    sprintf('Subject is not selected')
-    return
+if notDefined('nums'),
+    nums = [1:8];
 end
 
-% pick up members
-for ii = subjectID
-    Subs{ii} = List{ii};
-    
-    % copy LGN roi from ROIs to fs_Retinotopy2 folder   
-    source1   = sprintf('%s%s',fullfile(dMRI,Subs{ii},'ROIs'),'/Lt-LGN4.mat');
-    destination1 = sprintf('%s%s',fullfile(dMRI,Subs{ii},'/fs_Retinotopy2'),'/Lt-LGN4.mat'); 
-    
-    source2   = sprintf('%s%s',fullfile(dMRI,Subs{ii},'ROIs'),'/Rt-LGN4.mat');
-    destination2 = sprintf('%s%s',fullfile(dMRI,Subs{ii},'/fs_Retinotopy2'),'/Rt-LGN4.mat'); 
-    
-    if ~exist(destination1);
-      copyfile(source1, destination1);
-    end
-    
-    if ~exist(destination2);
-      copyfile(source2, destination2);
-    end
+for ii = 1:length(nums)
+    Subs{ii} = List{nums(ii)};
 end
+
+% % nums = [23:24, 34:43]; 
+% % pick up your interesting subject
+% if notDefined('subjectID'),
+%     sprintf('Subject is not selected')
+%     return
+% end
+% 
+% % pick up members
+% for ii = subjectID
+%     Subs{ii} = List{ii};
+%     
+%     % copy LGN roi from ROIs to fs_Retinotopy2 folder   
+%     source1   = sprintf('%s%s',fullfile(dMRI,Subs{ii},'ROIs'),'/Lt-LGN4.mat');
+%     destination1 = sprintf('%s%s',fullfile(dMRI,Subs{ii},'/fs_Retinotopy2'),'/Lt-LGN4.mat'); 
+%     
+%     source2   = sprintf('%s%s',fullfile(dMRI,Subs{ii},'ROIs'),'/Rt-LGN4.mat');
+%     destination2 = sprintf('%s%s',fullfile(dMRI,Subs{ii},'/fs_Retinotopy2'),'/Rt-LGN4.mat'); 
+%     
+%     if ~exist(destination1);
+%       copyfile(source1, destination1);
+%     end
+%     
+%     if ~exist(destination2);
+%       copyfile(source2, destination2);
+%     end
+% end
 
 %% Optic Radiation
 % Set Params for contrack fiber generation
@@ -49,7 +59,7 @@ ctrParams.dtDir = 'dwi_1st';
 ctrParams.roiDir = '/fs_Retinotopy2';
 
 % pick up subjects
-ctrParams.subs = subjectID;
+ctrParams.subs = Subs;
 
 % set parameter
 ctrParams.roi1 = {'Lt-LGN4','Lt-LGN4','Lt-LGN4','Rt-LGN4','Rt-LGN4','Rt-LGN4'};
