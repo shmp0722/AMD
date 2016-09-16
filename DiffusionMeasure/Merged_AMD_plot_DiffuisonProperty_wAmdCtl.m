@@ -12,17 +12,16 @@ function Merged_AMD_plot_DiffuisonProperty_wAmdCtl(fibID,SavePath)
 
 %% Identify the directories and subject types in the study
 % The full call can be
-[homeDir, ~, AMD, AMD_Ctl, ~, Ctl] = SubJect;
+% [~, ~, AMD, AMD_Ctl, ~, Ctl] = SubJect;
 
 % Load ACH data
-TPdata = '/media/HDPC-UT/dMRI_data/Results/ACH_0210.mat';
-load(TPdata);
+% TPdata = '/media/HDPC-UT/dMRI_data/Results/ACH_0210.mat';
+% load(TPdata);
 
-%
-% if notDefined('vals')
-%     vals = 'fa';
-% end
-
+load ACH_0210.mat
+AMD= 1:8;
+AMD_Ctl = 9:20;
+%% argument check
 if notDefined('fibID')
     fibID = 1;
 end
