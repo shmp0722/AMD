@@ -1,27 +1,21 @@
 function Merged_AMD_plot(fibID,SavePath)
-% Plot figure 5 showing individual FA value along the core of OR and optic tract.
+% individual FA value along the core of OR and optic tract.
 %
 % Repository dependencies
 %    VISTASOFT
 %    AFQ
-%    LHON2
+%    shmp0722/AMD  
 %
-% SO Vista lab, 2014
 %
 % Shumpei Ogawa 2014
 
-%% Identify the directories and subject types in the study
-% The full call can be
-% [~, ~, AMD, AMD_Ctl, ~, Ctl] = SubJect;
-
-% Load ACH data
-% TPdata = '/media/HDPC-UT/dMRI_data/Results/ACH_0210.mat';
-% load(TPdata);
-
+%% load raw data and subjects
 load ACH_0210.mat
-AMD= 1:8;
+AMD = 1:8;
 AMD_Ctl = 9:20;
 %% argument check
+fbName = {'L-OT','R-OT','L-OR','R-OR','LOR0-3','ROR0-3','LOR15-30','ROR15-30'...
+    'LOR30-90','ROR30-90'};
 if notDefined('fibID')
     fibID = 1;
 end
@@ -32,46 +26,41 @@ end
 
 %% Figure
 % indivisual FA value along optic tract
-% if fibID< 5,
-% take values
-fbName = {'L-OT','R-OT','L-OR','R-OR','LOR0-3','ROR0-3','LOR15-30','ROR15-30'...
-    'LOR30-90','ROR30-90'};
-% package to cnotain
+
+% container
 nodes =  length(ACH{10,fibID}.vals.fa);
 fa = nan(length(ACH), nodes);
 md = fa;
 ad = fa;
 rd = fa;
 
-%%
-% make one sheet diffusivity
-% merge both hemisphere
+%% get values and merge both hemisphere
 for subID = 1:length(ACH);
     if isempty(ACH{subID,fibID});
         fa(subID,:) =nan(1,nodes);
     else
-        fa(subID,:) =  mean([ACH{subID,fibID}.vals.fa;...
+        fa(subID,:) =  nanmean([ACH{subID,fibID}.vals.fa;...
             ACH{subID,fibID+1}.vals.fa]);
     end;
     
     if isempty(ACH{subID,fibID});
         md(subID,:) =nan(1,nodes);
     else
-        md(subID,:) = mean([ ACH{subID,fibID}.vals.md;...
+        md(subID,:) = nanmean([ ACH{subID,fibID}.vals.md;...
             ACH{subID,fibID+1}.vals.md]);
     end;
     
     if isempty(ACH{subID,fibID});
         rd(subID,:) =nan(1,nodes);
     else
-        rd(subID,:) = mean([ ACH{subID,fibID}.vals.rd;...
+        rd(subID,:) = nanmean([ ACH{subID,fibID}.vals.rd;...
             ACH{subID,fibID+1}.vals.rd]);
     end;
     
     if isempty(ACH{subID,fibID});
         ad(subID,:) =nan(1,nodes);
     else
-        ad(subID,:) = mean([ ACH{subID,fibID}.vals.ad;...
+        ad(subID,:) = nanmean([ ACH{subID,fibID}.vals.ad;...
             ACH{subID,fibID+1}.vals.ad]);
     end;
 end
