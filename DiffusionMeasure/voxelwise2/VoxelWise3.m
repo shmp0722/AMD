@@ -73,43 +73,24 @@ for ii = 1:length(FN)
     [Peripheral.tests.(FN{ii}).h, ...
      Peripheral.tests.(FN{ii}).p] = ttest2(Peripheral.patients.(FN{ii}),Peripheral.controls.(FN{ii}),'Vartype','unequal');
 end
-%% ttest(2groups)
+% %% ttest(2groups)
+%  
+%  hist(Central.patients.FA)
+%  hist(Central.controls.FA)
  
- hist(Central.patients.FA)
- hist(Central.controls.FA)
- 
-%% central portion
-figure; hold on;
-y(1) =  nanmean(Central.patients.FA); 
-y(2) =  nanmean(Central.controls.FA);
-
-sd(1) = nanstd(Central.patients.FA);
-sd(2) = nanstd(Central.controls.FA);
-
-errorbar([1,2],y,sd)
-
-title('Voxel base comparison')
-set(gca,'YLim',[0 0.6],'YTick',[0 0.6],...
-    'XTickLabel',{'Pa','Ctl'})
-ylabel('FA')
 
 %% Peripheral portion
 
 
 
-%% 
+% 
  [h,p,ci,stats] =ttest2( Central.patients.FA,Central.controls.FA);
  [h,p,ci,stats] =ttest2( Peripheral.patients.FA,Peripheral.controls.FA);
 
-%%
-% FIX FIX FIX Shumpei we need to make sure what comes after here is consistent with the new code above. %
 %% controls vs AMD
 valname = fieldnames(Central);
-
 for v = 1:4
     mrvNewGraphWin
-    % FA
-    % subplot(1,3,1)
     hold on;
     
     % Errorbars
@@ -121,6 +102,13 @@ for v = 1:4
     eb2 = errorbar([1.1, 2.1],[mean(Peripheral.controls.(valname{v}));...
         mean(Peripheral.patients.(valname{v}))],Err2,'bo','markerfacecolor','b','markersize',15);
     
+    % add stats
+    [h(1),p(1),ci(:,1),stats(1)] =...
+        ttest2( Central.patients.(valname{v}),Central.controls.(valname{v}));
+    [h(2),p(2),ci(:,2),stats(2)] =...
+        ttest2( Peripheral.patients.(valname{v}),Peripheral.controls.(valname{v}));
+    
+    
     % title('Central wo intersecting voxels')
     ylabel(sprintf(valname{v}))
     set(gca,'xtick',[1,2],'xtickLabel',{'Control','Patient'}, 'xlim', [.5 2.5],...
@@ -128,87 +116,36 @@ for v = 1:4
     YLIM =  get(gca,'ylim');
     set(gca,'YLim',YLIM,'YTick',YLIM )
     
+    if h(1)==1;
+        plot(1.5,YLIM(2)-.1,'r*');end
+    if h(2)==1;
+        plot(1.5,YLIM(2)-.05,'b*');end
+    
     % legend
    lg1 = legend([eb1,eb2],'Central','Peripheral','Posi');
    set(lg1,'Position',[0.78 0.83 0.2 0.1],'Box','off')
+%    title 'Central 0-3d';
    hold off;
+   
+   saveas(gca,sprintf('Voxelwise_%s.eps',upper(valname{v})),'psc2')
+   saveas(gca,sprintf('Voxelwise_%s.png',upper(valname{v})))
+   clear h p ci stats
 end
-% 
-% % AD
-% % subplot(1,3,2)
-% hold on;
-% Err1 = [std(Central.controls.AD),std(Central.patients.AD)];
-% eb1 = errorbar([.9,1.9],[mean(Central.controls.AD);mean(Central.patients.AD)],Err1,'ro','markerfacecolor','r','markersize',15);
-% 
-% Err2 = [std(Peripheral.controls.AD),std(Peripheral.patients.AD)];
-% eb2 = errorbar([1.1, 2.1],[mean(Peripheral.controls.AD);mean(Peripheral.patients.AD)],Err2,'bo','markerfacecolor','b','markersize',15);
-% 
-% % title('Central wo intersecting voxels')
-% ylabel('AD')
-% set(gca,'xtick',[1,2],'xtickLabel',{'Control','Patient'}, 'xlim', [.5 2.5],... 
-% 'tickdir','out');
-% YLIM =  get(gca,'ylim');
-% set(gca,'YLim',YLIM,'YTick',YLIM )
-% end
-% 
-% % RD
-% subplot(1,3,3)
-% hold on;
-% Err1 = [std(Central.controls.RD),std(Central.patients.RD)];
-% eb1 = errorbar([.9,1.9],[mean(Central.controls.RD);mean(Central.patients.RD)],Err1,'ro','markerfacecolor','r','markersize',15);
-% 
-% Err2 = [std(Peripheral.controls.RD),std(Peripheral.patients.RD)];
-% eb2 = errorbar([1.1, 2.1],[mean(Peripheral.controls.RD);mean(Peripheral.patients.RD)],Err2,'bo','markerfacecolor','b','markersize',15);
-% 
-% % title('Central wo intersecting voxels')
-% ylabel('RD')
-% set(gca,'xtick',[1,2],'xtickLabel',{'Control','Patient'}, 'xlim', [.5 2.5],... 
-% 'tickdir','out');
-% YLIM =  get(gca,'ylim');
-% set(gca,'YLim',YLIM,'YTick',YLIM )
-% end
 
+%% boxplot
 
-
-lg1 = legend([eb1,eb2],'Central','Peripheral','Posi');
-set(lg1,'Position',[0.78 0.83 0.2 0.1],'Box','off')
-hold off;
-
-%%
-saveas(gca,'CentralwoIntersectingVoxels.eps','psc2')
-
-%% Intersect
-mrvNewGraphWin
-hold on;
-x = [1,2];
-y = nanmean(Intsct.FA,2);
-
-h =bar(x,[mean(y(1:8)),mean(y(9:20))],0.3);
-
-title('Intersecting voxels')
-ylabel('FA')
-set(gca,'xtick',[1,2],'xtickLabel',{'Patient','Healthy'})
-set(gca,'ytick',[0:0.1:0.3]);
-hold off;
-
-saveas(gca,'IntersectingVoxels.eps','psc2')
-%% Peripheral
-mrvNewGraphWin
-hold on;
-x = [1,2];
-y = nanmean(Peripheral.FA,2);
-
-h =bar(x,[mean(y(1:8)),mean(y(9:20))],0.3);
-
-title('Peripheral wo intersecting voxels')
-ylabel('FA')
-set(gca,'xtick',[1,2],'xtickLabel',{'Patient','Healthy'})
-set(gca,'ytick',[0:0.1:0.3]);
-hold off;
-
-saveas(gca,'PeripheralwoIntersectingVoxels.eps','psc2')
-
-
+valname = fieldnames(Central);
+for v = 1:4
+    mrvNewGraphWin
+    hold on;
+    
+    % must be same size
+    
+    Pa  = nan(size(Central.controls.(valname{v})));
+    Pa(1:length(Central.patients.(valname{v})),1)= Central.patients.(valname{v});
+     boxplot(Central.controls.(valname{v}),Pa);
+    
+    
 
 
 %%
