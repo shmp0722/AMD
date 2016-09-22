@@ -42,11 +42,11 @@ for ii = 1:length(segFile)
 end
 
 %% Get V1, V2 and MT ROIs
-%   fsDir          = getenv('SUBJECTS_DIR');
-SUBJECTS_DIR = fullfile(fsDir,subjID);
+  fsDir          = getenv('SUBJECTS_DIR');
+ SUBJECTS_DIR = fullfile(fsDir,subjID);
 
 % Grab the label file
-labelFileDir =  fullfile(SUBJECTS_DIR,'label');
+labelFileDir =  fullfile(SUBJECTS_DIR,subjID,'label');
 labelFileNames = {'lh.V1.label','rh.V1.label','lh.MT.label','rh.MT.label'};
 
 % Create nifti and mat ROI
