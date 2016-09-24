@@ -8,7 +8,7 @@ function AMD_AFQ_WBsegmented
 
 %% load afq structure
 
-load /home/ganka/git/AMD/afq/afq_13-Sep-2016.mat
+load afq_21-Sep-2016.mat
 
 %% Which nodes and vals to analyze
 
@@ -21,15 +21,6 @@ valname = {'fa' 'md' 'rd' 'ad'};
 % Get number of fiber groups and their names
 nfg = AFQ_get(afq,'nfg');% nfg = 28;
 fgNames = AFQ_get(afq,'fgnames');
-
-% % Set the views for each fiber group
-% fgviews = {'leftsag', 'rightsag', 'leftsag', 'rightsag', ...
-%     'leftsag', 'rightsag', 'leftsag', 'rightsag', 'axial', 'axial',...
-%     'leftsag', 'rightsag', 'leftsag', 'rightsag',  'leftsag', 'rightsag'...
-%     'leftsag', 'rightsag', 'leftsag', 'rightsag'};
-% % Slices to add to the rendering
-% slices = [-5 0 0; 5 0 0; -5 0 0; 5 0 0; -5 0 0; 5 0 0; -5 0 0; 5 0 0;...
-%     0 0 -5; 0 0 -5; -5 0 0; 5 0 0; -5 0 0; 5 0 0; -5 0 0; 5 0 0; -5 0 0; 5 0 0; -5 0 0; 5 0 0];
 
 % Set the colormap and color range for the renderings
 cmap = AFQ_colormap('bgr');
@@ -44,7 +35,7 @@ for v = 1:length(valname)
     figure; hold('on');
     
     % patient and control data
-%     pVals = AFQ_get(afq,'patient data');
+    %     pVals = AFQ_get(afq,'patient data');
     cVals = AFQ_get(afq,'control data');
     
     % Loop over each fiber group
@@ -68,7 +59,7 @@ for v = 1:length(valname)
         fill(x,y2, [.6 .6 .6],'edgecolor',[0 0 0]);
         fill(x,y1,[.4 .4 .4] ,'edgecolor',[0 0 0]);
         
-        % plot individual means    
+        % plot individual means
         for jj = 1:sum(afq.sub_group)
             vals_cur = vals_p(jj,nodes);
             m_curr   = nanmean(vals_cur);
@@ -97,3 +88,166 @@ for v = 1:length(valname)
     saveas(gca,sprintf('%s.eps',upper(valname{v})),'psc2')
 end
 return
+
+
+%% 2nd, merge both hemisphere
+
+Merged = [1,3,5,7,9,10,11,13,15,17,18];
+
+%% Loop over the different values
+for v = 1:length(valname)
+    % Open a new figure window for the mean plot
+    figure; hold('on');
+    
+    % patient and control data
+    %     pVals = AFQ_get(afq,'patient data');
+    cVals = AFQ_get(afq,'control data');
+    
+    % Loop over each fiber group
+    for ii = Merged
+        
+        % Merging if bilateral
+        switch ii
+            case 9,10
+                % Get the values for the patient and compute the mean
+                vals_p = AFQ_get(afq,fgNames{ii},valname{v});
+                % Get the value for each control and compute the mean
+                vals_c = cVals(ii).(upper(valname{v}));
+                vals_c = vals_c(:,nodes);
+                vals_cm = nanmean(vals_c,2);
+                
+            otherwise
+                vals_p = (AFQ_get(afq,fgNames{ii},valname{v})+AFQ_get(afq,fgNames{ii+1},valname{v}))/2;
+                % Get the value for each control and compute the mean
+                vals_c = nanmean([cVals(ii).(upper(valname{v}));cVals(ii+1).(upper(valname{v}))]);
+                vals_c = vals_c(:,nodes);
+                vals_cm = nanmean(vals_c,2);
+        end
+        
+%         % Get the value for each control and compute the mean
+%         vals_c = cVals(ii).(upper(valname{v}));
+%         vals_c = vals_c(:,nodes);
+%         vals_cm = nanmean(vals_c,2);
+        
+        % Compute control group mean and sd
+        m = nanmean(vals_cm);
+        sd = nanstd(vals_cm);
+        
+        X = find(Merged==ii);
+        
+        % Plot control group means and sd
+        x = [X-.2 X+.2 X+.2 X-.2 X-.2];
+        y1 = [m-sd m-sd m+sd m+sd m-sd];
+        y2 = [m-2*sd m-2*sd m+2*sd m+2*sd m-2*sd];
+        fill(x,y2, [.6 .6 .6],'edgecolor',[0 0 0]);
+        fill(x,y1,[.4 .4 .4] ,'edgecolor',[0 0 0]);
+        
+        % plot individual means
+        for jj = 1:sum(afq.sub_group)
+            vals_cur = vals_p(jj,nodes);
+            m_curr   = nanmean(vals_cur);
+            % Define the color of the point for the fiber group based on its zscore
+            tractcol = vals2colormap((m_curr - m)./sd,cmap,crange);
+            
+            % Plot patient mean as a circle
+            plot(ii, m_curr,'ko', 'markerfacecolor',tractcol,'MarkerSize',6);
+        end
+    end
+    
+    
+    %% make fgnames shorter
+    %     newfgNames = {'l-TR','r-TR','l-C','r-C','l-CC','r-CC','l-CH','r-CH','CFMa',...
+    %         'CFMi','l-IFOF','r-IFOF','l-ILF','r-ILF','l-SLF','r-SLF','l-U','r-U',...
+    %         'l-A','r-A'};
+    
+    %     set(gca,'xtick',1:nfg,'xticklabel',newfgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
+    set(gca,'xtick',1:nfg,'xticklabel',fgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
+    set(gca, 'XTickLabelRotation',90)
+    ylabel(upper(valname{v}));
+    
+    h = colorbar('AxisLocation','out');
+    h.Label.String = 'z score';
+    
+    saveas(gca,sprintf('%s.eps',upper(valname{v})),'psc2')
+end
+
+
+
+%% Focus on Visual pathways
+Focus  = [9,10,29,31,33,35];
+Merged = [1,3,5,7,9,10,11,13,15,17,18];
+CC     = [21:28];
+
+%% Focus
+for v = 1:length(valname)
+    % Open a new figure window for the mean plot
+    figure; hold('on');
+    
+    % patient and control data
+    %     pVals = AFQ_get(afq,'patient data');
+    cVals = AFQ_get(afq,'control data');
+    
+    % Loop over each fiber group
+    for ii = Focus %1:nfg
+        % Get the value for each control and compute the mean
+        vals_c = cVals(ii).(upper(valname{v}));
+        vals_c = vals_c(:,nodes);
+        vals_cm = nanmean(vals_c,2);
+        
+        % Compute control group mean and sd
+        m = nanmean(vals_cm);
+        sd = nanstd(vals_cm);
+        
+        % Plot control group means and sd
+        z= find(Focus==ii)
+        x = [z-.2 z+.2 z+.2 z-.2 z-.2];
+        
+        y1 = [m-sd m-sd m+sd m+sd m-sd];
+        y2 = [m-2*sd m-2*sd m+2*sd m+2*sd m-2*sd];
+        fill(x,y2, [.6 .6 .6],'edgecolor',[0 0 0]);
+        fill(x,y1,[.4 .4 .4] ,'edgecolor',[0 0 0]);
+        %     end
+        
+        %% add Individual subject
+        for ii = Focus %1:nfg
+            
+            % plot individual means
+            for jj = 1:sum(afq.sub_group)
+                if v<28
+                    % Get the values for the patient and compute the mean
+                    vals_p = AFQ_get(afq,fgNames{ii},valname{v});
+                    vals_cur = vals_p(jj,nodes);
+                else
+                    % merged both hemi
+                    vals_p = AFQ_get(afq,fgNames{ii},valname{v});
+                    vals_p2 = AFQ_get(afq,fgNames{ii+1},valname{v});
+                    
+                    vals_cur = nanmean([vals_p(jj,nodes);vals_p2(jj,nodes)],1);
+                end
+                
+                m_curr   = nanmean(vals_cur);
+                % Define the color of the point for the fiber group based on its zscore
+                tractcol = vals2colormap((m_curr - m)./sd,cmap,crange);
+                
+                % Plot patient mean as a circle
+                plot(z, m_curr,'ko', 'markerfacecolor',tractcol,'MarkerSize',6);
+            end
+        end
+        %% make fgnames shorter
+        %     newfgNames = {'l-TR','r-TR','l-C','r-C','l-CC','r-CC','l-CH','r-CH','CFMa',...
+        %         'CFMi','l-IFOF','r-IFOF','l-ILF','r-ILF','l-SLF','r-SLF','l-U','r-U',...
+        %         'l-A','r-A'};
+        
+        %     set(gca,'xtick',1:nfg,'xticklabel',newfgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
+        set(gca,'xtick',1:nfg,'xticklabel',fgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
+        set(gca, 'XTickLabelRotation',90)
+        ylabel(upper(valname{v}));
+        
+        h = colorbar('AxisLocation','out');
+        h.Label.String = 'z score';
+        
+        saveas(gca,sprintf('%s.eps',upper(valname{v})),'psc2')
+    end
+end
+    return
+    

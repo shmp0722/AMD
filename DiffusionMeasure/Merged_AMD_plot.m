@@ -152,9 +152,14 @@ end
 % clear h
 % Save current figure
 if ~isempty(SavePath)
-    saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
+    saveas(gca,fullfile(SavePath, [vals,'_',T.String,'.eps']),'epsc')
+%         saveas(G,fullfile(SavePath, [vals,'_',T.String,'.ai']))
+
     %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
 end
+
+
+return
 
 %% AD
 %
