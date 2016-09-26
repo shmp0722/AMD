@@ -2,7 +2,9 @@
 
 load ACH.mat
 read_AMD_VA
-%
+
+
+% remind fiber ordering and give merged name
 fbName = {'L-OT','R-OT','L-OR','R-OR','LOR0-3','ROR0-3','LOR15-30','ROR15-30'...
     'LOR30-90','ROR30-90'};
 
@@ -14,7 +16,7 @@ if notDefined('fibID')
     fibID = [3,5,7,9];
 end
 
-%
+% merged both hemisphere
 for v =1:length(fibID)
     % get values and merge both hemisphere
     for subID = 1:20;
@@ -32,6 +34,7 @@ for v =1:length(fibID)
         
     end
     
+    % unite diffusion properties for anlyze
     switch v
         case 1
             val_OR = struct;
