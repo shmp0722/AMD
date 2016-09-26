@@ -63,7 +63,7 @@ for v =1:length(fibID)
     clear fa md ad rd;
 end
 
-%% correlation val_OR and logMARVARL
+%% Pearson correlation val_OR and logMARVARL
 c = lines(4);
 figure; hold on;
 
@@ -73,8 +73,8 @@ for k = 1:length(valname)
         if p(ii)<0.05
             plot(ii,r(ii),'o','color',c(k,:),'markersize',15);end
     end
-    plot(r,'color',c(k,:),'linewidth',1)
-  
+    l(k) = plot(r,'color',c(k,:),'linewidth',1);
+    
 end
 
 % add
@@ -85,6 +85,7 @@ plot([0 100],[0 0],'-k')
 ylabel('r')
 title(Merged{1})
 hold off;
+clear l
 
 saveas(gca,'OR_BCVA.eps','epsc')
 %% correlation val_OR03 and logMARVARL
@@ -94,12 +95,12 @@ c = lines(4);
 for k = 1:length(valname)
     for ii =1: length(val_OR03.fa)
         [r(ii),p(ii)] = corr(val_OR03.(valname{k})(1:8,ii),logMARVARL);
-         if p(ii)<0.05
+        if p(ii)<0.05
             plot(ii,r(ii),'o','color',c(k,:),'markersize',15);end
     end
     
-    plot(r,'color',c(k,:),'linewidth',1)
-  
+    l(k) = plot(r,'color',c(k,:),'linewidth',1);
+    
 end
 
 % legend(valname)
@@ -111,7 +112,9 @@ plot([0 100],[0 0],'-k')
 ylabel('r')
 title(Merged{2})
 hold off;
+legend([l(1),l(2),l(3)],valname)
 
+clear l
 saveas(gca,'OR03_BCVA.eps','epsc')
 
 %% correlation val_OR15 and logMARVARL
@@ -121,12 +124,12 @@ c = lines(4);
 for k = 1:length(valname)
     for ii =1: length(val_OR15.fa)
         [r(ii),p(ii)] = corr(val_OR15.(valname{k})(1:8,ii),logMARVARL);
-         if p(ii)<0.05
+        if p(ii)<0.05
             plot(ii,r(ii),'o','color',c(k,:),'markersize',15);end
     end
     
-    plot(r,'color',c(k,:),'linewidth',1)
-  
+    l(k)= plot(r,'color',c(k,:),'linewidth',1);
+    
 end
 
 % legend(valname)
@@ -139,6 +142,9 @@ ylabel('r')
 title(Merged{3})
 hold off;
 
+legend([l(1),l(2),l(3)],valname)
+
+
 saveas(gca,'OR15_BCVA.eps','epsc')
 
 %% correlation val_OR90 and logMARVARL
@@ -148,12 +154,12 @@ c = lines(4);
 for k = 1:length(valname)
     for ii =1: length(val_OR90.fa)
         [r(ii),p(ii)] = corr(val_OR90.(valname{k})(1:8,ii),logMARVARL);
-         if p(ii)<0.05
+        if p(ii)<0.05
             plot(ii,r(ii),'o','color',c(k,:),'markersize',15);end
     end
     
-    plot(r,'color',c(k,:),'linewidth',1)
-  
+    l(k)= plot(r,'color',c(k,:),'linewidth',1);
+    
 end
 
 % legend(valname)
@@ -164,19 +170,23 @@ plot([0 100],[0 0],'-k')
 
 ylabel('r')
 title(Merged{4})
+legend([l(1),l(2),l(3)],valname)
+
 hold off;
+
+
 
 saveas(gca,'OR90_BCVA.eps','epsc')
 
 %%
 for k = 1:length(valname)
-
-figure; hold on;
-c = lines(4);
+    
+    figure; hold on;
+    c = lines(4);
     % 03
     for ii =1: length(val_OR03.fa)
         [r(ii),p(ii)] = corr(val_OR03.(valname{k})(1:8,ii),logMARVARL);
-         if p(ii)<0.05
+        if p(ii)<0.05
             plot(ii,r(ii),'o','color',c(1,:),'markersize',15);end
     end
     
@@ -185,30 +195,31 @@ c = lines(4);
     % 15
     for ii =1: length(val_OR15.fa)
         [r(ii),p(ii)] = corr(val_OR15.(valname{k})(1:8,ii),logMARVARL);
-         if p(ii)<0.05
+        if p(ii)<0.05
             plot(ii,r(ii),'o','color',c(2,:),'markersize',15);end
     end
     
-   l2 = plot(r,'color',c(2,:),'linewidth',1);
+    l2 = plot(r,'color',c(2,:),'linewidth',1);
     
     % 90
-     for ii =1: length(val_OR90.fa)
+    for ii =1: length(val_OR90.fa)
         [r(ii),p(ii)] = corr(val_OR90.(valname{k})(1:8,ii),logMARVARL);
-         if p(ii)<0.05
+        if p(ii)<0.05
             plot(ii,r(ii),'o','color',c(3,:),'markersize',15);end
     end
     
     l3 = plot(r,'color',c(3,:),'linewidth',1);
     
     set(gca,'YLim',[-1 1],'YTick',[-1:0.5:1],'TickDir','out','XLim',[6 45],'XTick','')
-plot([0 100],[0 0],'-k')
-
-ylabel('r')
-xlabel('Location')
-title(upper(valname{k}))
-
+    plot([0 100],[0 0],'-k')
+    
+    ylabel('r')
+    xlabel('Location')
+    title(upper(valname{k}))
+    
     legend([l1,l2,l3],'0-3','15-30','30-90')
+    
+    saveas(gca,sprintf('ThreeEcc_%s.eps',upper(valname{k})),'epsc')
     
 end
 
-  
