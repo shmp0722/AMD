@@ -29,13 +29,13 @@ end
 
 % container
 nodes =  length(ACH{10,fibID}.vals.fa);
-fa = nan(length(ACH), nodes);
+fa = nan(20, nodes);
 md = fa;
 ad = fa;
 rd = fa;
 
 %% get values and merge both hemisphere
-for subID = 1:length(ACH);
+for subID = 1:20;
     if isempty(ACH{subID,fibID});
         fa(subID,:) =nan(1,nodes);
     else
@@ -65,27 +65,18 @@ for subID = 1:length(ACH);
     end;
 end
 
+
 %% FA
 val_AC = fa(AMD_Ctl,:);
 val_AMD = fa(AMD,:);
 AMD_data  = val_AMD;
 vals ='fa';
 
-% Wilcoxon Single rank test
-group =2;
-M = length(AMD_Ctl);
-pac = nan(M,group);
-
+% Wilcoxon rank sum rank test
 for jj= 1: nodes
     
-    pac(:,1)= val_AC(:,jj);
-    pac(1:8,2)= val_AMD(:,jj);
+    [~,h(jj)] = ranksum(val_AC(:,jj),val_AMD(:,jj));
     
-    % Wilcoxon signed rank test
-    [p(jj),h(jj),~] = signrank(pac(:,1),pac(:,2));
-    %     [P(jj),H(jj),~] =          ttest(pac(:,1),pac(:,2));
-    %     co = multcompare(stats(jj),'display','off');
-    %     C{jj}=co;
 end
 
 % logical 2 double
@@ -153,9 +144,6 @@ end
 % Save current figure
 if ~isempty(SavePath)
     saveas(gca,fullfile(SavePath, [vals,'_',T.String,'.eps']),'epsc')
-%         saveas(G,fullfile(SavePath, [vals,'_',T.String,'.ai']))
-
-    %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
 end
 
 
@@ -168,22 +156,12 @@ val_AC = ad(AMD_Ctl,:);
 val_AMD = ad(AMD,:);
 AMD_data  = val_AMD;
 
-%% Wilcoxon Single rank test
-% container
-group =2;
-M = length(AMD_Ctl);
-pac = nan(M,group);
-
-clear h
+%% Wilcoxon sum rank test
 
 for jj= 1: nodes
-    
-    pac(:,1)= val_AC(:,jj);
-    pac(1:8,2)= val_AMD(:,jj);
-    
-    [p(jj),h(jj),~] = signrank(pac(:,1),pac(:,2));
-    %     co = multcompare(stats(jj),'display','off');
-    %     C{jj}=co;
+   
+    [p(jj),h(jj),~] = ranksum(val_AC(:,jj),val_AMD(:,jj));
+  
 end
 
 % change logical to double
@@ -263,20 +241,10 @@ AMD_data  = val_AMD;
 
 %% Wilcoxon Single rank test
 % container
-group =2;
-M = length(AMD_Ctl);
-pac = nan(M,group);
-
 clear h
 
 for jj= 1: nodes
-    
-    pac(:,1)= val_AC(:,jj);
-    pac(1:8,2)= val_AMD(:,jj);
-    
-    [p(jj),h(jj),~] = signrank(pac(:,1),pac(:,2));
-    %     co = multcompare(stats(jj),'display','off');
-    %     C{jj}=co;
+    [p(jj),h(jj),~] = ranksum(val_AC(:,jj),val_AMD(:,jj));
 end
 
 % logical 2 double

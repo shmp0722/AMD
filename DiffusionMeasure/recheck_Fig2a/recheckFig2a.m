@@ -29,13 +29,13 @@ plot(M+SD,'--','color',[.7 .7 .7])
 plot(M-SD,'--','color',[.7 .7 .7])
 
 % stats
-% Wilcoxon signed rank test
-
+% Wilcoxon rank sum test
 nodes = length(data);
 for jj= 1: nodes    
     
     % Wilcoxon signed rank test
-    [p(jj),h(jj),~] = signrank([data(1:8,jj);nan(4,1)],data(9:20,jj));
+%     [p(jj),h(jj),~] = signrank([data(1:8,jj);nan(4,1)],data(9:20,jj));
+     [p(jj),h(jj)] =ranksum([data(1:8,jj);nan(4,1)],data(9:20,jj));
     
     % ttest
     [H(jj),P(jj),~] = ttest2(data(1:8,jj),data(9:20,jj));

@@ -1,4 +1,4 @@
-function Merged_AMD_plot_DiffuisonProperty_wAmdCtl(fibID,SavePath)
+function Merged_AMD_plot_DiffuisonProperty_wAmdCtl(fibID,vals,SavePath)
 % Plot figure 5 showing individual FA value along the core of OR and optic tract.
 %
 % Repository dependencies
@@ -11,13 +11,6 @@ function Merged_AMD_plot_DiffuisonProperty_wAmdCtl(fibID,SavePath)
 % Shumpei Ogawa 2014
 
 %% Identify the directories and subject types in the study
-% The full call can be
-% [~, ~, AMD, AMD_Ctl, ~, Ctl] = SubJect;
-
-% Load ACH data
-% TPdata = '/media/HDPC-UT/dMRI_data/Results/ACH_0210.mat';
-% load(TPdata);
-
 load ACH_0210.mat
 AMD= 1:8;
 AMD_Ctl = 9:20;
@@ -30,6 +23,10 @@ if notDefined('SavePath')
     SavePath = pwd;
 end
 
+if notDefined('vals')
+    vals = 'fa';
+end
+
 %% Figure
 % indivisual FA value along optic tract
 % if fibID< 5,
@@ -38,7 +35,7 @@ fbName = {'L-OT','R-OT','L-OR','R-OR','LOR0-3','ROR0-3','LOR15-30','ROR15-30'...
     'LOR30-90','ROR30-90'};
 % package to cnotain
 nodes =  length(ACH{10,fibID}.vals.fa);
-fa = nan(length(ACH), nodes);
+fa = nan(20, nodes);
 md = fa;
 ad = fa;
 rd = fa;
@@ -46,7 +43,7 @@ rd = fa;
 %%
 % make one sheet diffusivity
 % merge both hemisphere
-for subID = 1:length(ACH);
+for subID = 1:20;
     if isempty(ACH{subID,fibID});
         fa(subID,:) =nan(1,nodes);
     else
@@ -77,25 +74,11 @@ for subID = 1:length(ACH);
 end
 
 %% FA
-val_AC = fa(AMD_Ctl,:);
-val_AMD = fa(AMD,:);
-AMD_data  = val_AMD;
-vals ='fa';
-
-% Wilcoxon Single rank test
-group =2;
-M = length(AMD_Ctl);
-pac = nan(M,group);
-
-for jj= 1: nodes
-    
-    pac(:,1)= val_AC(:,jj);
-    pac(1:8,2)= val_AMD(:,jj);
-    
-    [p(jj),h(jj),~] = signrank(pac(:,1),pac(:,2));
-            [P(jj),H(jj),~] =          ttest(pac(:,1),pac(:,2));
-    %     co = multcompare(stats(jj),'display','off');
-    %     C{jj}=co;
+val_AMD =  fa(1:8,:);
+val_AC = fa(9:20,:);
+% wilcoxon sum rank test in each node
+for jj= 1: nodes 
+    [p(jj),h(jj),~] = ranksum(val_AMD(:,jj),val_AC(:,jj));
 end
 
 % logical 2 double
@@ -111,29 +94,24 @@ st = nanstd(val_AC);
 m   = nanmean(val_AC,1);
 
 % render control subjects range
-A3 = area(m+2*st);
-A1 = area(m+st);
-A2 = area(m-st);
-A4 = area(m-2*st);
+A1 = plot(m+st,':','color',[0.6 0.6 0.6]);
+A2 = plot(m-st,':','color',[0.6 0.6 0.6]);
+A3 = plot(m+2*st,':','color',[0.8 0.8 0.8]);
+A4 = plot(m-2*st,':','color',[0.8 0.8 0.8]);
 
-% set color and style
-set(A1,'FaceColor',[0.6 0.6 0.6],'linestyle','none')
-set(A2,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
-set(A3,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
-set(A4,'FaceColor',[1 1 1],'linestyle','none')
-
+% mean 
 plot(m,'color',[0 0 0], 'linewidth',3 )
 
 % add individual FA plot
 for k = 1:length(AMD) %1:length(subDir)
-    plot(X,AMD_data(k,:),'Color',c(k,:),...
+    plot(X,val_AMD(k,:),'Color',c(k,:),...
         'linewidth',1);
 end
-m   = nanmean(AMD_data,1);
+m   = nanmean(val_AMD,1);
 plot(X,m,'Color',c(3,:) ,'linewidth',3)
 
 T = title(sprintf('%s comparing to AMD_C', fbName{fibID}(3:end)));
-ylabel(upper(vals))
+ylabel(upper(val))
 xlabel('Location')
 
 % axis
@@ -144,24 +122,25 @@ switch fibID
     case {1}
         b=[0.1,0.8];
         % set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
-        set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'xtickLabel','');
+        set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
+
         bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
         hold off;
     case {3}
         b=[0,0.8];
-        set(gca,'ylim',b,'yTick',b,'xLim',[11,90],'xtickLabel','');
+        set(gca,'ylim',b,'yTick',b,'xLim',[11,90],'XTick',[11,90],'xtickLabel','');
         bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
         hold off;
     case {5,7,9}
           b=[0,0.8];
-        set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'xtickLabel','');
+        set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6 45],'xtickLabel','');
         bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
         hold off;        
 end
 clear h
 % Save current figure
 if ~isempty(SavePath)
-    saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
+    saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'epsc')
     %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
 end
 
