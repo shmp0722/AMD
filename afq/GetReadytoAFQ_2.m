@@ -66,5 +66,60 @@ for ii = 1:20
     
 end
 
+%%
+%% Eccentricity Optic radiation
+for ii = 1:20
+    l1 = dir(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided/*lh_Ecc0to3*MD3.pdb'));
+%     l3 = dir(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided/*lh_Ecc3to30*MD4.pdb'));
+    l2 = dir(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided/*lh_Ecc30to90*MD3.pdb'));
+    
+    r1 = dir(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided/*rh_Ecc0to3*MD3.pdb'));
+%     r3 = dir(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided/*rh_Ecc3to30*MD4.pdb'));
+    r2 = dir(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided/*rh_Ecc30to90*MD3.pdb'));
+    
+    if length(l1)>1
+        LORC = fgRead(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided',l1(1).name));
+    else
+        LORC = fgRead(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided',l1.name));
+    end
+    LORC.name = 'LORC_MD3';
+    LORC.pathwayInfo =[];
+    
+    if length(l2)>1
+    LORP = fgRead(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided',l2(1).name));
+    else 
+            LORP = fgRead(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided',l2.name));
+    end
+    LORP.name = 'LORP_MD3';
+    LORP.pathwayInfo =[];
+    
+    if length(r1)>1
+        RORC = fgRead(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided',r1(1).name));
+    else
+        RORC = fgRead(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided',r1.name));
+    end
+    RORC.name = 'RORC_MD3';
+    RORC.pathwayInfo =[];
+    
+    if length(r2)>1
+        RORP = fgRead(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided',r2(1).name));
+    else
+        RORP = fgRead(fullfile(dMRI,subs{ii},'dwi_1st/fibers/conTrack/OR_divided',r2.name));
+    end
+    RORP.name = 'RORP_MD3';
+    RORP.pathwayInfo =[];
+    
+    
+    % wright fiber group to under fiber directory
+    fgWrite(LORC,fullfile(dMRI,subs{ii},'dwi_1st/fibers', [LORC.name,'.mat']))
+    fgWrite(LORP,fullfile(dMRI,subs{ii},'dwi_1st/fibers', [LORP.name,'.mat']))
+%     fgWrite(LORM,fullfile(dMRI,subs{ii},'dwi_1st/fibers', [LORM.name,'.mat']))
+    
+    fgWrite(RORC,fullfile(dMRI,subs{ii},'dwi_1st/fibers', [RORC.name,'.mat']))
+    fgWrite(RORP,fullfile(dMRI,subs{ii},'dwi_1st/fibers', [RORP.name,'.mat']))
+%     fgWrite(RORM,fullfile(dMRI,subs{ii},'dwi_1st/fibers', [RORM.name,'.mat']))
+    
+end
+
 
 

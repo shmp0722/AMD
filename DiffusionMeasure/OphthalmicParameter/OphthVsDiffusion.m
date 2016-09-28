@@ -87,6 +87,7 @@ title(Merged{1})
 hold off;
 clear l
 
+saveas(gca,'OR_BCVA.png')
 saveas(gca,'OR_BCVA.eps','epsc')
 %% correlation val_OR03 and logMARVARL
 figure; hold on;
@@ -116,6 +117,8 @@ legend([l(1),l(2),l(3)],valname)
 
 clear l
 saveas(gca,'OR03_BCVA.eps','epsc')
+saveas(gca,'OR03_BCVA.png')
+
 
 %% correlation val_OR15 and logMARVARL
 figure; hold on;
@@ -146,6 +149,8 @@ legend([l(1),l(2),l(3)],valname)
 
 
 saveas(gca,'OR15_BCVA.eps','epsc')
+saveas(gca,'OR15_BCVA.png')
+
 
 %% correlation val_OR90 and logMARVARL
 figure; hold on;
@@ -177,6 +182,8 @@ hold off;
 
 
 saveas(gca,'OR90_BCVA.eps','epsc')
+saveas(gca,'OR90_BCVA.png')
+
 
 %%
 for k = 1:length(valname)
@@ -220,6 +227,8 @@ for k = 1:length(valname)
     legend([l1,l2,l3],'0-3','15-30','30-90')
     
     saveas(gca,sprintf('ThreeEcc_%s.eps',upper(valname{k})),'epsc')
+    saveas(gca,sprintf('ThreeEcc_%s.png',upper(valname{k})))
+
     
 end
 
