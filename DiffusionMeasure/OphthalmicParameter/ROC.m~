@@ -2,7 +2,11 @@
 
 load ACH.mat
 
-read_AMD_VA2
+if exist('/home/ganka','dir')
+    read_AMD_VA
+elseif exist('shumpei','dir')
+    read_AMD_VA2
+end
 
 %
 sub_group =zeros(20,1);
@@ -67,7 +71,7 @@ for v =1:length(fibID)
     clear fa md ad rd;
 end
 
-%% fit a logistic regression model
+%% fit a logistic regression model for FA
 sub_group;
 
 for Nnode = 1:length(val_OR03.fa)
@@ -100,10 +104,102 @@ l3 = plot(AUC90,'color',C(3,:));
 
 xlabel('Number of node')
 ylabel('AUC')
+
+ylim = get(gca,'YLim');
+xlim = get(gca,'XLim');
+xlim = [xlim(2)*.1+1,xlim(2)-xlim(2);
+
+set(gca,'YTick',ylim,'XTick',xlim,'TickDir','out')
+
 legend([l1,l2,l3],'0-3','15-30','30-90')
 title('AUC from FA')
 
+%% fit a logistic regression model for AD
+sub_group;
+
+for Nnode = 1:length(val_OR03.ad)
+    %OR03
+    mdl03 = fitglm(val_OR03.ad(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
+    
+    scores = mdl03.Fitted.Probability;
+    [~,~,~,AUC03(Nnode)] = perfcurve(sub_group,scores,1);
+    clear scores
+   
+    %OR15
+    mdl15 = fitglm(val_OR15.ad(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
+    
+    scores = mdl15.Fitted.Probability;
+    [X,Y,T,AUC15(Nnode)] = perfcurve(sub_group,scores,1);
+     clear scores
+
+    
+    %OR90
+    mdl90 = fitglm(val_OR90.ad(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
+    
+    scores = mdl90.Fitted.Probability;
+    [X,Y,T,AUC90(Nnode)] = perfcurve(sub_group,scores,1);
+    clear scores
+
+end
+clear X Y T
+%% See the result
+figure; hold on;
+C = jet(3);
+l1 = plot(AUC03,'color',C(1,:));
+l2 = plot(AUC15, 'color',C(2,:));
+l3 = plot(AUC90,'color',C(3,:));
+
+xlabel('Number of node')
+ylabel('AUC')
+legend([l1,l2,l3],'0-3','15-30','30-90')
+title('AUC from AD')
+
+
+%% fit a logistic regression model for RD
+sub_group;
+
+for Nnode = 1:length(val_OR03.rd)
+    %OR03
+    mdl03 = fitglm(val_OR03.rd(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
+    
+    scores = mdl03.Fitted.Probability;
+    [~,~,~,AUC03(Nnode)] = perfcurve(sub_group,scores,1);
+    clear scores
+   
+    %OR15
+    mdl15 = fitglm(val_OR15.rd(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
+    
+    scores = mdl15.Fitted.Probability;
+    [X,Y,T,AUC15(Nnode)] = perfcurve(sub_group,scores,1);
+     clear scores
+
+    
+    %OR90
+    mdl90 = fitglm(val_OR90.rd(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
+    
+    scores = mdl90.Fitted.Probability;
+    [X,Y,T,AUC90(Nnode)] = perfcurve(sub_group,scores,1);
+    clear scores
+
+end
+clear X Y T
+% See the result
+figure; hold on;
+C = jet(3);
+l1 = plot(AUC03,'color',C(1,:));
+l2 = plot(AUC15, 'color',C(2,:));
+l3 = plot(AUC90,'color',C(3,:));
+
+xlabel('Number of node')
+ylabel('AUC')
+legend([l1,l2,l3],'0-3','15-30','30-90')
+title('AUC from RD')
+
+
+return
 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % fit a logistic regression
 mdl03 = fitglm(val_OR03.fa,sub_group,'Distribution','binomial','Link','logit');
 score_log = mdl03.Fitted.Probability; % Probability estimates

@@ -2,7 +2,11 @@
 
 load ACH.mat
 
-read_AMD_VA2
+if exist('/home/ganka','dir')
+    read_AMD_VA
+elseif exist('shumpei','dir')
+    read_AMD_VA2
+end
 
 %
 sub_group =zeros(20,1);
@@ -75,33 +79,47 @@ for Nnode = 1:length(val_OR03.fa)
     mdl03 = fitglm(val_OR03.fa(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
     
     scores = mdl03.Fitted.Probability;
-    [~,~,~,AUC03(Nnode)] = perfcurve(sub_group,scores,1);
+    [X03,Y03,T03,AUC03(Nnode)] = perfcurve(sub_group,scores,1);
     
     %OR15
     mdl15 = fitglm(val_OR15.fa(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
     
     scores = mdl15.Fitted.Probability;
-    [X,Y,T,AUC15(Nnode)] = perfcurve(sub_group,scores,1);
+    [X15,Y15,T15,AUC15(Nnode)] = perfcurve(sub_group,scores,1);
     
     %OR90
     mdl90 = fitglm(val_OR90.fa(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
     
     scores = mdl90.Fitted.Probability;
-    [X,Y,T,AUC90(Nnode)] = perfcurve(sub_group,scores,1);
+    [X90,Y90,T90,AUC90(Nnode)] = perfcurve(sub_group,scores,1);
     
 end
-clear X Y T
+
 %% See the result
 figure; hold on;
 C = jet(3);
-l1 = plot(AUC03,'color',C(1,:));
-l2 = plot(AUC15, 'color',C(2,:));
-l3 = plot(AUC90,'color',C(3,:));
+l1 = plot(AUC03,'color',C(1,:),'linewidth',2);
+l2 = plot(AUC15, 'color',C(2,:),'linewidth',2);
+l3 = plot(AUC90,'color',C(3,:),'linewidth',2);
 
 xlabel('Number of node')
 ylabel('AUC')
+
+ylim = get(gca,'YLim');
+
+% remove dirst and last 10% nodes
+xlim = get(gca,'XLim');
+xlim = [xlim(2)*.1+1,xlim(2)-xlim(2)*.1];
+
+set(gca,'YTick',ylim,'XLim',xlim,'XTick',xlim,'TickDir','out')
+
 legend([l1,l2,l3],'0-3','15-30','30-90')
-title('AUC from FA')
+title('AUC from FA in each node')
+
+saveas(gca,'AUCfromFA.eps','epsc')
+saveas(gca,'AUCfromFA.png')
+
+
 
 %% fit a logistic regression model for AD
 sub_group;
