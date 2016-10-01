@@ -16,6 +16,9 @@ if notDefined('fibID')
     fibID = [3,5,7,9];
 end
 
+% for r
+R = struct;
+
 % merged both hemisphere
 for v =1:length(fibID)
     % get values and merge both hemisphere
@@ -87,6 +90,9 @@ title(Merged{1})
 hold off;
 clear l
 
+% keep r value
+R.OR = r;
+clear r
 saveas(gca,'OR_BCVA.png')
 saveas(gca,'OR_BCVA.eps','epsc')
 %% correlation val_OR03 and logMARVARL
@@ -115,7 +121,12 @@ title(Merged{2})
 hold off;
 legend([l(1),l(2),l(3)],valname)
 
-clear l
+% keep r value
+R.OR03 = r;
+
+clear l r;
+
+% save the figure
 saveas(gca,'OR03_BCVA.eps','epsc')
 saveas(gca,'OR03_BCVA.png')
 
@@ -147,6 +158,9 @@ hold off;
 
 legend([l(1),l(2),l(3)],valname)
 
+% keep r value
+R.OR15 = r;
+clear l r;
 
 saveas(gca,'OR15_BCVA.eps','epsc')
 saveas(gca,'OR15_BCVA.png')
@@ -179,11 +193,16 @@ legend([l(1),l(2),l(3)],valname)
 
 hold off;
 
+% keep r value
+R.OR90 = r;
 
+clear l r ;
 
 saveas(gca,'OR90_BCVA.eps','epsc')
 saveas(gca,'OR90_BCVA.png')
 
+%% save 
+save R R
 
 %%
 for k = 1:length(valname)
@@ -231,4 +250,8 @@ for k = 1:length(valname)
 
     
 end
+
+
+
+
 
