@@ -2,7 +2,7 @@
 
 load ACH.mat
 
-% detecting PC
+% detecting PC used
 if exist('/home/ganka','dir')
     read_AMD_VA
 elseif exist('shumpei','dir')
