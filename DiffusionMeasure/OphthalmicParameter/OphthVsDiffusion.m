@@ -1,10 +1,29 @@
+function OphthVsDiffusion(savefig)
+%
+% 
+%
+%
+% SO@ACH 2016.10.03
+
 %% load files
 
+
+
 load ACH.mat
-read_AMD_VA
+
+if exist('ganka','dir')
+    read_AMD_VA
+elseif exist('shumpei','dir')
+    read_AMD_VA2
+end
+
+% argument check
+if notDefined('savefig')
+    savefig = false;
+end
 
 
-% remind fiber ordering and give merged name
+%% remind fiber name ordering and give merged name
 fbName = {'L-OT','R-OT','L-OR','R-OR','LOR0-3','ROR0-3','LOR15-30','ROR15-30'...
     'LOR30-90','ROR30-90'};
 
@@ -22,7 +41,7 @@ R = struct;
 % merged both hemisphere
 for v =1:length(fibID)
     % get values and merge both hemisphere
-    for subID = 1:20;
+    for subID = 1:20; % patients =1:8, healthy = 9;20;
         fa(subID,:) =  nanmean([ACH{subID,fibID(v)}.vals.fa;...
             ACH{subID,fibID(v)+1}.vals.fa]);
         
@@ -73,11 +92,17 @@ figure; hold on;
 for k = 1:length(valname)
     for ii =1: length(val_OR.fa)
         [r(ii),p(ii)] = corr(val_OR.(valname{k})(1:8,ii),logMARVARL);
+       
         if p(ii)<0.05
             plot(ii,r(ii),'o','color',c(k,:),'markersize',15);end
     end
+    % add range of r-value using bootstrap
+     [bootstat,bootsam] = bootstrp(1000,@corr,...
+            val_OR.(valname{k})(1:8,ii),logMARVARL);
     l(k) = plot(r,'color',c(k,:),'linewidth',1);
-    
+    se = std(bootstat);
+    m(k) = plot(r+se,'--','color',c(k,:),'linewidth',1);
+    n(k) = plot(r-se,'--','color',c(k,:),'linewidth',1);
 end
 
 % add
@@ -86,15 +111,18 @@ legend(valname)
 plot([0 100],[0 0],'-k')
 
 ylabel('r')
-title(Merged{1})
+title('corralation ')
 hold off;
 clear l
 
 % keep r value
 R.OR = r;
 clear r
+
+if savefig==1,
 saveas(gca,'OR_BCVA.png')
 saveas(gca,'OR_BCVA.eps','epsc')
+end
 %% correlation val_OR03 and logMARVARL
 figure; hold on;
 c = lines(4);

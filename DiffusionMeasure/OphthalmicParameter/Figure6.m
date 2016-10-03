@@ -71,8 +71,7 @@ rgb = vals2colormap(vals);
     
 %%
 
-
-
+fg  = fgRead('LORC_MD4_SuperFiber.mat');
 % AFQ_RenderFibers(LORC,'numfibers',100,'newfig',0,'color',rgb);
 
 
