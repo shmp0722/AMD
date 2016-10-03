@@ -31,7 +31,7 @@ rgb = vals2colormap(vals);
 
 
     % compute tract profile
-    [fa,md,rd,ad,cl,fgCore]=dtiComputeDiffusionPropertiesAlongFG(LORC, dt6, [], [], 50);
+    [~,~,~,~,~,fgCore]=dtiComputeDiffusionPropertiesAlongFG(LORC, dt6, [], [], 50);
     % Create Tract Profile structure
     TP = AFQ_CreateTractProfile;
     % Set the desired values to the structure
