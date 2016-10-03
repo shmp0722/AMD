@@ -2,6 +2,7 @@
 
 load ACH.mat
 
+% detecting PC
 if exist('/home/ganka','dir')
     read_AMD_VA
 elseif exist('shumpei','dir')
@@ -9,8 +10,9 @@ elseif exist('shumpei','dir')
 end
 
 %
+patient =1:8;
 sub_group =zeros(20,1);
-sub_group(1:8,1) =1;
+sub_group(patient,1) =1;
 
 % remind fiber ordering and give merged name
 fbName = {'L-OT','R-OT','L-OR','R-OR','LOR0-3','ROR0-3','LOR15-30','ROR15-30'...
@@ -27,7 +29,7 @@ end
 % merged both hemisphere
 for v =1:length(fibID)
     % get values and merge both hemisphere
-    for subID = 1:20;
+    for subID = 1:20; % patient (8) + healthy (12) subject is 20
         fa(subID,:) =  nanmean([ACH{subID,fibID(v)}.vals.fa;...
             ACH{subID,fibID(v)+1}.vals.fa]);
         
