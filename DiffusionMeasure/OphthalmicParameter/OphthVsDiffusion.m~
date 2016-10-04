@@ -300,7 +300,7 @@ for k = 1:length(valname)
     m(k) = plot(r+se,'--','color',c(3,:),'linewidth',1);
     n(k) = plot(r-se,'--','color',c(3,:),'linewidth',1);
     
-    % make it up
+    
     set(gca,'YLim',[-1 1],'YTick',[-1:0.5:1],'TickDir','out','XLim',[6 45],'XTick','')
     plot([0 100],[0 0],'-k')
     
