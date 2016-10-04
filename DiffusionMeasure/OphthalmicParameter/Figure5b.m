@@ -1,9 +1,9 @@
-function Figure6
+function Figure5b
 %
 % Make Figure6b
 %  
 %
-%
+
 % SO@ACH 2016.9.30
 
 %% Make sure you are under OphthalmicParameter

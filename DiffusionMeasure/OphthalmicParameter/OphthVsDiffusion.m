@@ -7,10 +7,11 @@ function OphthVsDiffusion(savefig)
 
 %% load files
 
-
-
+% load TP structure called ACH
 load ACH.mat
+load R.mat
 
+% load the results of ophthalmic test
 if exist('ganka','dir')
     read_AMD_VA
 elseif exist('shumpei','dir')
@@ -22,7 +23,6 @@ if notDefined('savefig')
     savefig = false;
 end
 
-
 %% remind fiber name ordering and give merged name
 fbName = {'L-OT','R-OT','L-OR','R-OR','LOR0-3','ROR0-3','LOR15-30','ROR15-30'...
     'LOR30-90','ROR30-90'};
@@ -31,59 +31,59 @@ Merged = {'OR','OR03','OR15','OR90'};
 
 valname = {'fa','ad','rd'};
 
-if notDefined('fibID')
-    fibID = [3,5,7,9];
-end
-
-% for r
-R = struct;
-
-% merged both hemisphere
-for v =1:length(fibID)
-    % get values and merge both hemisphere
-    for subID = 1:20; % patients =1:8, healthy = 9;20;
-        fa(subID,:) =  nanmean([ACH{subID,fibID(v)}.vals.fa;...
-            ACH{subID,fibID(v)+1}.vals.fa]);
-        
-        md(subID,:) = nanmean([ ACH{subID,fibID(v)}.vals.md;...
-            ACH{subID,fibID(v)+1}.vals.md]);
-        
-        rd(subID,:) = nanmean([ ACH{subID,fibID(v)}.vals.rd;...
-            ACH{subID,fibID(v)+1}.vals.rd]);
-        
-        ad(subID,:) = nanmean([ ACH{subID,fibID(v)}.vals.ad;...
-            ACH{subID,fibID(v)+1}.vals.ad]);
-        
-    end
-    
-    % unite diffusion properties for anlyze
-    switch v
-        case 1
-            val_OR = struct;
-            val_OR.fa = fa;
-            val_OR.md = md;
-            val_OR.ad = ad;
-            val_OR.rd = rd;
-        case 2
-            val_OR03 = struct;
-            val_OR03.fa = fa;
-            val_OR03.md = md;
-            val_OR03.ad = ad;
-            val_OR03.rd = rd;
-        case 3
-            val_OR15 = struct;
-            val_OR15.fa = fa;
-            val_OR15.md = md;
-            val_OR15.ad = ad;
-            val_OR15.rd = rd;
-        case 4
-            val_OR90.fa = fa;
-            val_OR90.md = md;
-            val_OR90.ad = ad;
-            val_OR90.rd = rd;
-    end
-    clear fa md ad rd;
-end
+% if notDefined('fibID')
+%     fibID = [3,5,7,9];
+% end
+% 
+% % for r
+% R = struct;
+% 
+% % merged both hemisphere
+% for v =1:length(fibID)
+%     % get values and merge both hemisphere
+%     for subID = 1:20; % patients =1:8, healthy = 9;20;
+%         fa(subID,:) =  nanmean([ACH{subID,fibID(v)}.vals.fa;...
+%             ACH{subID,fibID(v)+1}.vals.fa]);
+%         
+%         md(subID,:) = nanmean([ ACH{subID,fibID(v)}.vals.md;...
+%             ACH{subID,fibID(v)+1}.vals.md]);
+%         
+%         rd(subID,:) = nanmean([ ACH{subID,fibID(v)}.vals.rd;...
+%             ACH{subID,fibID(v)+1}.vals.rd]);
+%         
+%         ad(subID,:) = nanmean([ ACH{subID,fibID(v)}.vals.ad;...
+%             ACH{subID,fibID(v)+1}.vals.ad]);
+%         
+%     end
+%     
+%     % unite diffusion properties for anlyze
+%     switch v
+%         case 1
+%             val_OR = struct;
+%             val_OR.fa = fa;
+%             val_OR.md = md;
+%             val_OR.ad = ad;
+%             val_OR.rd = rd;
+%         case 2
+%             val_OR03 = struct;
+%             val_OR03.fa = fa;
+%             val_OR03.md = md;
+%             val_OR03.ad = ad;
+%             val_OR03.rd = rd;
+%         case 3
+%             val_OR15 = struct;
+%             val_OR15.fa = fa;
+%             val_OR15.md = md;
+%             val_OR15.ad = ad;
+%             val_OR15.rd = rd;
+%         case 4
+%             val_OR90.fa = fa;
+%             val_OR90.md = md;
+%             val_OR90.ad = ad;
+%             val_OR90.rd = rd;
+%     end
+%     clear fa md ad rd;
+% end
 
 %% Pearson correlation between val_OR and logMARVARL
 c = lines(4);
@@ -97,7 +97,7 @@ for k = 1:length(valname)
             plot(ii,r(ii),'o','color',c(k,:),'markersize',15);end
     end
     % add the range of r-value using bootstrap
-    [bootstat,bootsam] = bootstrp(1000,@corr,...
+    [bootstat,~] = bootstrp(1000,@corr,...
         val_OR.(valname{k})(1:8,ii),logMARVARL);
     l(k) = plot(r,'color',c(k,:),'linewidth',1);
     se = std(bootstat);
@@ -248,6 +248,8 @@ save R R
 %% compare across ORs based on eccentricity
 for k = 1:length(valname)
     
+%     ORs ={'val_OR03','val_OR15','val_OR90'};
+    
     figure; hold on;
     c = lines(4);
     % 0-3 degree
@@ -318,8 +320,4 @@ for k = 1:length(valname)
     end
     
 end
-
-
-
-
 
