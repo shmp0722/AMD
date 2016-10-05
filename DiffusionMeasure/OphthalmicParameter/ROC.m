@@ -118,7 +118,7 @@ ylim = get(gca,'YLim');
 xlim = get(gca,'XLim');
 xlim = [xlim(2)*.1+1,xlim(2)-xlim(2)*.1];
 
-plot(xlim,[.5 .5],'--','color',[.5 .5 5.5])
+plot(xlim,[.5 .5],'--','color',[.5 .5 .5])
 
 set(gca,'YTick',ylim,'XLim',xlim,'XTick',xlim,'TickDir','out')
 
