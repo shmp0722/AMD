@@ -1,4 +1,4 @@
-function OphthVsDiffusion(savefig)
+function BootstrapFA_LogMAR(BS_times,savefig)
 %
 %
 %
@@ -21,6 +21,10 @@ end
 % argument check
 if notDefined('savefig')
     savefig = false;
+end
+
+if notDefined('BS_times')
+    BS_times = 1000;
 end
 
 %% remind fiber name ordering and give merged name
@@ -85,207 +89,47 @@ for v =1:length(fibID)
     clear fa md ad rd;
 end
 
-%% Pearson correlation between val_OR and logMARVARL
-c = lines(4);
-figure; hold on;
-
-for k = 1:length(valname)
-    for node =1: length(val_OR.fa)
-        [r(node),p(node)] = corr(val_OR.(valname{k})(1:8,node),logMARVARL);
-        
-        if p(node)<0.05
-            plot(node,r(node),'o','color',c(k,:),'markersize',15);end
-    end
-    % add the range of r-value using bootstrap
-    [bootstat,~] = bootstrp(1000,@corr,...
-        val_OR.(valname{k})(1:8,node),logMARVARL);
-    l(k) = plot(r,'color',c(k,:),'linewidth',1);
-    se = std(bootstat);
-    m(k) = plot(r+se,'--','color',c(k,:),'linewidth',1);
-    n(k) = plot(r-se,'--','color',c(k,:),'linewidth',1);
-end
-
-% add
-set(gca,'YLim',[-1 1],'YTick',[-1:0.5:1],'TickDir','out','XLim',[11 90],'XTick','')
-legend(valname)
-plot([0 100],[0 0],'-k')
-
-ylabel('r')
-title('OR')
-hold off;
-clear l
-
-% keep r value
-R.OR = r;
-clear r
-
-% saving figures
-if savefig==1,
-    saveas(gca,'OR_BCVA_boot.png')
-    saveas(gca,'OR_BCVA_boot.eps','epsc')
-    
-    !mv *.png Figure/
-    !mv *.eps Figure/
-end
-%% correlation val_OR03 and logMARVARL
-figure; hold on;
-c = lines(4);
-
-for k = 1:length(valname)
-    for node =1: length(val_OR03.fa)
-        [r(node),p(node)] = corr(val_OR03.(valname{k})(1:8,node),logMARVARL);
-        if p(node)<0.05
-            plot(node,r(node),'o','color',c(k,:),'markersize',15);end
-    end
-    
-    l(k) = plot(r,'color',c(k,:),'linewidth',1);
-    
-end
-
-% legend(valname)
-
-% add
-set(gca,'YLim',[-1 1],'YTick',[-1:0.5:1],'TickDir','out','XLim',[6 45],'XTick','')
-plot([0 100],[0 0],'-k')
-
-ylabel('r')
-title(Merged{2})
-hold off;
-legend([l(1),l(2),l(3)],valname)
-
-% keep r value
-R.OR03 = r;
-
-clear l r;
-
-% save the figure
-if savefig ==1,
-    saveas(gca,'OR03_BCVA.eps','epsc')
-    saveas(gca,'OR03_BCVA.png')
-    
-    !mv *.png Figure/
-    !mv *.eps Figure/
-end
-
-%% correlation val_OR15 and logMARVARL
-figure; hold on;
-c = lines(4);
-
-for k = 1:length(valname)
-    for node =1: length(val_OR15.fa)
-        [r(node),p(node)] = corr(val_OR15.(valname{k})(1:8,node),logMARVARL);
-        if p(node)<0.05
-            plot(node,r(node),'o','color',c(k,:),'markersize',15);end
-    end
-    
-    l(k)= plot(r,'color',c(k,:),'linewidth',1);
-    
-end
-
-% legend(valname)
-
-% add
-set(gca,'YLim',[-1 1],'YTick',[-1:0.5:1],'TickDir','out','XLim',[6 45],'XTick','')
-plot([0 100],[0 0],'-k')
-
-ylabel('r')
-title(Merged{3})
-hold off;
-
-legend([l(1),l(2),l(3)],valname)
-
-% keep r value
-R.OR15 = r;
-clear l r;
-
-if savefig ==1,
-    saveas(gca,'OR15_BCVA.eps','epsc')
-    saveas(gca,'OR15_BCVA.png')
-end
-
-%% correlation val_OR90 and logMARVARL
-figure; hold on;
-c = lines(4);
-
-for k = 1:length(valname)
-    for node =1: length(val_OR90.fa)
-        [r(node),p(node)] = corr(val_OR90.(valname{k})(1:8,node),logMARVARL);
-        if p(node)<0.05
-            plot(node,r(node),'o','color',c(k,:),'markersize',15);end
-    end
-    
-    l(k)= plot(r,'color',c(k,:),'linewidth',1);
-    
-end
-
-% legend(valname)
-
-% add
-set(gca,'YLim',[-1 1],'YTick',[-1:0.5:1],'TickDir','out','XLim',[6 45],'XTick','')
-plot([0 100],[0 0],'-k')
-
-ylabel('r')
-title(Merged{4})
-legend([l(1),l(2),l(3)],valname)
-
-hold off;
-
-% keep r value
-R.OR90 = r;
-
-clear l r ;
-
-if savefig ==1;
-    saveas(gca,'OR90_BCVA.eps','epsc')
-    saveas(gca,'OR90_BCVA.png')
-    !mv *.png Figure/
-    !mv *.eps Figure/
-end
-
-%% save
-save R R
 
 %% compare across ORs based on eccentricity
-for k = 1:length(valname)
-    
-%     ORs ={'val_OR03','val_OR15','val_OR90'};
+for k = 1%:length(valname) ;% only fa
     
     figure; hold on;
     c = lines(4);
     % 0-3 degree
     for node =1: length(val_OR03.fa)
         [r(node),p(node)] = corr(val_OR03.(valname{k})(1:8,node),logMARVARL);
-         [bootstat(:,node),~] = bootstrp(1000,@corr,val_OR03.(valname{k})(1:8,node),logMARVARL);
+         [bootstat(:,node),~] = bootstrp(BS_times,@corr,val_OR03.(valname{k})(1:8,node),logMARVARL);
         % loaction p-value
         if p(node)<0.05
             plot(node,r(node),'o','color',c(1,:),'markersize',15);
         end
     end
     
+    % render the correlation value
     l1= plot(r,'color',c(1,:),'linewidth',1);
+       
+%     % compute the two-tailed % confidence intervals:
+%     ci = prctile(bootstat,[5,95]);
+%     ci1 = plot(ci(1,:),'--','color',c(1,:));
+%     ci2 = plot(ci(2,:),'--','color',c(1,:));
     
     % add the range of r-value using bootstrap
     se = std(bootstat);
-    
-    % compute the two-tailed 95% confidence intervals:
-    ci = prctile(bootstat,[5,95]);
-    ci1 = plot(ci(1,:),'-')
-    
     m(k) = plot(r+se,'--','color',c(1,:),'linewidth',1);
     n(k) = plot(r-se,'--','color',c(1,:),'linewidth',1);
-    
+    clearvars bootstat
     
     % 15-30 degree
     for node =1: length(val_OR15.fa)
         [r(node),p(node)] = corr(val_OR15.(valname{k})(1:8,node),logMARVARL);
+        [bootstat(:,node),~] = bootstrp(1000,@corr,val_OR15.(valname{k})(1:8,node),logMARVARL);
         if p(node)<0.05
             plot(node,r(node),'o','color',c(2,:),'markersize',15);end
     end
     
     l2 = plot(r,'color',c(2,:),'linewidth',1);
+    
     % add the range of r-value using bootstrap
-    [bootstat,~] = bootstrp(1000,@corr,...
-        val_OR15.(valname{k})(1:8,node),logMARVARL);
     se = std(bootstat);
     m(k) = plot(r+se,'--','color',c(2,:),'linewidth',1);
     n(k) = plot(r-se,'--','color',c(2,:),'linewidth',1);
@@ -294,15 +138,17 @@ for k = 1:length(valname)
     % 30-90 degree
     for node =1: length(val_OR90.fa)
         [r(node),p(node)] = corr(val_OR90.(valname{k})(1:8,node),logMARVARL);
+        [bootstat(:,node),~] = bootstrp(1000,@corr,...
+        val_OR90.(valname{k})(1:8,node),logMARVARL);
         if p(node)<0.05
-            plot(node,r(node),'o','color',c(3,:),'markersize',15);end
+            plot(node,r(node),'o','color',c(3,:),'markersize',15);
+        end
     end
     
     l3 = plot(r,'color',c(3,:),'linewidth',1);
     
     % add the range of r-value using bootstrap
-    [bootstat,~] = bootstrp(1000,@corr,...
-        val_OR90.(valname{k})(1:8,node),logMARVARL);
+   
     se = std(bootstat);
     m(k) = plot(r+se,'--','color',c(3,:),'linewidth',1);
     n(k) = plot(r-se,'--','color',c(3,:),'linewidth',1);
