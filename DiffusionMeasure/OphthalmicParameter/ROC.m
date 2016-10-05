@@ -26,7 +26,11 @@ if notDefined('fibID')
     fibID = [3,5,7,9];
 end
 
-% merged both hemisphere
+if notDefined('savefig')
+savefig =0;
+end
+
+%% merged both hemisphere
 for v =1:length(fibID)
     % get values and merge both hemisphere
     for subID = 1:20; % patient (8) + healthy (12) subject is 20
@@ -104,6 +108,7 @@ l1 = plot(AUC03,'color',C(1,:),'linewidth',2);
 l2 = plot(AUC15, 'color',C(2,:),'linewidth',2);
 l3 = plot(AUC90,'color',C(3,:),'linewidth',2);
 
+
 xlabel('Number of node')
 ylabel('AUC')
 
@@ -113,14 +118,20 @@ ylim = get(gca,'YLim');
 xlim = get(gca,'XLim');
 xlim = [xlim(2)*.1+1,xlim(2)-xlim(2)*.1];
 
+plot(xlim,[.5 .5],'--','color',[.5 .5 5.5])
+
 set(gca,'YTick',ylim,'XLim',xlim,'XTick',xlim,'TickDir','out')
 
 legend([l1,l2,l3],'0-3','15-30','30-90')
 title('AUC from FA in each node')
 
-saveas(gca,'AUCfromFA.eps','epsc')
-saveas(gca,'AUCfromFA.png')
 
+
+
+if savefig ==1,
+    saveas(gca,'AUCfromFA.eps','epsc')
+    saveas(gca,'AUCfromFA.png')
+end
 
 
 %% fit a logistic regression model for AD
