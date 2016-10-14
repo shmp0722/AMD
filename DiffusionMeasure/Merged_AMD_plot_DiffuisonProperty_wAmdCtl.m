@@ -111,7 +111,7 @@ m   = nanmean(val_AMD,1);
 plot(X,m,'Color',c(3,:) ,'linewidth',3)
 
 T = title(sprintf('%s comparing to AMD_C', fbName{fibID}(3:end)));
-ylabel(upper(val))
+ylabel(upper(vals))
 xlabel('Location')
 
 % axis
