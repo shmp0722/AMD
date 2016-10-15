@@ -353,13 +353,8 @@ pac = nan(M,group);
 clear h
 
 for jj= 1: nodes
-    
-    pac(:,1)= val_AC(:,jj);
-    pac(1:8,2)= val_AMD(:,jj);
-    
-    [p(jj),h(jj),~] = ranksum(pac(:,1),pac(:,2));
-    %     co = multcompare(stats(jj),'display','off');
-    %     C{jj}=co;
+    [p(jj),h(jj),~] = ranksum(val_AC(:,jj),val_AMD(:,jj));
+   [H(jj),P(jj),~] = ttest2(val_AC(:,jj),val_AMD(:,jj));
 end
 
 % logical 2 double
@@ -380,21 +375,15 @@ A2 = plot(m-st,':','color',[0.6 0.6 0.6]);
 A3 = plot(m+2*st,':','color',[0.8 0.8 0.8]);
 A4 = plot(m-2*st,':','color',[0.8 0.8 0.8]);
 
-% % set color and style
-% set(A1,'FaceColor',[0.6 0.6 0.6],'linestyle','none')
-% set(A2,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
-% set(A3,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
-% set(A4,'FaceColor',[1 1 1],'linestyle','none')
-
 plot(m,'color',[0 0 0], 'linewidth',3 )
 
 % add individual FA plot
 for k = 1:length(AMD) %1:length(subDir)
-    plot(X,AMD_data(k,:),'Color',c(k,:),...
+    plot(X,AMD_data(k,:),'--r',...
         'linewidth',1);
 end
 m   = nanmean(AMD_data,1);
-plot(X,m,'Color',c(3,:) ,'linewidth',3)
+plot(X,m,'r' ,'linewidth',3)
 
 T = title(sprintf('%s comparing to AMD_C', fbName{fibID}(3:end)));
 ylabel(upper(vals))
@@ -426,7 +415,7 @@ clear h
 % Save current figure
 if ~isempty(SavePath)
     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
-    %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
+    %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'png')
 end
 
 return
