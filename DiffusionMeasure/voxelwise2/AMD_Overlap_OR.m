@@ -10,7 +10,7 @@ load /home/ganka/git/AMD/afq/afq_21-Sep-2016.mat
 
 AMD = 1:8;
 AMD_Ctl = 9:20;
-%%
+
 %% argument check
 fbName = {'L-OT','R-OT','L-OR','R-OR','LOR0-3','ROR0-3','LOR15-30','ROR15-30'...
     'LOR30-90','ROR30-90'};
@@ -43,7 +43,7 @@ AFQ_RenderTractProfile(ACH{1,5}.coords.acpc,[],[160/255 32/255 240/255])
 
 %% get values and merge both hemisphere
 
-OR03 = fgRead(afq.files.fibers.LORC_MD4)
+OR03 = fgRead(afq.files.fibers.LORC_MD4);
 
 
 

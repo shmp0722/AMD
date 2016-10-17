@@ -400,7 +400,7 @@ for k = 1:length(valname)
     
     ylabel('r')
     xlabel('Location')
-    title(sprintf('LogMAR vs %s',upper(valname{k})))
+    title(sprintf(upper(valname{k}))
     
     legend([l1,l2,l3],'0-3','15-30','30-90')
     
@@ -412,88 +412,4 @@ for k = 1:length(valname)
     end
     
 end
-
-%% compare across ORs based on eccentricity
-for k = 1:length(valname)
-       
-    figure; hold on;
-    c = lines(4);
-    % 0-3 degree
-    for node =1: length(val_OR03.fa)
-        [r(node),p(node)] = corr(val_OR03.(valname{k})(1:8,node),logMARVARL);
-%          [bootstat(:,node),~] = bootstrp(1000,@corr,val_OR03.(valname{k})(1:8,node),logMARVARL);
-        % loaction p-value
-        if p(node)<0.05
-            plot(node,r(node),'o','color',c(1,:),'markersize',15);
-        end
-    end
-    
-    % render the correlation value
-    l1= plot(r,'color',c(1,:),'linewidth',1);
-       
-%     % compute the two-tailed % confidence intervals:
-%     ci = prctile(bootstat,[5,95]);
-%     ci1 = plot(ci(1,:),'--','color',c(1,:));
-%     ci2 = plot(ci(2,:),'--','color',c(1,:));
-    
-    % add the range of r-value using bootstrap
-%     se = std(bootstat);
-%     m(k) = plot(r+se,'--','color',c(1,:),'linewidth',1);
-%     n(k) = plot(r-se,'--','color',c(1,:),'linewidth',1);
-%     clearvars bootstat
-    
-    % 15-30 degree
-    for node =1: length(val_OR15.fa)
-        [r(node),p(node)] = corr(val_OR15.(valname{k})(1:8,node),logMARVARL);
-%         [bootstat(:,node),~] = bootstrp(1000,@corr,val_OR15.(valname{k})(1:8,node),logMARVARL);
-        if p(node)<0.05
-            plot(node,r(node),'o','color',c(2,:),'markersize',15);end
-    end
-    
-    l2 = plot(r,'color',c(2,:),'linewidth',1);
-    
-%     % add the range of r-value using bootstrap
-%     se = std(bootstat);
-%     m(k) = plot(r+se,'--','color',c(2,:),'linewidth',1);
-%     n(k) = plot(r-se,'--','color',c(2,:),'linewidth',1);
-    
-    
-    % 30-90 degree
-    for node =1: length(val_OR90.fa)
-        [r(node),p(node)] = corr(val_OR90.(valname{k})(1:8,node),logMARVARL);
-%         [bootstat(:,node),~] = bootstrp(1000,@corr,...
-%         val_OR90.(valname{k})(1:8,node),logMARVARL);
-        if p(node)<0.05
-            plot(node,r(node),'o','color',c(3,:),'markersize',15);
-        end
-    end
-    
-    l3 = plot(r,'color',c(3,:),'linewidth',1);
-    
-    % add the range of r-value using bootstrap
-   
-%     se = std(bootstat);
-%     m(k) = plot(r+se,'--','color',c(3,:),'linewidth',1);
-%     n(k) = plot(r-se,'--','color',c(3,:),'linewidth',1);
-    
-    % make it up
-    set(gca,'YLim',[-1 1],'YTick',[-1:0.5:1],'TickDir','out','XLim',[6 45],'XTick','')
-    plot([0 100],[0 0],'-k')
-    
-    ylabel('r')
-    xlabel('Location')
-    title(sprintf('LogMAR vs %s',upper(valname{k})))
-    
-    legend([l1,l2,l3],'0-3','15-30','30-90')
-    
-    if savefig ==1,
-        saveas(gca,sprintf('ThreeEcc_%s_wo.eps',upper(valname{k})),'epsc')
-        saveas(gca,sprintf('ThreeEcc_%s_wo.png',upper(valname{k})))
-        !mv *.png Figure/
-        !mv *.eps Figure/
-    end
-    
-end
-
-
 
