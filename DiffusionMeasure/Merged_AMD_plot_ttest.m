@@ -339,17 +339,13 @@ end
 %% MD
 %
 vals ='md';
-val_AC = rd(AMD_Ctl,:);
-val_AMD = rd(AMD,:);
+val_AC = md(AMD_Ctl,:);
+val_AMD = md(AMD,:);
 
 AMD_data  = val_AMD;
 
 %% Wilcoxon rank sum test
 % container
-group =2;
-M = length(AMD_Ctl);
-pac = nan(M,group);
-
 clear h
 
 for jj= 1: nodes
@@ -401,7 +397,7 @@ switch fibID
         bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
         hold off;
     case {3}
-        b=[0.2,1.1];
+        b=[0.6,1.1];
         set(gca,'ylim',b,'yTick',b,'xLim',[11,90],'XTick',[11 90],'xtickLabel','');
         bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
         hold off;
@@ -415,7 +411,9 @@ clear h
 % Save current figure
 if ~isempty(SavePath)
     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
-    %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'png')
+        saveas(G,fullfile(SavePath, [vals,'_',T.String]),'png')
+        !mv *eps DiffusivionPropertyPlot/
+        !mv *png DiffusivionPropertyPlot/
 end
 
 return
