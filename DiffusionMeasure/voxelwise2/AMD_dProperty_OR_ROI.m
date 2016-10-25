@@ -29,7 +29,8 @@ subs = {...
 
 %% would you like to see a figure?
 if notDefined('showfig')
-    showfig = 0;end
+    showfig = 0;
+end
 
 %% boxes
 Intsct = struct;
@@ -72,7 +73,7 @@ for ii = 1:length(subs)
         end
         
         ROR3090 = dir(fullfile(ORdir, '*30to90*-Lh_NOT_MD4.pdb'));
-        LOR3090= dir(fullfile(ORdir, '*30to90*-Rh_NOT_MD4.pdb'));
+        LOR3090 = dir(fullfile(ORdir, '*30to90*-Rh_NOT_MD4.pdb'));
         
 %     else
 %         sprintf('- few or too much fiber groups, check OR directory \n \n- %s',ORdir)

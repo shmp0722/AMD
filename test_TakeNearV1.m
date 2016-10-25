@@ -98,7 +98,7 @@ AFQ_RenderRoi(DivRoi3090,C(1,:))
 
 %% Next we7re gonna check this
 
-dt6File = dtiLoadDt6('/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_2nd/dt6.mat');
+dt6File = dtiLoadDt6('/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/dt6.mat');
 RoiFileName = Roi3090wo03;
 
 dt6File=dtiLoadDt6(dt6File); 
