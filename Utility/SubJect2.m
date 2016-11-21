@@ -1,4 +1,4 @@
-function [dMRI, List, AMD, AMD_Ctl, RP, Ctl,LHON,JMD] = SubJect
+function [dMRI, List, AMD, AMD_C, JMD_C, RP, Ctl,LHON,JMD_all] = SubJect2
 
 % Return all subjects in dMRI directory
 
@@ -11,22 +11,6 @@ for ii = 1:length(All_List)
     List{ii} = All_List(ii).name;
 end
 
-
-%%
-RP      = [68,70:76];
-AMD     = [1:8];
-AMD_Ctl = [9:20];
-Ctl     = [23:25,27,34:43]; 
-
-JMD = [47:58];
-LHON = [59:65,67];
-return
-
-Ctl_follow = [26,28:33];
-AO      = 21;
-CSC     = 22;
-
-return
 %%
 AMD   = dir('/media/HDPC-UT/dMRI_data/AMD-0*');
 AMD_C = dir('/media/HDPC-UT/dMRI_data/AMD-C*');
@@ -35,4 +19,3 @@ JMD_all   = dir('/media/HDPC-UT/dMRI_data/JMD*');
 JMD_C     = dir('/media/HDPC-UT/dMRI_data/JMD-C*');
 Ctl   = dir('/media/HDPC-UT/dMRI_data/Ct*');
 RP    = dir('/media/HDPC-UT/dMRI_data/RP*');
-

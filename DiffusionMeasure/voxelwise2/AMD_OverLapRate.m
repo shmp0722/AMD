@@ -42,10 +42,10 @@ T.ID = ID';
 % MD = FA;
 % AD = FA;
 % RD = FA;
-S = struct;
+% S = struct;
 
 %% Make OR roi and save all rois
-for ii = 1:length(subs)
+parfor ii = 1:length(subs)
     SubDir = fullfile(AFQdata,subs{ii});
     OTdir  = fullfile(SubDir,'/dwi_1st/fibers/conTrack/OT_5K');
     ORdir  = fullfile(SubDir,'/dwi_1st/fibers/conTrack/OR_divided');
@@ -116,28 +116,41 @@ for ii = 1:length(subs)
     OR_1530 =  [L_OR1530_roi.coords;R_OR1530_roi.coords];
     OR_3090 =  [L_OR3090_roi.coords;R_OR3090_roi.coords];
 
+    %
+%     AFQ_RenderRoi(dtiNewRoi([],[],intersect(OR_03,OR_1530,'rows')),[1 0 0])
+%     AFQ_RenderRoi(dtiNewRoi([],[],setdiff(OR_03,OR_1530,'rows')),[0 0 1])
+
+    
     % overlapping rate
-    OR03vs1530_stdf(ii)   =  length(setdiff(OR_03,OR_1530,'rows'))/length(OR_03)*100;
-    OR03vs1530_int(ii)   =  length(intersect(OR_03,OR_1530,'rows'))/length(OR_03)*100;
+%     OR03vs1530_stdf(ii)   =  length(setdiff(OR_03,OR_1530,'rows'))/length(OR_03)*100;
+    OR03vs1530_int(ii)   =  length(intersect(OR_03,OR_1530,'rows'))...
+        /length(unique([OR_03;OR_1530],'rows'))*100;
     
-    OR03vs3090_stdf(ii)   = length(setdiff(OR_03,OR_3090,'rows'))/length(OR_03)*100;
-    OR03vs3090_int(ii)   =   length(intersect(OR_03,OR_3090,'rows'))/length(OR_03)*100;
+%     OR03vs3090_stdf(ii)   = length(setdiff(OR_03,OR_3090,'rows'))/length(OR_03)*100;
+    OR03vs3090_int(ii)   =   length(intersect(OR_03,OR_3090,'rows'))...
+        /length(unique([OR_03;OR_3090],'rows'))*100;
     
-    OR1530vs3090_stdf(ii) = length(setdiff(OR_1530,OR_3090,'rows'))/length(OR_1530)*100;
-    OR1530vs3090_int(ii) = length(intersect(OR_1530,OR_3090,'rows'))/length(OR_1530)*100;
+%     OR1530vs3090_stdf(ii) = length(setdiff(OR_1530,OR_3090,'rows'))/length(OR_1530)*100;
+    OR1530vs3090_int(ii) = length(intersect(OR_1530,OR_3090,'rows'))...
+        /length(unique([OR_1530;OR_3090],'rows'))*100;
 
     
 end
 
 % edit a tabel
-T.OR03vs1530_stdf = OR03vs1530_stdf';
+% T.OR03vs1530_stdf = OR03vs1530_stdf';
 T.OR03vs1530_int  = OR03vs1530_int';
-T.OR03vs3090_stdf = OR03vs3090_stdf';
+% T.OR03vs3090_stdf = OR03vs3090_stdf';
 T.OR03vs3090_int  = OR03vs3090_int';
-T.OR1530vs3090_stdf = OR1530vs3090_stdf';
+% T.OR1530vs3090_stdf = OR1530vs3090_stdf';
 T.OR1530vs3090_int  = OR1530vs3090_int';
+
+%% diiferenciate
+T.dif_03vs1530    = (100-OR03vs1530_int)';
+T.dif_03vs3090    = (100-OR03vs3090_int)';
+T.dif_1530vs3090  = (100-OR1530vs3090_int)';
 
 %%
 cd /home/ganka/git/AMD/DiffusionMeasure/voxelwise2
-save T T
+save T3 T
 
