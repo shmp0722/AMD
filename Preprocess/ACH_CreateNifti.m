@@ -27,7 +27,7 @@ function ACH_CreateNifti
 outFormat = 'nii.gz';
 
 % create nii.gz files 
-if ~exist(fullfile(SUBJECT,'t1.nii.gz'))
+if ~exist(fullfile(SUBJECT,'t1.nii.gz'),'file')
  dicm2nii(T1, SUBJECT, outFormat)
 end
 dicm2nii(dwi1st, dwi1st, outFormat)

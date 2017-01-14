@@ -54,6 +54,12 @@ for ii = subID; % 7 , 17
     %     ROR = dir(fullfile(ORdir, '*Rt*MD4.pdb'));
     %     LOR = dir(fullfile(ORdir, '*Lt*MD4.pdb'));
     
+    % removing redandant file 
+    if exist(fullfile(ORdir,'*NOT*NOT*','file'));
+        delete(fullfile(ORdir,'*NOT*NOT*','file'));
+    end
+    
+    % select tract files up
     ROR_C = dir(fullfile(ORdir, '*Rt*Ecc0to3*MD3.pdb'));
     LOR_C = dir(fullfile(ORdir, '*Lt*Ecc0to3*MD3.pdb'));
     
@@ -70,7 +76,7 @@ for ii = subID; % 7 , 17
         RORP{ll} = fgRead(fullfile(ORdir,ROR_P(ll).name));
         LORP{ll} = fgRead(fullfile(ORdir,LOR_P(ll).name));
     end
-    
+    clear ROR_C LOR_C ROR_P LOR_P
     %% Render figure
     figure;hold on;
     Dt6 = dtiLoadDt6(dt6);
@@ -99,6 +105,7 @@ for ii = subID; % 7 , 17
     
     title(sprintf('%s MD3', subDir{ii}));
     %     view(-184,40)
+    clear R_OT L_OT RORP LORP
 end
 % end
 % return

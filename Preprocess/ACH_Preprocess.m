@@ -14,6 +14,8 @@ function ACH_Preprocess(subDir, option)
 % SO @ACH 
 % SO 20150512 fixed small bugs 
 
+% basedir = '/media/USB_HDD1/dMRI_data';
+
 if notDefined('subDir')
     [basedir, subDir] = fileparts(pwd);
 end
@@ -74,7 +76,9 @@ switch option
         dwParams.bvalsFile = fullfile(subjectpath, 'raw', 'dwi2nd.bval');
         dwParams.fitMethod = 'both';
         dwParams.dt6BaseName= dt6_base_names{3};
-        dwParams.outDir = fullfile(subjectpath, 'raw');
+        dwParams.outDir = fullfile(subjectpath);
+%                 dwParams.outDir = fullfile(subjectpath, 'raw');
+
     case 3,
         rawdtiFile = fullfile(subjectpath, 'raw', 'dwi3rd.nii.gz');
         dwParams.bvecsFile = fullfile(subjectpath, 'raw', 'dwi3rd.bvec');

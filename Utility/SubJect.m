@@ -4,7 +4,7 @@ function [dMRI, List, AMD, AMD_Ctl, RP, Ctl,LHON,JMD] = SubJect
 
 %% 
 % Amd
-dMRI='/media/HDPC-UT/dMRI_data';
+dMRI='/media/USB_HDD1/dMRI_data';
 All_List = dir(fullfile(dMRI,'*-*'));
 
 for ii = 1:length(All_List)
@@ -28,11 +28,11 @@ CSC     = 22;
 
 return
 %%
-AMD   = dir('/media/HDPC-UT/dMRI_data/AMD-0*');
-AMD_C = dir('/media/HDPC-UT/dMRI_data/AMD-C*');
-LHON  = dir('/media/HDPC-UT/dMRI_data/LHON*');
-JMD_all   = dir('/media/HDPC-UT/dMRI_data/JMD*');
-JMD_C     = dir('/media/HDPC-UT/dMRI_data/JMD-C*');
-Ctl   = dir('/media/HDPC-UT/dMRI_data/Ct*');
-RP    = dir('/media/HDPC-UT/dMRI_data/RP*');
+AMD   = dir('/media/USB_HDD1/dMRI_data/AMD-0*');
+AMD_C = dir('/media/USB_HDD1/dMRI_data/AMD-C*');
+LHON  = dir('/media/USB_HDD1/dMRI_data/LHON*');
+JMD_all   = dir('/media/USB_HDD1/dMRI_data/JMD*');
+JMD_C     = dir('/media/USB_HDD1/dMRI_data/JMD-C*');
+Ctl   = dir('/media/USB_HDD1/dMRI_data/Ct*');
+RP    = dir('/media/USB_HDD1/dMRI_data/RP*');
 

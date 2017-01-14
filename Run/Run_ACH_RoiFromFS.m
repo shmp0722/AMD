@@ -8,14 +8,15 @@ function Run_ACH_RoiFromFS
 %  NotYet = zeros(size( List));
 
 % run fs if its not done.
-for ii =    40:length(List)
+for ii =   ( 64:82)%)length(List))
     subID = List{ii};
     V1roi = fullfile(homeDir,subID,'ROIs/rh_V1_smooth3mm.mat');
  
-    if ~exist(V1roi)
+    if ~exist(V1roi,'file')
         try
             cd(fullfile(homeDir,subID))
             ACH_RoiFromFS
+            CutV1Roi
         catch 
             cd(fullfile(homeDir,subID))
             fsSubDir =  fullfile(homeDir,'freesurfer',subID);
@@ -23,6 +24,7 @@ for ii =    40:length(List)
             eval(cmd);
             FS_autosegment
             ACH_RoiFromFS
+            CutV1Roi
         end
     end
 end

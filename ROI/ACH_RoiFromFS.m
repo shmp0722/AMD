@@ -42,12 +42,12 @@ for ii = 1:length(segFile)
 end
 
 %% Get V1, V2 and MT ROIs
-  fsDir          = getenv('SUBJECTS_DIR');
- SUBJECTS_DIR = fullfile(fsDir,subjID);
+fsDir          = getenv('SUBJECTS_DIR');
+SUBJECTS_DIR = fullfile(fsDir,subjID);
 
 % Grab the label file
-labelFileDir =  fullfile(SUBJECTS_DIR,subjID,'label');
-labelFileNames = {'lh.V1.label','rh.V1.label','lh.MT.label','rh.MT.label'};
+labelFileDir =  fullfile(SUBJECTS_DIR,'label');
+labelFileNames = {'lh.V1.label','rh.V1.label','lh.V2.label','rh.V2.label','lh.MT.label','rh.MT.label'};
 
 % Create nifti and mat ROI
 for ii = 1:length(labelFileNames)
@@ -55,66 +55,24 @@ for ii = 1:length(labelFileNames)
     
     % define save file and path
     MatRoiDir = fullfile(HOME,subjID,'ROIs');
-    niftiRoiNames  = {'lh_V1','rh_V1','lh_MT','rh_MT'};
-    niftiRoiName   = fullfile(MatRoiDir,niftiRoiNames{ii});
+    niftiRoiNames  = {'lh_V1','rh_V1','lh_MT','rh_MT','lh_V2','rh_V2'};
     
     % run fs_labelFileToNiftiRoi to make nifti roi
-    [~, niftiRoi] = fs_labelFileToNiftiRoi(subjID,labelFileName,niftiRoiName);
+    [~, niftiRoi] = fs_labelFileToNiftiRoi(subjID,labelFileName,niftiRoiNames{ii});
     
     % make mat roi from nifti
-      nifti       = [niftiRoi.fname,'.nii.gz'];
-      maskValue   =  0;       % All nonZero values are used for the mask
-      outName     = [niftiRoi.fname,'.mat'];
-      outType     = 'mat';
-      binary      = true;
-      save        = true;
-      dtiRoiFromNifti(nifti,maskValue,outName,outType,binary,save);
+    nifti       = [niftiRoi.fname,'.nii.gz'];
+    maskValue   =  0;       % All nonZero values are used for the mask
+    
+    outName     = [niftiRoi.fname,'.mat'];
+    outType     = 'mat';
+    binary      = true;
+    save        = true;
+    roi = dtiRoiFromNifti(nifti,maskValue,outName,outType,binary,save);
+    dtiWriteRoi(roi,fullfile(outDir,roi.name))
 end
 
+% make V1 roi half
+CutV1Roi(fullfile(HOME,subjID))
+
 return
-
-%% original manual ROI generation script
-% for Yoshimine
-
-%   %% Get V1, V2 and MT ROIs
-%   SUBJECTS_DIR = '/home/ganka/dMRI_data/freesurfer/subjID';
-%
-%   fs_subject = 'subjID';
-%   labelFileName = fullfile(SUBJECTS_DIR,'label/lh.V1.label');
-%
-%   niftiRoiName  = '/home/ganka/dMRI_data/subjID/TestROIs/lh_V1';
-%
-%   [niftiRoiName, niftiRoi] = fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName);
-%
-% %% V1 R
-%
-%   labelFileName = fullfile(SUBJECTS_DIR,'label/rh.V1.label');
-%   niftiRoiName  = '/home/ganka/dMRI_data/subjID/TestROIs/rh_V1';
-%
-%
-%   fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
-% %% V2 LR
-%   labelFileName = fullfile(SUBJECTS_DIR,'label/lh.V2.label');
-%   niftiRoiName  = '/home/ganka/dMRI_data/subjID/TestROIs/lh_V2';
-%   fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
-%
-%   labelFileName = fullfile(SUBJECTS_DIR,'label/rh.V2.label');
-%   niftiRoiName  = '/home/ganka/dMRI_data/subjID/TestROIs/rh_V2';
-%   fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
-% %% MT LR
-%   labelFileName = fullfile(SUBJECTS_DIR,'label/lh.MT.label');
-%    niftiRoiName  = '/home/ganka/dMRI_data/subjID/TestROIs/lh_MT';
-%   fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
-%
-%   labelFileName = fullfile(SUBJECTS_DIR,'label/rh.MT.label');
-%   niftiRoiName  = '/home/ganka/dMRI_data/subjID/TestROIs/rh_MT';
-%   fs_labelFileToNiftiRoi(fs_subject,labelFileName,niftiRoiName)
-% %% transform nii.gz to .mat
-%
-%       nifti       = 'lh_MT.nii.gz';
-%         maskValue   =  0;       % All nonZero values are used for the mask
-%         outName     = 'lh_MT.mat';
-%         outType     = 'mat';
-%         binary      = true;
-%         save        = true;
-%         dtiRoiFromNifti(nifti,maskValue,outName,outType,save);

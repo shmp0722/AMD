@@ -31,7 +31,7 @@ for ii = 1:length(ROIS)
         
         % select spesific coords by half where is close to central 15do VF ...
         
-        CutPoint_Y =  floor(mean(minmax(V1roi.coords(:,2))));
+        CutPoint_Y =  floor(mean([min(V1roi.coords(:,2)), max(V1roi.coords(:,2))]));
         
         % pick the posterior half
         [~, roiNot] = dtiRoiClip(V1roi, [], [-120,CutPoint_Y], []);

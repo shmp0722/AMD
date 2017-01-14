@@ -76,6 +76,8 @@ for hemisphere = 1:2
         end
     end
 end
+
+delete *NOT*NOT*;
 return
 
 
