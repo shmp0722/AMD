@@ -17,7 +17,7 @@ function ACH_CleanUpTract_OR100K(subID)
 if notDefined('subID'),
     subID = 1:length(subDir);
 end
-
+% IDBN =[64:67,75,76,82,83]
 
 %% Merging waypoint ROIs
 for ii = subID
@@ -101,7 +101,11 @@ for ii = subID
         
         % load fg and ROI
         fg  = dir(fullfile(fgDir,fgF{hemisphere}));
-        fg  = fgRead(fullfile(fgDir,fg.name));
+        if length(fg)==1;
+            fg  = fgRead(fullfile(fgDir,fg.name));
+        else
+            fg = fgRead(fullfile(fgDir,fg(end).name));
+        end
         
         % Load a waypoint ROI
         ROIname = {'Lh_NOT.mat','Rh_NOT.mat'};

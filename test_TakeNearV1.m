@@ -8,10 +8,10 @@ function test_TakeNearV1
 
 
 %%  difine and read ORs
-FullfbDir = '/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers/conTrack/OR_100K';
+FullfbDir = '/media/USB_HDD1/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers/conTrack/OR_100K';
 FullfbName = 'fg_OR_100K_Lt-LGN4_lh_V1_smooth3mm_Half_2015-06-24_19.34.09-Rh_NOT_MD4.pdb';
 
-DivfbDir = '/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers/conTrack/OR_divided';
+DivfbDir = '/media/USB_HDD1/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers/conTrack/OR_divided';
 DivfbName = 'fg_OR_divided_Lt-LGN4_lh_Ecc30to90_2015-09-02_14.55.17-Rh_NOT_MD4.pdb';
 DivfbName2 = 'fg_OR_divided_Lt-LGN4_lh_Ecc0to3_2015-09-02_14.55.17-Rh_NOT_MD4.pdb';
 
@@ -98,7 +98,7 @@ AFQ_RenderRoi(DivRoi3090,C(1,:))
 
 %% Next we7re gonna check this
 
-dt6File = dtiLoadDt6('/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/dt6.mat');
+dt6File = dtiLoadDt6('/media/USB_HDD1/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/dt6.mat');
 RoiFileName = Roi3090wo03;
 
 dt6File=dtiLoadDt6(dt6File); 
@@ -120,7 +120,7 @@ axialADC(1)=min(ad); axialADC(2)=mean(ad); axialADC(3)=max(ad);
 
 %%
 % Load up the dt6
-dt = dtiLoadDt6('/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/dt6.mat');
+dt = dtiLoadDt6('/media/USB_HDD1/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/dt6.mat');
 
 % These coordsinates are in ac-pc (millimeter) space. We want to transform
 % them to image indices.

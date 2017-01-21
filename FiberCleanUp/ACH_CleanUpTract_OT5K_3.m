@@ -8,7 +8,7 @@ function ACH_CleanUpTract_OT5K_3(subject)
 % if ischar(subject); end 
 % 
 % if isnumeric(subject);
-%     subject = 
+%     subject = [64:67,75,76,82,83]
 
 if notDefined('subject'),
     subject = 1:length(subDir);

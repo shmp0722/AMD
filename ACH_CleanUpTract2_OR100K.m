@@ -93,7 +93,9 @@ for hemisphere = 1:2
     
     % load fg and ROI
     fg  = dir(fullfile(fgDir,fgF{hemisphere}));
-    fg  = fgRead(fullfile(fgDir,fg.name));
+    if length(fg)==1;
+        fg  = fgRead(fullfile(fgDir,fg.name));
+    else fg = fgRead(fullfile(fgDir,fg(end).name)); end;
     
     % Load a waypoint ROI
     ROIname = {'Lh_NOT.mat','Rh_NOT.mat'};

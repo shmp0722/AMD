@@ -1,1 +1,0 @@
-addpath(genpath('/Users/shumpei/Documents/git/AMD'));addpath(genpath('/Users/shumpei/Documents/git/vistasoft');
