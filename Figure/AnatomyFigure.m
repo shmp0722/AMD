@@ -8,7 +8,7 @@ function AnatomyFigure
 % SO@ACH 2016.09.06
 
 %%
-home = '/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI';
+home = '/media/USB_HDD1/dMRI_data/AMD-01-dMRI-Anatomy-dMRI';
 
 %% load dt6
 
@@ -35,9 +35,9 @@ end
 % % adding ROIs for gfiber generation
 % roi1 = dtiReadRoi(fullfile(ROIdir,'Lt-LGN4.mat'));
 % roi2 = dtiReadRoi(...
-%     '/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/fs_Retinotopy2/lh_Ecc0to3_smooth3mm.mat');
+%     '/media/USB_HDD1/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/fs_Retinotopy2/lh_Ecc0to3_smooth3mm.mat');
 % roi3 = dtiReadRoi(...
-%     '/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/fs_Retinotopy2/lh_Ecc30to90_smooth3mm.mat');
+%     '/media/USB_HDD1/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/fs_Retinotopy2/lh_Ecc30to90_smooth3mm.mat');
 % 
 % AFQ_RenderRoi(roi1)
 % AFQ_RenderRoi(roi2)
@@ -61,12 +61,12 @@ axis off
 hold off;
 
 %%  difine and read ORs
-% FullfbDir = '/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers/conTrack/OR_100K';
+% FullfbDir = '/media/USB_HDD1/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers/conTrack/OR_100K';
 % FullfbName = 'fg_OR_100K_Lt-LGN4_lh_V1_smooth3mm_Half_2015-06-24_19.34.09-Rh_NOT_MD4.pdb';
-OT = '/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers/conTrack/OT_5K';      
+OT = '/media/USB_HDD1/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers/conTrack/OT_5K';      
 OTfb = 'fg_OT_5K_85_Optic-Chiasm_Lt-LGN4_2015-07-13_18.48.12-41_Right-Cerebral-White-Matter_Ctrk100_AFQ_51.mat';
 
-DivfbDir = '/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers/conTrack/OR_divided';
+DivfbDir = '/media/USB_HDD1/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers/conTrack/OR_divided';
 fbPeri = 'fg_OR_divided_Lt-LGN4_lh_Ecc30to90_2015-09-02_14.55.17-Rh_NOT_MD4.pdb';
 fbCenter = 'fg_OR_divided_Lt-LGN4_lh_Ecc0to3_2015-09-02_14.55.17-Rh_NOT_MD4.pdb';
 

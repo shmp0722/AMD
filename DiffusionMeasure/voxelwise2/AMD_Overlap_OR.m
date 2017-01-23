@@ -1,8 +1,4 @@
 function AMD_Overlap_OR(savefig)
-
-
-
-
 % %% load raw data and subjects
 % load /home/ganka/git/AMD/DiffusionMeasure/ACH_0210.mat
 %
@@ -126,10 +122,6 @@ for ii = 1:length(subs)
     % Render a figure
     %     if showfig == 1
     
-    
-   
-    
-    
     figure; hold on;
     
     % color definition
@@ -235,12 +227,13 @@ Peripheral.MD(ii,1:length([faR;faL]))=([mdR;mdL]);
 end
 %%
 % Central.FA(Central.FA==0) = nan;
+% return
 
 %%
-mkdir /home/ganka/git/AMD/DiffusionMeasure/voxelwise2
-cd /home/ganka/git/AMD/DiffusionMeasure/voxelwise2
-save Central Central
-save Intsct Intsct
-save Peripheral Peripheral
+% mkdir /home/ganka/git/AMD/DiffusionMeasure/voxelwise2
+% cd /home/ganka/git/AMD/DiffusionMeasure/voxelwise2
+% save Central Central
+% save Intsct Intsct
+% save Peripheral Peripheral
 
 

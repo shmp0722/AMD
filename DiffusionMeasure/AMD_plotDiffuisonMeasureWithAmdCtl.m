@@ -1,4 +1,4 @@
-doofunction AMD_plotDiffuisonMeasureWithAmdCtl(vals,fibID,SavePath)
+function AMD_plotDiffuisonMeasureWithAmdCtl(vals,fibID,SavePath)
 % Plot figure 5 showing individual FA value along the core of OR and optic tract.
 %
 % Repository dependencies
@@ -15,12 +15,14 @@ doofunction AMD_plotDiffuisonMeasureWithAmdCtl(vals,fibID,SavePath)
 [homeDir, ~, AMD, AMD_Ctl, ~, Ctl] = SubJect;
 
 % Load ACH data
-TPdata = '/media/HDPC-UT/dMRI_data/Results/ACH_0210.mat';
+TPdata = '/media/USB_HDD1/dMRI_data/Results/ACH_0210.mat';
 load(TPdata);
 
 %
 if notDefined('vals')
     vals = 'fa';
+%     vals = fieldnames(ACH{1,1}.vals);
+
 end
 
 if notDefined('fibID')
@@ -28,7 +30,7 @@ if notDefined('fibID')
 end
 
 if notDefined('SavePath')
-    SavePath = pwd;
+    SavePath = [];
 end
 
 %% Figure
