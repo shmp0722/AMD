@@ -1,13 +1,18 @@
-function Merged_AMD_plot_Western(fibID,SavePath)
+function Merged_AMD_plot_Westin(fibID,SavePath)
 % individual FA value along the core of OR and optic tract.
 %
 % Repository dependencies
 %    VISTASOFT
 %    AFQ
 %    shmp0722/AMD
+% 
+% Basic theory
+% 
+% 'Processing and visualization for diffusion tensor MRI'
+% Westin CF, Maier SE, Mamata H, Nabavi A, Jolesz FA, Kikinis R
+% Med Image Anal, 2002 
 %
-%
-% Shumpei Ogawa 2014
+% Shumpei Ogawa 2017@ ACH
 
 %% load raw data and subjects
 load ACH_0210.mat
@@ -145,7 +150,7 @@ xlabel('Location')
 %     case {}
 switch fibID
     case {1}
-        b=[0.8, 1.8];
+        b=[0, .4];
         % set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
         set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
         bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
