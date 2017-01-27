@@ -60,22 +60,21 @@ afq = AFQ_SegmentCallosum(afq);
 %%
 %% Add NODDI maps
 % create a cell array of paths to each subjects image.
-imgDir ='/media/USB_HDD1/AMICO';
+imgDir ='/media/USB_HDD1/AMICO/AMICO';
 
 % subs
-for ii = 1:length(subs)
-    dwi = fullfile(imgDir, subs{ii}, 'NODDI_DWI.nii.gz');
-    dwi_img = fullfile(imgDir, subs{ii}, 'NODDI_DWI.hdr');
-
-    if exist(dwi_img,'file') && ~exist(dwi,'file');
-      nii = nii_tool('load', fullfile(imgDir, subs{ii}, 'NODDI_DWI.hdr'));
-      nii_tool('save',nii,fullfile(imgDir, subs{ii}, 'NODDI_DWI.nii.gz'));
-    end
-    
-    NODDI_Path{ii} = fullfile(imgDir, subs{ii}, 'NODDI_DWI.nii.gz');
+for jj = 1:length(subs)
+    OD{jj}  = fullfile(imgDir, subs{jj},'AMICO/NODDI' ,'FIT_OD.nii.gz');
+    DIR{jj}  = fullfile(imgDir, subs{jj},'AMICO/NODDI' , 'FIT_dir.nii.gz');
+    ICVF{jj} = fullfile(imgDir, subs{jj},'AMICO/NODDI' , 'FIT_ICVF.nii.gz');
+    ISOVF{jj} = fullfile(imgDir, subs{jj},'AMICO/NODDI' , 'FIT_ISOVF.nii.gz');
 end
   
-afq = AFQ_set(afq, 'images', NODDI_Path);
+afq = AFQ_set(afq, 'images', OD);
+afq = AFQ_set(afq, 'images', DIR);
+afq = AFQ_set(afq, 'images', ICVF);
+afq = AFQ_set(afq, 'images', ISOVF);
+
 
 %%
 afq = AFQ_set(afq,'overwritevals',1:length(subs));

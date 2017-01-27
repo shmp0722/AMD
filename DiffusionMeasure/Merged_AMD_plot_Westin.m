@@ -153,13 +153,13 @@ switch fibID
         b=[0, .4];
         % set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
         set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
-        bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
+%         bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
         
         hold off;
     case {3}
-        b=[0.6,1.1];
+        b=[0,0.5];
         set(gca,'ylim',b,'yTick',b,'xLim',[11,90],'XTick',[11 90],'xtickLabel','');
-        bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
+%         bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
         hold off;
     case {5,7,9}
         b=[0, .5];
