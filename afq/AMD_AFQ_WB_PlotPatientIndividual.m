@@ -1,4 +1,4 @@
-function AMD_AFQ_WB_Seg_PlotPatientIndividual
+function AMD_AFQ_WB_PlotPatientIndividual
 % Plot patient data against controls
 %
 %
