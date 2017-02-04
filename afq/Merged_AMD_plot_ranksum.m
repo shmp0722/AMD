@@ -12,7 +12,7 @@ function Merged_AMD_plot_ranksum(fibID,SavePath)
 %% load raw data and subjects
 Git
 cd AMD/afq
-load afq_04-Feb-2017.mat
+load afq_05-Feb-2017.mat
 
 AMD = 1:8;
 AMD_Ctl = 9:20;
@@ -36,7 +36,7 @@ end
 %% Render all val
 % [norms, patient_data, control_data, afq] = AFQ_ComputeNorms(afq);
 % Group plots
-for nn = [21,23,25,27]
+for nn = [21,23,25,27,29]
     for kk =[8,9,11,12] ;%[1:9,11,12]
         Ctl = AFQ_get(afq,'control_data');
         Pt = AFQ_get(afq,'patient_data');
@@ -101,7 +101,7 @@ Ctl = AFQ_get(afq,'control_data');
 Pt = AFQ_get(afq,'patient_data');
 c =lines(length(afq.vals.ad));
   nodes = 11:90;
-for nn = [21,23,25,27]
+for nn = [21,23,25,27,29]
     % [21,23,25,27,29]
     kk =9 ;%[1:9,11,12]
     % define the colors to be used for each groups plot
@@ -117,7 +117,8 @@ for nn = [21,23,25,27]
     %         nodes = length(Pt(nn).(upper(val{kk}))) ;
   
     for jj= nodes
-        [p(jj),h(jj)] = ranksum(OT_P(:,jj),OT_C(:,jj));
+%         [p(jj),h(jj)] = ranksum(OT_P(:,jj),OT_C(:,jj));
+        [h(jj),p(jj)] = ttest2(OT_P(:,jj),OT_C(:,jj));
     end
     % logical2double
     h = h+0;
@@ -144,23 +145,19 @@ for nn = [21,23,25,27]
     xlabel('Location','fontName','Times','fontSize',12);
     ylabel(label,'fontName','Times','fontSize',12);
     title(afq.fgnames{nn}(2:5),'fontName','Times','fontSize',12);
-    
-%    switch nn
-%        case {27}
-%            set(gca,'fontName','Times','fontSize',12,'XLim',[11 90],'YLim',[0, 0.4]);
-%        case {21,23,25}
-           set(gca,'fontName','Times','fontSize',12,'XLim',[11 90],'YLim',[0, 0.4]);
-%    end
-    
-    %         end
-    %     end
-    % add a legend to the plot
-    %         legend(h,gnames);
+ 
+    set(gca,'fontName','Times','fontSize',12,'XLim',[11 90],...
+        'XTick',[11 90],'XTickLabel',{'LGN','V1'},...
+        'YLim',[0, 0.4],'YTick',[0 0.4]);
+
+    saveas(gca,afq.fgnames{nn}(2:5),'fig')
+    saveas(gca,afq.fgnames{nn}(2:5),'pdf')
+    saveas(gca,afq.fgnames{nn}(2:5),'epsc')    
 end
 
 %% correlation FA vs OD
 
-nn = 23;% [21,23,25,27]
+nn = 21% [21,23,25,27,29];
 kk = 1;
 % [8,9,11,12] ;%[1:9,11,12]
 Ctl = AFQ_get(afq,'control_data');

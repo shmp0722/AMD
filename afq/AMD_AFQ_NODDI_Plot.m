@@ -16,10 +16,10 @@ function AMD_AFQ_NODDI_Plot
 %% load afq
 Git
 cd('AMD/afq')
-load('afq_04-Feb-2017.mat')
+load('afq_05-Feb-2017.mat')
 %% Which nodes to analyze
 if notDefined('nodes')
-    nodes = 21:80;
+    nodes = 11:90;
 end
 
 % Define output directory
