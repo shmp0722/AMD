@@ -7,7 +7,9 @@ function runAFQonAMD_Part2
 
 %% Load afq structure
 % load '/home/ganka/git/AMD/afq/afq_13-Sep-2016.mat';
-load 'afq_13-Sep-2016.mat';
+Git
+cd AMD/afq
+load 'afq_29-Jan-2017.mat';
  
 %% Add new fibers
 
@@ -71,6 +73,24 @@ afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
 fgName = 'RORP_MD4';
 roi1Name = 'Rt-LGN4';
 roi2Name = 'rh_Ecc30to90';
+cleanFibers =0;
+computeVals =1;
+afq.params.clip2rois = 0;
+afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
+
+%%
+
+fgName = 'LORMP_MD3';
+roi1Name = 'Lt-LGN4';
+roi2Name = 'lh_Ecc15to30';
+cleanFibers =0;
+computeVals =1;
+afq.params.clip2rois = 0;
+afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
+
+fgName = 'RORMP_MD3';
+roi1Name = 'Rt-LGN4';
+roi2Name = 'rh_Ecc15to30';
 cleanFibers =0;
 computeVals =1;
 afq.params.clip2rois = 0;

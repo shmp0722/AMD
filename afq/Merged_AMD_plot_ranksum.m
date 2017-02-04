@@ -12,7 +12,7 @@ function Merged_AMD_plot_ranksum(fibID,SavePath)
 %% load raw data and subjects
 Git
 cd AMD/afq
-load afq_29-Jan-2017.mat
+load afq_04-Feb-2017.mat
 
 AMD = 1:8;
 AMD_Ctl = 9:20;
@@ -33,7 +33,7 @@ if notDefined('val')
     val = fieldnames(afq.vals);
 end
 
-%%
+%% Render all val
 % [norms, patient_data, control_data, afq] = AFQ_ComputeNorms(afq);
 % Group plots
 for nn = [21,23,25,27]
@@ -52,9 +52,9 @@ for nn = [21,23,25,27]
         
         % Wilcoxon rank sum test
         nodes = length(Pt(nn).(upper(val{kk}))) ;
-        for jj= 1: nodes            
+        for jj= 1: nodes
             [p(jj),h(jj)] = ranksum(OT_P(:,jj),OT_C(:,jj));
-        end        
+        end
         % logical2double
         h = h+0;
         
@@ -94,46 +94,164 @@ for nn = [21,23,25,27]
     %         legend(h,gnames);
 end
 
+%% Render OD
+% [norms, patient_data, control_data, afq] = AFQ_ComputeNorms(afq);
+% Group plots
+Ctl = AFQ_get(afq,'control_data');
+Pt = AFQ_get(afq,'patient_data');
+c =lines(length(afq.vals.ad));
+  nodes = 11:90;
+for nn = [21,23,25,27]
+    % [21,23,25,27,29]
+    kk =9 ;%[1:9,11,12]
+    % define the colors to be used for each groups plot
+    
+    figure; hold on;
+    % merged
+    OT_P = ( Pt(nn).(upper(val{kk})) + Pt(nn+1).(upper(val{kk})))/2;
+    OT_C = ( Ctl(nn).(upper(val{kk})) + Ctl(nn+1).(upper(val{kk})))/2;
+    
+    label = upper(val{kk});
+    
+    % Wilcoxon rank sum test
+    %         nodes = length(Pt(nn).(upper(val{kk}))) ;
+  
+    for jj= nodes
+        [p(jj),h(jj)] = ranksum(OT_P(:,jj),OT_C(:,jj));
+    end
+    % logical2double
+    h = h+0;
+    
+    % number of subjects with measurements for this tract
+    n  = sum(~isnan(OT_P(:,1)));
+    % group mean diffusion profile
+    m  = nanmean(OT_P);
+    M  = nanmean(OT_C);
+    
+    % plot the mean
+    bar(nodes,h(nodes),1.0,'EdgeColor','none')
+    plot(m,'-','Color',c(nn,:),'linewidth',3);
+    plot(M,'-','Color',[0 0 0],'linewidth',3);
+    
+    % plot the confidence interval
+    % standard deviation at each node
+    sd = nanstd(OT_C);
+    plot(M+sd,'--','Color',[0 0 0]);
+    plot(M-sd,'--','Color',[0 0 0]);
+    plot(M+sd*2,'--','Color',[0 0 0]);
+    plot(M-sd*2,'--','Color',[0 0 0]);
+    % label the axes etc.
+    xlabel('Location','fontName','Times','fontSize',12);
+    ylabel(label,'fontName','Times','fontSize',12);
+    title(afq.fgnames{nn}(2:5),'fontName','Times','fontSize',12);
+    
+%    switch nn
+%        case {27}
+%            set(gca,'fontName','Times','fontSize',12,'XLim',[11 90],'YLim',[0, 0.4]);
+%        case {21,23,25}
+           set(gca,'fontName','Times','fontSize',12,'XLim',[11 90],'YLim',[0, 0.4]);
+%    end
+    
+    %         end
+    %     end
+    % add a legend to the plot
+    %         legend(h,gnames);
+end
+
 %% correlation FA vs OD
 
 nn = 23;% [21,23,25,27]
 kk = 1;
 % [8,9,11,12] ;%[1:9,11,12]
-        Ctl = AFQ_get(afq,'control_data');
-        Pt = AFQ_get(afq,'patient_data');
-        
-        % define the colors to be used for each groups plot
+Ctl = AFQ_get(afq,'control_data');
+Pt = AFQ_get(afq,'patient_data');
+
+% define the colors to be used for each groups plot
 %         c =lines(length(afq.vals.ad));
-        % merged
-        FA_OT_P = ( Pt(nn).FA + Pt(nn+1).FA)/2;        
-        OD_OT_P = ( Pt(nn).FIT_OD + Pt(nn+1).FIT_OD)/2;
+% merged
+FA_OT_P = ( Pt(nn).FA + Pt(nn+1).FA)/2;
+OD_OT_P = ( Pt(nn).FIT_OD + Pt(nn+1).FIT_OD)/2;
 
-        FA_OT_C = ( Ctl(nn).FA + Ctl(nn+1).FA)/2;
-        OD_OT_C = ( Ctl(nn).FIT_OD + Ctl(nn+1).FIT_OD)/2;
+FA_OT_C = ( Ctl(nn).FA + Ctl(nn+1).FA)/2;
+OD_OT_C = ( Ctl(nn).FIT_OD + Ctl(nn+1).FIT_OD)/2;
 
-        figure; hold on;
-        plot(FA_OT_P(:),OD_OT_P(:),'or')
-        xlabel FA
-        ylabel OD
-        title 'Pt OR'
-        lsline
-        
-        corr(FA_OT_P(:),OD_OT_P(:))
-        
-        figure; hold on;
+figure; hold on;
+plot(FA_OT_P(:),OD_OT_P(:),'or')
+xlabel FA
+ylabel OD
+title 'Pt OR'
+lsline
+
+[h,p] = corr(FA_OT_P(:),OD_OT_P(:))
+
+figure; hold on;
 %         FA_OT_C(isnan(FA_OT_C))=[];
-        plot(FA_OT_C(:),OD_OT_C(:),'ob')
-        xlabel FA
-        ylabel OD
-        title 'Ctl OR'
-        lsline
-        
-        
-        % remove nan
-        
-        corr(FA_OT_C(:),OD_OT_C(:))
-        mdl = fitglm(FA_OT_C(:),OD_OT_C(:))
+plot(FA_OT_C(:),OD_OT_C(:),'ob')
+xlabel FA
+ylabel OD
+title 'Ctl OR'
+lsline
 
+
+% remove nan
+
+[h,p] = corrcoef(FA_OT_C(:),OD_OT_C(:),'rows','pairwise')
+mdl  = fitglm(FA_OT_C(:),OD_OT_C(:))
+
+
+%% correlation FA vs OD
+
+nn = 23;% [21,23,25,27]
+kk = 1;
+% [8,9,11,12] ;%[1:9,11,12]
+Ctl = AFQ_get(afq,'control_data');
+Pt = AFQ_get(afq,'patient_data');
+
+% define the colors to be used for each groups plot
+%         c =lines(length(afq.vals.ad));
+% merged
+FA_OT_P = ( Pt(nn).FA + Pt(nn+1).FA)/2;
+OD_OT_P = ( Pt(nn).FIT_OD + Pt(nn+1).FIT_OD)/2;
+
+FA_OT_C = ( Ctl(nn).FA + Ctl(nn+1).FA)/2;
+OD_OT_C = ( Ctl(nn).FIT_OD + Ctl(nn+1).FIT_OD)/2;
+
+figure; hold on;
+plot(FA_OT_P(:),OD_OT_P(:),'or')
+xlabel FA
+ylabel OD
+title 'Pt OR'
+lsline
+
+[h,p] = corr(FA_OT_P(:),OD_OT_P(:))
+
+figure; hold on;
+%         FA_OT_C(isnan(FA_OT_C))=[];
+plot(FA_OT_C(:),OD_OT_C(:),'ob')
+xlabel FA
+ylabel OD
+title 'Ctl OR'
+lsline
+
+
+% remove nan
+
+[h,p] = corrcoef(FA_OT_C(:),OD_OT_C(:),'rows','pairwise')
+mdl  = fitglm(FA_OT_C(:),OD_OT_C(:))
+
+%
+ OD = (afq.vals.FIT_OD{23}+afq.vals.FIT_OD{24})/2;
+ FA = (afq.vals.fa{23}+afq.vals.fa{24})/2;
+ 
+ [h,p] = corrcoef(OD(:), FA(:),'rows','pairwise')
+
+ figure;hold on;
+ plot(FA(:), OD(:),'o')
+ xlabel FA
+ ylabel OD
+ 
+ 
+ 
 
 %% Individual plots
 %  Plot the norms and confidence intervals then add each individual patient

@@ -16,7 +16,7 @@ function AMD_AFQ_NODDI_Plot
 %% load afq
 Git
 cd('AMD/afq')
-load('afq_29-Jan-2017.mat')
+load('afq_04-Feb-2017.mat')
 %% Which nodes to analyze
 if notDefined('nodes')
     nodes = 21:80;
@@ -216,3 +216,23 @@ for v = 1:length(valname)
 end
 
 return
+
+
+%%
+figure; hold on;
+
+FA = (afq.vals.fa{23}+afq.vals.fa{24})/2;
+OD = (afq.vals.FIT_OD{23}+afq.vals.FIT_OD{24})/2;
+
+plot(FA,OD,'ob')
+xlabel FA
+ylabel OD
+
+[h p] = corrcoef(FA,OD,'rows','pairwise')
+
+saveas(gca,'FAvsOD','fig')
+saveas(gca,'FAvsOD','epsc')
+saveas(gca,'FAvsOD','pdf')
+saveas(gca,'FAvsOD','png')
+%%
+
