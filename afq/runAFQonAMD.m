@@ -4,7 +4,7 @@ function runAFQonAMD
 %
 % SO@ACH 
 
-AFQdata = '/media/HDPC-UT/dMRI_data';
+AFQdata = '/media/USB_HDD1/dMRI_data';
 
 subs = {...
     'AMD-01-dMRI-Anatomy-dMRI'
@@ -57,14 +57,28 @@ afq = AFQ_run(sub_dirs, sub_group, afq);
 %% Add callosal fibers
 afq = AFQ_SegmentCallosum(afq);
 
-%% Add new fibers
-%
-% afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, [cleanFibers = true], ...
-%          [computeVals = true], [showFibers = false], [segFgName = 'WholeBrainFG.mat'] ...
-%          [overwrite = false])
-%
+%%
+%% Add NODDI maps
+% create a cell array of paths to each subjects image.
+imgDir ='/media/USB_HDD1/AMICO/AMICO';
+
+% subs
+for jj = 1:length(subs)
+    OD{jj}  = fullfile(imgDir, subs{jj},'AMICO/NODDI' ,'FIT_OD.nii.gz');
+    DIR{jj}  = fullfile(imgDir, subs{jj},'AMICO/NODDI' , 'FIT_dir.nii.gz');
+    ICVF{jj} = fullfile(imgDir, subs{jj},'AMICO/NODDI' , 'FIT_ICVF.nii.gz');
+    ISOVF{jj} = fullfile(imgDir, subs{jj},'AMICO/NODDI' , 'FIT_ISOVF.nii.gz');
+end
+  
+afq = AFQ_set(afq, 'images', OD);
+afq = AFQ_set(afq, 'images', DIR);
+afq = AFQ_set(afq, 'images', ICVF);
+afq = AFQ_set(afq, 'images', ISOVF);
+
 
 %%
+afq = AFQ_set(afq,'overwritevals',1:length(subs));
+afq = AFQ_run(sub_dirs, sub_group,afq);
 
 
 

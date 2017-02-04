@@ -6,16 +6,12 @@ function AMD_AFQ_plotIndividual
 %
 %
 %
-%
-%
-
-
 %% load afq
 
 % load /sni-storage/wandell/biac2/wandell/data/DWI-Tamagawa-Japan2/RP/afq_Whole_8RP_25Normal_02202015_OTOR.mat
 Git
 cd('AMD/afq')
-load('afq_21-Sep-2016.mat')
+load('afq_29-Jan-2017.mat')
 
 %% Which nodes to analyze
 if notDefined('nodes')

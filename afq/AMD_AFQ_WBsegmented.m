@@ -8,7 +8,7 @@ function AMD_AFQ_WBsegmented
 
 %% load afq structure
 
-load afq_21-Sep-2016.mat
+load afq_29-Jan-2017.mat
 
 %% Which nodes and vals to analyze
 
