@@ -77,9 +77,9 @@ cVals = AFQ_get(afq,'control data');
 for v = 1:length(valname)
     % Open a new figure window for the mean plot
     mrvNewGraphWin;
-
-%     subplot(3,3,v);
-    hold('on');    
+    
+    %     subplot(3,3,v);
+    hold('on');
     
     % Loop over each fiber group
     for ii = 1:nfg
@@ -112,16 +112,16 @@ for v = 1:length(valname)
         % plot individual means
         %         c = lines(8);
         
-%         for jj = 1:sum(afq.sub_group)
-%             vals_cur = vals_p(jj,:);
-            m_curr   = vals_pm;
-%             nanmean(vals_cur);
-            % Define the color of the point for the fiber group based on its zscore
-            tractcol = vals2colormap((m_curr - m)./sd,cmap,crange);
-            
-            % Plot patient
-            plot(ii, m_curr,'ko', 'markerfacecolor',tractcol,'MarkerSize',6);
-%         end
+        %         for jj = 1:sum(afq.sub_group)
+        %             vals_cur = vals_p(jj,:);
+        m_curr   = vals_pm;
+        %             nanmean(vals_cur);
+        % Define the color of the point for the fiber group based on its zscore
+        tractcol = vals2colormap((m_curr - m)./sd,cmap,crange);
+        
+        % Plot patient
+        plot(ii, m_curr,'ko', 'markerfacecolor',tractcol,'MarkerSize',6);
+        %         end
     end
     
     % make fgnames shorter
@@ -137,14 +137,16 @@ for v = 1:length(valname)
     h = colorbar('AxisLocation','out');
     h.Label.String = 'z score';
     
-    saveas(gcf, sprintf(valname{v}),'pdf')
-
+    if save_fig ==1;
+        saveas(gcf, sprintf(valname{v}),'pdf')
+    end
+    
 end
 
 return
 
 
-%% if all subjects are too much, average them
+%% Showing 28 tracts in all indivis
 % mrvNewGraphWin;
 pVals = AFQ_get(afq,'patient data');
 cVals = AFQ_get(afq,'control data');
@@ -152,9 +154,9 @@ cVals = AFQ_get(afq,'control data');
 for v = 1:length(valname)
     % Open a new figure window for the mean plot
     mrvNewGraphWin;
-
-%     subplot(3,3,v);
-    hold('on');    
+    
+    %     subplot(3,3,v);
+    hold('on');
     
     % Loop over each fiber group
     for ii = 1:nfg
@@ -204,15 +206,86 @@ for v = 1:length(valname)
         'l-A','r-A'};
     
     %     set(gca,'xtick',1:nfg,'xticklabel',newfgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
-%     set(gca,'xtick',1:nfg,'xticklabel',fgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
+    %     set(gca,'xtick',1:nfg,'xticklabel',fgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
     set(gca, 'XTickLabelRotation',90,'TickDir','out')
     ylabel(upper(valtitle{v}));
     
     h = colorbar('AxisLocation','out');
     h.Label.String = 'z score';
     
-    saveas(gcf, sprintf(valname{v}),'pdf')
+    if save_fig ==1
+        saveas(gcf, sprintf(valname{v}),'pdf')
+    end
+end
 
+return
+
+%% Showing 28 tracts in all indivis
+% mrvNewGraphWin;
+pVals = AFQ_get(afq,'patient data');
+cVals = AFQ_get(afq,'control data');
+
+for v = 1:length(valname)
+    % Open a new figure window for the mean plot
+    mrvNewGraphWin;
+    
+    %     subplot(3,3,v);
+    hold('on');
+    
+    % Loop over each fiber group
+    for ii = 1:nfg
+        % Get the values for the patient and compute the mean
+        vals_p = pVals(ii).(upper(valname{v}));
+        
+        % Remove nodes that are not going to be analyzed and only
+        % compute for subject #s
+        vals_p = vals_p(:,nodes);
+%                 vals_pm = nanmean(vals_p(:));
+        
+        % Get the value for each control and compute the mean
+        vals_c = cVals(ii).(upper(valname{v}));
+        vals_c = vals_c(:,nodes);
+%                 vals_cm = nanmean(vals_c,2);
+        
+        
+        
+        for jj = 1:sum(afq.sub_group)
+            
+            C = lines(sum(afq.sub_group));
+            val_P = nanmean(vals_p(jj,:));
+            val_C = nanmean(vals_c(jj,:));
+            
+            tractcol = vals2colormap(val_P);
+            tractcol2 = vals2colormap(val_C);
+            
+            % Plot patient
+%             plot(ii-.2, nanmean(vals_p(jj,:)),'ko', 'markerfacecolor',tractcol,'MarkerSize',6);
+%             plot(ii+.2, nanmean(vals_c(jj,:)),'ko', 'markerfacecolor',tractcol2,'MarkerSize',6);
+            
+            % pre and post IDBN in each subject 
+            plot(ii-.2, val_P,'ko', 'markerfacecolor',C(jj,:),'MarkerSize',6);
+            plot(ii+.2, val_C,'ko', 'markerfacecolor',C(jj,:),'MarkerSize',6);
+            % add line between two
+            plot([ii-.2,ii+.2],[val_P,val_C],'-k')
+        end
+    end
+    
+    % make fgnames shorter
+    newfgNames = {'l-TR','r-TR','l-C','r-C','l-CC','r-CC','l-CH','r-CH','CFMa',...
+        'CFMi','l-IFOF','r-IFOF','l-ILF','r-ILF','l-SLF','r-SLF','l-U','r-U',...
+        'l-A','r-A'};
+    
+    %     set(gca,'xtick',1:nfg,'xticklabel',newfgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
+        set(gca,'xtick',1:nfg,'xticklabel',fgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
+    set(gca, 'XTickLabelRotation',90,'TickDir','out')
+    ylabel(upper(valtitle{v}));
+    
+%     h = colorbar('AxisLocation','out');
+%     h.Label.String = 'z score';
+    
+    if save_fig ==1
+        saveas(gcf, sprintf(valname{v}),'pdf')
+    end
 end
 
 return
