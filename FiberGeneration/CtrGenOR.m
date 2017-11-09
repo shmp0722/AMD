@@ -5,7 +5,14 @@ function CtrGenOR(nums)
 % SO@ACH 2015
 
 %% Take subject names
-[dMRI, List, AMD, AMD_Ctl, RP, Ctl,LHON,JMD] = SubJect;
+[dMRI, List] = SubJect;
+
+% pickup subject does not have OR_100K dir
+for ii = 1:length(List)
+    No(ii) = ~exist(fullfile(dMRI,List{ii},'dwi_1st/fibers/conTrack/OR_100K'),'dir');
+end
+
+nums = find(No,'1');
 
 % pick up your interesting subject
 if notDefined('nums'),
@@ -15,6 +22,8 @@ end
 for ii = 1:length(nums)
     Subs{ii} = List{nums(ii)};
 end
+
+
 
 %% Optic Radiation
 % Set Params for contrack fiber generation

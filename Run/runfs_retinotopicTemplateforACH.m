@@ -6,17 +6,15 @@ function runfs_retinotopicTemplateforACH(subID)
 %
 
 %%
-[homeDir,subDir] = SubJect;
+[homeDir,~] = SubJect;
 
 if notDefined('subID')
-    [~,SubName]= fileparts(pwd);
-    subID =find(ismember(subDir,SubName));
+   [~, subID] = fileparts(pwd);
 end
 
 %% run fs_retinotopicTemplate
 
-Cur_subject = subDir{subID};
-out_path = fullfile(homeDir,subDir{subID},'fs_Retinotopy2');
+out_path = fullfile(homeDir,subID,'fs_Retinotopy2');
 
 if ~exist(out_path);
     mkdir(out_path);

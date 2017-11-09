@@ -93,7 +93,7 @@ for subID = 1:length(ACH);
     end;
 end
 
-%% 
+%% check 
 
 [h p ] = corrcoef(fa(1:8,:), cl(1:8,:) ,'rows','pairwise')
 

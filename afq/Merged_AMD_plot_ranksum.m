@@ -117,8 +117,8 @@ for nn = [21,23,25,27,29]
     %         nodes = length(Pt(nn).(upper(val{kk}))) ;
   
     for jj= nodes
-%         [p(jj),h(jj)] = ranksum(OT_P(:,jj),OT_C(:,jj));
-        [h(jj),p(jj)] = ttest2(OT_P(:,jj),OT_C(:,jj));
+        [p(jj),h(jj)] = ranksum(OT_P(:,jj),OT_C(:,jj));
+%         [h(jj),p(jj)] = ttest2(OT_P(:,jj),OT_C(:,jj));
     end
     % logical2double
     h = h+0;
@@ -141,6 +141,11 @@ for nn = [21,23,25,27,29]
     plot(M-sd,'--','Color',[0 0 0]);
     plot(M+sd*2,'--','Color',[0 0 0]);
     plot(M-sd*2,'--','Color',[0 0 0]);
+    
+    for i = 1:n
+        plot(nodes, OT_P(i,nodes),'--')
+    end
+    
     % label the axes etc.
     xlabel('Location','fontName','Times','fontSize',12);
     ylabel(label,'fontName','Times','fontSize',12);
@@ -155,47 +160,90 @@ for nn = [21,23,25,27,29]
     saveas(gca,afq.fgnames{nn}(2:5),'epsc')    
 end
 
-%% correlation FA vs OD
 
-nn = 21% [21,23,25,27,29];
-kk = 1;
-% [8,9,11,12] ;%[1:9,11,12]
+%% Render fa
+% [norms, patient_data, control_data, afq] = AFQ_ComputeNorms(afq);
+% Group plots
 Ctl = AFQ_get(afq,'control_data');
 Pt = AFQ_get(afq,'patient_data');
+c =lines(length(afq.vals.ad));
+  nodes = 11:90;
+for nn = [21,23,25,27,29]
+    % [21,23,25,27,29]
+    kk =1 ;%[1:9,11,12]
+    % define the colors to be used for each groups plot
+    
+    figure; hold on;
+    % merged
+    OT_P = ( Pt(nn).(upper(val{kk})) + Pt(nn+1).(upper(val{kk})))/2;
+    OT_C = ( Ctl(nn).(upper(val{kk})) + Ctl(nn+1).(upper(val{kk})))/2;
+    
+    label = upper(val{kk});
+    
+    % Wilcoxon rank sum test
+    %         nodes = length(Pt(nn).(upper(val{kk}))) ;
+  
+    for jj= nodes
+        [p(jj),h(jj)] = ranksum(OT_P(:,jj),OT_C(:,jj));
+%         [h(jj),p(jj)] = ttest2(OT_P(:,jj),OT_C(:,jj));
+    end
+    % logical2double
+    h = h+0;
+    
+    % number of subjects with measurements for this tract
+    n  = sum(~isnan(OT_P(:,1)));
+    % group mean diffusion profile
+    m  = nanmean(OT_P);
+    M  = nanmean(OT_C);
+    
+    % plot the mean
+    bar(nodes,h(nodes),1.0,'EdgeColor','none')
+    plot(m,'-','Color',c(nn,:),'linewidth',3);
+    plot(M,'-','Color',[0 0 0],'linewidth',3);
+    
+    % plot the confidence interval
+    % standard deviation at each node
+    sd = nanstd(OT_C);
+    plot(M+sd,'--','Color',[0 0 0]);
+    plot(M-sd,'--','Color',[0 0 0]);
+    plot(M+sd*2,'--','Color',[0 0 0]);
+    plot(M-sd*2,'--','Color',[0 0 0]);
+    
+    for i = 1:n
+        plot(nodes, OT_P(i,nodes),'--')
+    end
+    
+    % label the axes etc.
+    xlabel('Location','fontName','Times','fontSize',12);
+    ylabel(label,'fontName','Times','fontSize',12);
+    title(afq.fgnames{nn}(2:5),'fontName','Times','fontSize',12);
+ 
+%     set(gca,'fontName','Times','fontSize',12,'XLim',[11 90],...
+%         'XTick',[11 90],'XTickLabel',{'LGN','V1'},...
+%         'YLim',[0, 0.4],'YTick',[0 0.4]);
 
-% define the colors to be used for each groups plot
-%         c =lines(length(afq.vals.ad));
-% merged
-FA_OT_P = ( Pt(nn).FA + Pt(nn+1).FA)/2;
-OD_OT_P = ( Pt(nn).FIT_OD + Pt(nn+1).FIT_OD)/2;
+%     saveas(gca,afq.fgnames{nn}(2:5),'fig')
+%     saveas(gca,afq.fgnames{nn}(2:5),'pdf')
+%     saveas(gca,afq.fgnames{nn}(2:5),'epsc')    
+end
 
-FA_OT_C = ( Ctl(nn).FA + Ctl(nn+1).FA)/2;
-OD_OT_C = ( Ctl(nn).FIT_OD + Ctl(nn+1).FIT_OD)/2;
-
-figure; hold on;
-plot(FA_OT_P(:),OD_OT_P(:),'or')
-xlabel FA
-ylabel OD
-title 'Pt OR'
-lsline
-
-[h,p] = corr(FA_OT_P(:),OD_OT_P(:))
-
-figure; hold on;
-%         FA_OT_C(isnan(FA_OT_C))=[];
-plot(FA_OT_C(:),OD_OT_C(:),'ob')
-xlabel FA
-ylabel OD
-title 'Ctl OR'
-lsline
-
-
-% remove nan
-
-[h,p] = corrcoef(FA_OT_C(:),OD_OT_C(:),'rows','pairwise')
-mdl  = fitglm(FA_OT_C(:),OD_OT_C(:))
-
-
+%% FAvs OD
+for nn = [23,25,27,29]
+    kk = 1;
+    
+    FA = (afq.vals.fa{nn}+afq.vals.fa{nn+1})/2;
+    OD = (afq.vals.FIT_OD{nn}+afq.vals.FIT_OD{nn+1})/2;
+    
+    figure;hold on;
+    
+    plot(FA,OD,'ob')
+    [h,p] = corrcoef(OD(:), FA(:),'rows','pairwise');
+    
+    title(sprintf('%s r = %s',afq.fgnames{nn}(2:5) ,h(1,2)) )
+    xlabel FA
+    ylabel OD
+    
+end
 %% correlation FA vs OD
 
 nn = 23;% [21,23,25,27]

@@ -17,18 +17,20 @@ function ACH_V1RoiCutEccentricity(subID, MinDegree, MaxDegree)
 %
 %% Set the path to data directory
 
-[homeDir ,subDir] = SubJect;
-if notDefined('subID');
-    subID = subDir;
-end;
-   
+[homeDir ,~] = SubJect;
+
+if ~exist('subID', 'var')
+    warning('Subject ID is required input'); %#ok<WNTAG>
+%     eval('help fs_autosegmentToITK');
+    return
+end
 %% Divide V1 ROI based on eccentricity
-for ii = subID;    
-    eccDir  = fullfile(homeDir,subDir{ii},'fs_Retinotopy2');    
+% for ii = subID;    
+    eccDir  = fullfile(homeDir,subID,'fs_Retinotopy2');    
     hemi ={'lh','rh'};
     for j =  1 : length(hemi)
         %% Load ecc or pol nii.gz
-        ni =niftiRead(fullfile(eccDir,sprintf('%s_%s_ecc.nii.gz',subDir{ii},hemi{j})));        
+        ni =niftiRead(fullfile(eccDir,sprintf('%s_%s_ecc.nii.gz',subID,hemi{j})));        
         %% select voxels has less than Maximum
         % foveal ROL
         EccROI = ni;
@@ -50,6 +52,6 @@ for ii = subID;
         dtiRoiFromNifti(niiName,0,matName,'mat',binary,save);                
        
     end
-end
+% end
 
 return
