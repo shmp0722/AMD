@@ -17,13 +17,13 @@ if notDefined('savefig')
 end
 
 %% reead t1, fg and dt6
-fgDir = '/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers';
+fgDir = '/media/USB_HDD1/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/fibers';
 
 LORC = fgRead(fullfile(fgDir,'LORC_MD4.mat'));
 RORC = fgRead(fullfile(fgDir,'RORC_MD4.mat'));
 
-t1 = niftiRead('/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/t1.nii.gz');
-dt6 = dtiLoadDt6('/media/HDPC-UT/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/dt6.mat');
+t1 = niftiRead('/media/USB_HDD1/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/t1.nii.gz');
+dt6 = dtiLoadDt6('/media/USB_HDD1/dMRI_data/AMD-01-dMRI-Anatomy-dMRI/dwi_1st/dt6.mat');
 
 %%
 figure; hold on;

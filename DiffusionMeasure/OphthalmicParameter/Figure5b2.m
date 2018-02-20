@@ -19,7 +19,22 @@ figure; hold on;
    title('r value along with OR 0-3degree')
    axis equal 
     
-   %%
+%% Highest
+
+M03 =  max(R.OR03);
+find(R.OR03 ==M03)
+size(R.OR03)
+
+M15 =  max(R.OR15);
+find(R.OR15 ==M15)
+size(R.OR15)
+
+
+
+
+
+
+%%
    saveas(gca,'Figure6b.eps','epsc')
    saveas(gca,'Figure6b.png')
  

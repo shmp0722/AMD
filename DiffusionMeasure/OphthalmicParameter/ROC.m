@@ -132,6 +132,16 @@ if savefig ==1,
     saveas(gca,'AUCfromFA.eps','epsc')
     saveas(gca,'AUCfromFA.png')
 end
+%% Highest point
+max(AUC03)
+find(AUC03 ==max(AUC03) )
+
+max(AUC15)
+find(AUC15 ==max(AUC15) )
+
+max(AUC90)
+find(AUC90 ==max(AUC90) )
+
 
 
 %% fit a logistic regression model for AD

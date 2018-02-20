@@ -53,45 +53,45 @@ eval(cmd)
 cmd = sprintf('!recon-all -s %s -label_v1', subjID);
 eval(cmd)
 
-% %% label files
-% % notice if you are using freesurfer 5.3.0 or higher, need one more step.
-% % EXAMPLE USAGE:
-% fsDir          = getenv('SUBJECTS_DIR');
-% subject        = subjID;
-% hemisphere     = {'lh','rh'};
-% annotation_file     = 'aparc';
-% outDir = fullfile(fsDir,subject,'label');
-%
-% % Now create all labels in the parcellation
-%
-% try
-%     for icmd = 1:length(hemisphere)
-%         cmd{icmd} = sprintf('!mri_annotation2label --subject %s  --hemi %s --annotation %s --outdir %s ', ...
-%             subject,hemisphere{icmd},annotation_file,outDir);
-%         eval(cmd{icmd});
-%     end
-%
-%     annotation_file     = 'aparc.a2009s';
-%
-%     % Now create all labels in the parcellation
-%     for icmd = 1:length(hemisphere)
-%         cmd{icmd} = sprintf('!mri_annotation2label --subject %s  --hemi %s --annotation %s --outdir %s ', ...
-%             subject,hemisphere{icmd},annotation_file,outDir);
-%         eval(cmd{icmd});
-%     end
-%
-%     annotation_file     = 'aparc.DKTatlas40';
-%
-%     % Now create all labels in the parcellation
-%     for icmd = 1:length(hemisphere)
-%         cmd{icmd} = sprintf('!mri_annotation2label --subject %s  --hemi %s --annotation %s --outdir %s ', ...
-%             subject,hemisphere{icmd},annotation_file,outDir);
-%         eval(cmd{icmd});
-%     end
-% catch
-% end
-%
-%
+%% label files
+% notice if you are using freesurfer 5.3.0 or higher, need one more step.
+% EXAMPLE USAGE:
+fsDir          = getenv('SUBJECTS_DIR');
+subject        = subjID;
+hemisphere     = {'lh','rh'};
+annotation_file     = 'aparc';
+outDir = fullfile(fsDir,subject,'label');
+
+% Now create all labels in the parcellation
+
+try
+    for icmd = 1:length(hemisphere)
+        cmd{icmd} = sprintf('!mri_annotation2label --subject %s  --hemi %s --annotation %s --outdir %s ', ...
+            subject,hemisphere{icmd},annotation_file,outDir);
+        eval(cmd{icmd});
+    end
+
+    annotation_file     = 'aparc.a2009s';
+
+    % Now create all labels in the parcellation
+    for icmd = 1:length(hemisphere)
+        cmd{icmd} = sprintf('!mri_annotation2label --subject %s  --hemi %s --annotation %s --outdir %s ', ...
+            subject,hemisphere{icmd},annotation_file,outDir);
+        eval(cmd{icmd});
+    end
+
+    annotation_file     = 'aparc.DKTatlas40';
+
+    % Now create all labels in the parcellation
+    for icmd = 1:length(hemisphere)
+        cmd{icmd} = sprintf('!mri_annotation2label --subject %s  --hemi %s --annotation %s --outdir %s ', ...
+            subject,hemisphere{icmd},annotation_file,outDir);
+        eval(cmd{icmd});
+    end
+catch
+end
+
+
 
 %% Grab the label file
 labelFileDir =  fullfile(Subj_DIR,'label');

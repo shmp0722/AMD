@@ -13,7 +13,7 @@ function BackUpProgress
 % cmd = '!rsync -av /media/HDPC-UT/rsync_test/ /media/HDPC-UT_/rsync_test/';
 % eval(cmd)
 
-%% only added or vhanged files -u
+%% only added or changed files -u
 % dMRI
 
 % 2 usb 1Tb 
