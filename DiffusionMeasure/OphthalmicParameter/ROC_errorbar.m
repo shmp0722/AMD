@@ -130,19 +130,19 @@ for Nnode = 1:length(val_OR03.fa)
     mdl03 = fitglm(val_OR03.fa(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
     
     scores = mdl03.Fitted.Probability;
-    [X03,Y03,T03, AUC03(Nnode, :)] = perfcurve(sub_group,scores,1,'NBoot',1000,'XVals',0:0.05:1);
+    [X03,Y03,T03, AUC03(Nnode, :)] = perfcurve(sub_group,scores,1,'NBoot',1000,'XVals',0:0.05:1,'Alpha',0.20);
     
     %OR15
     mdl15 = fitglm(val_OR15.fa(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
     
     scores = mdl15.Fitted.Probability;
-    [X15,Y15,T15,AUC15(Nnode, :)] = perfcurve(sub_group,scores,1,'NBoot',1000,'XVals',0:0.05:1);
+    [X15,Y15,T15,AUC15(Nnode, :)] = perfcurve(sub_group,scores,1,'NBoot',1000,'XVals',0:0.05:1,'Alpha',0.20);
     
     %OR90
     mdl90 = fitglm(val_OR90.fa(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
     
     scores = mdl90.Fitted.Probability;
-    [X90,Y90,T90,AUC90(Nnode,:)] = perfcurve(sub_group,scores,1,'NBoot',1000,'XVals',0:0.05:1);
+    [X90,Y90,T90,AUC90(Nnode,:)] = perfcurve(sub_group,scores,1,'NBoot',1000,'XVals',0:0.05:1,'Alpha',0.20);
     
 end
 
