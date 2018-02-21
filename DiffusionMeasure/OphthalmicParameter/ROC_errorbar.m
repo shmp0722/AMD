@@ -130,19 +130,19 @@ for Nnode = 1:length(val_OR03.fa)
     mdl03 = fitglm(val_OR03.fa(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
     
     scores = mdl03.Fitted.Probability;
-    [X03,Y03,T03,AUC03(Nnode)] = perfcurve(sub_group,scores,1);
+    [X03,Y03,T03, AUC03(Nnode, :)] = perfcurve(sub_group,scores,1,'NBoot',1000,'XVals',0:0.05:1);
     
     %OR15
     mdl15 = fitglm(val_OR15.fa(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
     
     scores = mdl15.Fitted.Probability;
-    [X15,Y15,T15,AUC15(Nnode)] = perfcurve(sub_group,scores,1);
+    [X15,Y15,T15,AUC15(Nnode, :)] = perfcurve(sub_group,scores,1,'NBoot',1000,'XVals',0:0.05:1);
     
     %OR90
     mdl90 = fitglm(val_OR90.fa(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
     
     scores = mdl90.Fitted.Probability;
-    [X90,Y90,T90,AUC90(Nnode)] = perfcurve(sub_group,scores,1);
+    [X90,Y90,T90,AUC90(Nnode,:)] = perfcurve(sub_group,scores,1,'NBoot',1000,'XVals',0:0.05:1);
     
 end
 
@@ -150,10 +150,21 @@ end
 figure;
 subplot(2,2,1); hold on;
 C = jet(3);
-l1 = plot(AUC03,'color',C(1,:),'linewidth',2);
-l2 = plot(AUC15, 'color',C(2,:),'linewidth',2);
-l3 = plot(AUC90,'color',C(3,:),'linewidth',2);
 
+% OR03
+plot(AUC03(:,1),'color',C(1,:),'linewidth',2);
+plot(AUC03(:,2),'--','color',C(1,:));
+plot(AUC03(:,3),'--','color',C(1,:));
+
+% OR15 
+plot(AUC15(:,1), 'color',C(2,:),'linewidth',2);
+plot(AUC15(:,2),'--', 'color',C(2,:));
+plot(AUC15(:,3),'--', 'color',C(2,:));
+
+% OR90
+plot(AUC90(:,1),'color',C(3,:),'linewidth',2);
+plot(AUC90(:,2), '--','color',C(3,:));
+plot(AUC90(:,3), '--','color',C(3,:));
 
 xlabel('Number of node')
 ylabel('AUC')
@@ -166,7 +177,7 @@ xlim = [xlim(2)*.1+1,xlim(2)-xlim(2)*.1];
 
 plot(xlim,[.5 .5],'--','color',[.5 .5 .5])
 
-set(gca,'YTick',[.5,1],'XLim',xlim,'XTick',[],...
+set(gca,'YTick',[.5,1],'YLim',[0.4 1],'XLim',xlim,'XTick',[],...
     'TickDir','out')
 
 
@@ -174,8 +185,8 @@ set(gca,'YTick',[.5,1],'XLim',xlim,'XTick',[],...
 title('AUC from FA in each node')
 
 if savefig ==1,
-    saveas(gca,'AUCfromFA.eps','epsc')
-    saveas(gca,'AUCfromFA.png')
+    saveas(gca,'AUCfromFA_ci.eps','epsc')
+    saveas(gca,'AUCfromFA_ci.png')
 end
 %% Highest point
 max(AUC03)
