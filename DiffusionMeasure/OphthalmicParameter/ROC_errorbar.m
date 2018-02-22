@@ -130,52 +130,117 @@ for Nnode = 1:length(val_OR03.fa)
     mdl03 = fitglm(val_OR03.fa(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
     
     scores = mdl03.Fitted.Probability;
-    [X03,Y03,T03,AUC03(Nnode)] = perfcurve(sub_group,scores,1);
+    [X03,Y03,T03, AUC03(Nnode, :)] = perfcurve(sub_group,scores,1,'NBoot',1000,'XVals',0:0.05:1,'Alpha',0.05);
     
     %OR15
     mdl15 = fitglm(val_OR15.fa(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
     
     scores = mdl15.Fitted.Probability;
-    [X15,Y15,T15,AUC15(Nnode)] = perfcurve(sub_group,scores,1);
+    [X15,Y15,T15,AUC15(Nnode, :)] = perfcurve(sub_group,scores,1,'NBoot',1000,'XVals',0:0.05:1,'Alpha',0.05);
     
     %OR90
     mdl90 = fitglm(val_OR90.fa(:,Nnode),sub_group,'Distribution','binomial','Link','logit');
     
     scores = mdl90.Fitted.Probability;
-    [X90,Y90,T90,AUC90(Nnode)] = perfcurve(sub_group,scores,1);
+    [X90,Y90,T90,AUC90(Nnode,:)] = perfcurve(sub_group,scores,1,'NBoot',1000,'XVals',0:0.05:1,'Alpha',0.05);
     
 end
 
-%% See the result
+%% Figure 4a 
 figure;
-subplot(2,2,1); hold on;
+% subplot(2,2,1);
+hold on;
 C = jet(3);
-l1 = plot(AUC03,'color',C(1,:),'linewidth',2);
-l2 = plot(AUC15, 'color',C(2,:),'linewidth',2);
-l3 = plot(AUC90,'color',C(3,:),'linewidth',2);
 
+% OR03
+plot(AUC03(:,1),'color',C(1,:),'linewidth',2);
+% plot(AUC03(:,2),'--','color',C(1,:));
+% plot(AUC03(:,3),'--','color',C(1,:));
 
-xlabel('Number of node')
-ylabel('AUC')
+Sig = AUC03(:,2) > 0.5 ;
 
-% ylim = get(gca,'YLim');
+bar(Sig*0.46, 1.0,'Facecolor',C(1,:),'EdgeColor',C(1,:))
+
+% OR15 
+plot(AUC15(:,1),'color',C(2,:),'linewidth',2);
+
+% bar1 =  AUC03(:,2) - AUC15(:,3) > 0;
+% bar(bar1*0.46,'Facecolor',C(2,:),'EdgeColor',C(2,:))
+
+% OR90
+plot(AUC90(:,1),'color',C(3,:),'linewidth',2);
+% bar2 =  AUC03(:,2) - AUC90(:,3) > 0;
+% bar(bar2*0.43,'Facecolor',C(3,:),'EdgeColor',C(3,:))
 
 % remove first and last 10% nodes
-xlim = get(gca,'XLim');
-xlim = [xlim(2)*.1+1,xlim(2)-xlim(2)*.1];
+xlim = [6,45];
+% xlim = [xlim(2)*.1+1,xlim(2)-xlim(2)*.1];
 
 plot(xlim,[.5 .5],'--','color',[.5 .5 .5])
 
-set(gca,'YTick',[.5,1],'XLim',xlim,'XTick',[],...
+set(gca,'YTick',[.5,1],'YLim',[0.4 1],'XLim',xlim,'XTick',[],...
     'TickDir','out')
-
 
 % legend([l1,l2,l3],'0-3','15-30','30-90')
 title('AUC from FA in each node')
+xlabel('Number of node')
+ylabel('AUC')
 
 if savefig ==1,
-    saveas(gca,'AUCfromFA.eps','epsc')
-    saveas(gca,'AUCfromFA.png')
+    saveas(gca,'AUCfromFA_underbar.pdf','pdf')
+    saveas(gca,'AUCfromFA_underbar.png')
+end
+
+%% Figure 4a ver.2
+figure;
+% subplot(2,2,1);
+hold on;
+C = jet(3);
+
+% OR03
+plot(AUC03(:,1),'color',C(1,:),'linewidth',2);
+% plot(AUC03(:,2),'--','color',C(1,:));
+% plot(AUC03(:,3),'--','color',C(1,:));
+
+Sig = AUC03(:,2) > 0.5 ;
+bar(Sig*0.46, 1.0,'Facecolor',C(1,:),'EdgeColor',C(1,:))
+
+% OR15 
+plot(AUC15(:,1),'color',C(2,:),'linewidth',2);
+
+Sig = AUC15(:,2) > 0.5 ;
+bar(Sig*0.45, 1.0,'Facecolor',C(2,:),'EdgeColor',C(2,:))
+
+
+% bar1 =  AUC03(:,2) - AUC15(:,3) > 0;
+% bar(bar1*0.46,'Facecolor',C(2,:),'EdgeColor',C(2,:))
+
+% OR90
+plot(AUC90(:,1),'color',C(3,:),'linewidth',2);
+
+Sig = AUC90(:,2) > 0.5 ;
+bar(Sig*0.44, 1.0,'Facecolor',C(3,:),'EdgeColor',C(3,:))
+
+% bar2 =  AUC03(:,2) - AUC90(:,3) > 0;
+% bar(bar2*0.43,'Facecolor',C(3,:),'EdgeColor',C(3,:))
+
+% remove first and last 10% nodes
+xlim = [6,45];
+% xlim = [xlim(2)*.1+1,xlim(2)-xlim(2)*.1];
+
+plot(xlim,[.5 .5],'--','color',[.5 .5 .5])
+
+set(gca,'YTick',[.5,1],'YLim',[0.4 1],'XLim',xlim,'XTick',[],...
+    'TickDir','out')
+
+% legend([l1,l2,l3],'0-3','15-30','30-90')
+title('AUC from FA in each node')
+xlabel('Number of node')
+ylabel('AUC')
+
+if savefig ==1,
+    saveas(gca,'AUCfromFA_underbar.pdf','pdf')
+    saveas(gca,'AUCfromFA_underbar.png')
 end
 %% Highest point
 max(AUC03)
