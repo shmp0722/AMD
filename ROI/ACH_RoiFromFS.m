@@ -29,7 +29,7 @@ segFile = {'aparc.a2009s+aseg.mgz'};
 
 % confirm save directory existance
 outDir = fullfile(HOME,subjID,'ROIs');
-%%
+%% file existance check
 if ~exist(outDir);
     mkdir(outDir)
 end
