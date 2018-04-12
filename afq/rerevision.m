@@ -1,10 +1,13 @@
 %% load afq
 
-load('/home/ganka/git/AMD/afq/afq_05-Feb-2017.mat')
+load('/home/ganka/git/AMD/afq/afq_12-Apr-2018.mat')
 
 %%
 [norms, patient_data, control_data, afq] = AFQ_ComputeNorms(afq);
 
+save /home/ganka/git/AMD/afq/afq_12-Apr-2018.mat afq
+
+%%
 fgNames = AFQ_get(afq,'fgnames');
 nnodes = 6:95;
 
@@ -16,12 +19,16 @@ if notDefined('property')
     property = 'fa';
 end
 
-%
+if notDefined('Alpha')
+    Alpha = 0.05;
+end
 
-FgNum = 1:20;
-%%
+FgNum = 1:length(fgNames);
+%% dipic figures
+figure;
+
 for ii =  FgNum;
-    figure; hold on;
+    subplot(4,7,ii); hold on;
     
     % Control
     % collect the value of interest
@@ -56,7 +63,7 @@ for ii =  FgNum;
             label = 'Mead Diffusivity';
     end
     
-    [a,b] = size(m_c)
+%     [a,b] = size(m_c);
     
     % render control subjects range
     A3 = area(m_c(ii,:)+2*st_c(ii,:));
@@ -86,19 +93,27 @@ for ii =  FgNum;
     
     % add stats
     for jj = 1:100
-    [h(jj),p(jj)] = ttest2(pt(:,jj), ctl(:,jj));
+    [h(jj),p(jj)] = ttest2(pt(:,jj), ctl(:,jj), 'Alpha',Alpha);
     end
     
-    bar(1:100,h*0.1,1.0,'EdgeColor','none')
+    bar(1:100,h*0.25,1.0,'EdgeColor','none')
 
-    set(gca,'xLim',[6,95],'xtickLabel','');
+    set(gca,'YLim',[0.1 1],'xLim',[6,95],'xtickLabel','');
     hold off;
     
-    % save figure
-    saveas(gca,sprintf('RerevisionForBSF/%s_%s.pdf',...
-        fgNames{ii}(~isspace(fgNames{ii})),property))
+%     % save figure
+%     saveas(gca,sprintf('RerevisionForBSF/%s_%s.pdf',...
+%         fgNames{ii}(~isspace(fgNames{ii})),property))
 end 
    
+%%
+
+
+selected = fgNames;
+selected{1, 21:end} = [];
+
+AFQ_MakeFiberGroupMontage(afq, selected); %%,'numfibers',500)
+
     
     %% compare tract profile with AMD_Ctl
     

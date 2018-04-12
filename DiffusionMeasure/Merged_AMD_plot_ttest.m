@@ -101,7 +101,7 @@ nodes = n(2);
 
 % ttest each node
 for jj= 1: nodes
-    [H(jj),P(jj),~] = ttest2(fa(1:8,jj),fa(9:20,jj));
+    [H(jj),P(jj),~] = ttest2(fa(1:8,jj),fa(9:20,jj),'Alpha', 0.05);
 end
 
 % logical 2 double
@@ -166,13 +166,13 @@ switch fibID
         hold off;
 end
 % clear h
-% Save current figure
-if ~isempty(SavePath)
-    saveas(gca,fullfile(SavePath, [vals,'_',T.String,'.eps']),'epsc')
-%         saveas(G,fullfile(SavePath, [vals,'_',T.String,'.ai']))
-
-    %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
-end
+% % Save current figure
+% if ~isempty(SavePath)
+%     saveas(gca,fullfile(SavePath, [vals,'_',T.String,'.eps']),'epsc')
+% %         saveas(G,fullfile(SavePath, [vals,'_',T.String,'.ai']))
+% 
+%     %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
+% end
 
 
 %% AD
@@ -261,11 +261,11 @@ switch fibID
         hold off;
 end
 clear h
-% Save current figure
-if ~isempty(SavePath)
-    saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
-    %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
-end
+% % Save current figure
+% if ~isempty(SavePath)
+%     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
+%     %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
+% end
 
 %% RD
 %
@@ -354,11 +354,11 @@ switch fibID
         hold off;
 end
 clear h
-% Save current figure
-if ~isempty(SavePath)
-    saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
-    %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
-end
+% % Save current figure
+% if ~isempty(SavePath)
+%     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
+%     %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
+% end
 
 %% MD
 %

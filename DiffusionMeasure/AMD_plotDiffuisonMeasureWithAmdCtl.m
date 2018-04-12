@@ -106,7 +106,6 @@ end
 
 AMD_data  = val_AMD;
 
-
 %% Wilcoxon Single rank test
 % container
 group =2;
@@ -118,7 +117,7 @@ for jj= 1: nodes
     pac(:,1)= val_AC(:,jj);
     pac(1:8,2)= val_AMD(:,jj);
     
-    [p(jj),h(jj),~] = signrank(pac(:,1),pac(:,2));
+    [p(jj),h(jj),~] = signrank(pac(:,1),pac(:,2),'alpha',.05);
 %     co = multcompare(stats(jj),'display','off');
 %     C{jj}=co;
 end

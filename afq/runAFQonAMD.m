@@ -43,21 +43,26 @@ Ct = zeros(1,12);
 sub_group = [Pa, Ct];
 
 % Now create and afq structure
-afq = AFQ_Create('sub_dirs', sub_dirs, 'sub_group', sub_group, 'clip2rois', 1);
+afq = AFQ_Create('sub_dirs', sub_dirs, 'sub_group', sub_group, 'clip2rois', 1,'normalization','ants');
 
 % afq.params.cutoff=[5 95];
 afq.params.outdir = ...
 fullfile('/home/ganka/git/AMD/afq');
-% afq.params.outname = 'AFQ_5JMD_5Ctl.mat';
+% afq.params.outname = 'afq.mat';
 % afq.params.computeCSD = 1;
 % afq.params.track.faMaskThresh = 0.09;
 %% Run AFQ on these subjects
 afq = AFQ_run(sub_dirs, sub_group, afq);
 
-%% Add callosal fibers
+% Add callosal fibers
 afq = AFQ_SegmentCallosum(afq);
 
-%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
 %% Add NODDI maps
 % create a cell array of paths to each subjects image.
 imgDir ='/media/USB_HDD1/AMICO/AMICO';
