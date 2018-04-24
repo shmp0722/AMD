@@ -293,7 +293,7 @@ for ii =  FG_analized;
     
     % add stats
     for jj = 1:100
-        [h(jj),p(jj)] = ttest2(pt(:,jj), ctl(:,jj), 'Alpha',Alpha);
+        [h(jj),p(jj)] = ttest2(pt(:,jj), ctl(:,jj), 'Alpha',Alpha/50);
     end
     
     bar(1:100,h*0.25,1.0,'EdgeColor','none')
