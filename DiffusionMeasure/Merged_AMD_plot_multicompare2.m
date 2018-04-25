@@ -5,6 +5,8 @@ function Merged_AMD_plot_multicompare2(fibID, Alpha)
 % Shumpei Ogawa 2019.4
 
 %% load raw data and subjects
+% cd /home/ganka/git/AMD/DiffusionMeasure
+
 load ACH_0210.mat
 AMD = 1:8;
 AMD_Ctl = 9:20;
@@ -21,11 +23,12 @@ fbName = {'L-OT','R-OT','L-OR','R-OR','LOR0-3','ROR0-3','LOR15-30','ROR15-30'...
     'LOR30-90','ROR30-90'};
 
 %% Figure
-figure;
+% figure;
 for kk = fibID
     % indivisual FA value along optic tract
     fn = find(fibID==kk);
-    subplot(1,3,fn); hold on;
+    %     subplot(1,3,fn); hold on;
+    figure; hold on;
     % container
     nodes =  length(ACH{10,kk}.vals.fa);
     fa = nan(length(ACH), nodes);
@@ -103,9 +106,8 @@ for kk = fibID
     end
     
     %A bonferroni
-%     h = P < Alpha/nodes;
-    h = P < Alpha/100;
-
+    %     h = P < Alpha/nodes;
+    h = P < Alpha/nodes;
     
     % logical 2 double
     H = h+0;
@@ -134,7 +136,7 @@ for kk = fibID
     % rm = fitrm(t,'meas1-meas4~species','WithinDesign',Meas)
     
     %% FA
-%     G = figure; hold on;
+    %     G = figure; hold on;
     X = 1:nodes;
     c = lines(length(AMD));
     
@@ -165,7 +167,7 @@ for kk = fibID
     m   = nanmean(AMD_data,1);
     plot(X,m,'Color',c(3,:) ,'linewidth',3)
     
-    T = title(sprintf('%s comparing to AMD_C', fbName{kk}(3:end)));
+    T = title(sprintf('%s vs AMD_C', fbName{kk}(3:end)));
     ylabel(upper(vals))
     xlabel('Location')
     
@@ -190,288 +192,308 @@ for kk = fibID
             set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
             bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
             
-            
             % add infromation
             text(20, .3, 'P<0.001')
             hold off;
     end
-    % clear h
+    clear h
+    % Save current figure
+    %     if ~isempty(SavePath)
+    saveas(gca,fullfile(pwd, [vals,'_',T.String,'.pdf']))
+    %         saveas(G,fullfile(SavePath, [vals,'_',T.String,'.ai']))
+    
+    %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
+    % %     end
+    % end
+    % return
+    %% AD
+    %%
+    vals ='ad';
+    val_AC = ad(AMD_Ctl,:);
+    val_AMD = ad(AMD,:);
+    AMD_data  = val_AMD;
+    
+%     %% Wilcoxon Single rank test
+%     % container
+%     group =2;
+%     M = length(AMD_Ctl);
+%     pac = nan(M,group);
+%     
+%     clear h
+%     
+%     for jj= 1: nodes
+%         
+%         pac(:,1)= val_AC(:,jj);
+%         pac(1:8,2)= val_AMD(:,jj);
+%         
+%         [p(jj),h(jj),~] = signrank(pac(:,1),pac(:,2));
+%         [H(jj),P(jj),~] = ttest2(fa(1:8,jj),fa(9:20,jj),'Alpha', Alpha);
+%         
+%         %     co = multcompare(stats(jj),'display','off');
+%         %     C{jj}=co;
+%     end
+%     
+%     % change logical to double
+%     h = h+0;
+    
+    %% ttest each node
+    for jj= 1: nodes
+        [~,P(jj),~] = ttest2(ad(1:8,jj),ad(9:20,jj),'Alpha', Alpha);
+    end
+    
+    %A bonferroni
+    %     h = P < Alpha/nodes;
+    h = P < Alpha/nodes;
+    
+    % logical 2 double
+    H = h+0;
+    
+    %%
+    G = figure; hold on;
+    X = 1:nodes;
+    c = lines(length(AMD));
+    
+    % Control
+    st = nanstd(val_AC);
+    m   = nanmean(val_AC,1);
+    
+    % render control subjects range
+    A1 = plot(m+st,':','color',[0.6 0.6 0.6]);
+    A2 = plot(m-st,':','color',[0.6 0.6 0.6]);
+    A3 = plot(m+2*st,':','color',[0.8 0.8 0.8]);
+    A4 = plot(m-2*st,':','color',[0.8 0.8 0.8]);
+    
+    % % set color and style
+    % set(A1,'FaceColor',[0.6 0.6 0.6],'linestyle','none')
+    % set(A2,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
+    % set(A3,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
+    % set(A4,'FaceColor',[1 1 1],'linestyle','none')
+    
+    plot(m,'color',[0 0 0], 'linewidth',3 )
+    
+    % add individual FA plot
+    for k = 1:length(AMD) %1:length(subDir)
+        plot(X,AMD_data(k,:),'Color',c(k,:),...
+            'linewidth',1);
+    end
+    m   = nanmean(AMD_data,1);
+    plot(X,m,'Color',c(3,:) ,'linewidth',3)
+    
+    T = title(sprintf('%s vs AMD_C', fbName{kk}(3:end)));
+    ylabel(upper(vals))
+    xlabel('Location')
+    
+    % axis
+    % if b(1)<0;b(1)=0;end;
+    % switch vals
+    %     case {}
+    switch kk
+        case {1}
+            b=[0.8, 1.8];
+            % set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
+            set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
+            bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
+            hold off;
+        case {3}
+            b=[0.8,1.8];
+            set(gca,'ylim',b,'yTick',b,'xLim',[11,90],'XTick',[11 90],'xtickLabel','');
+            bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
+            hold off;
+        case {5,7,9}
+            b=[0.8, 1.8];
+            set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
+            bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
+            hold off;
+    end
+    clear H
     % % Save current figure
     % if ~isempty(SavePath)
-    %     saveas(gca,fullfile(SavePath, [vals,'_',T.String,'.eps']),'epsc')
-    % %         saveas(G,fullfile(SavePath, [vals,'_',T.String,'.ai']))
-    %
+    %     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
     %     %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
     % end
-end
-return
-%% AD
-%
-vals ='ad';
-val_AC = ad(AMD_Ctl,:);
-val_AMD = ad(AMD,:);
-AMD_data  = val_AMD;
-
-%% Wilcoxon Single rank test
-% container
-group =2;
-M = length(AMD_Ctl);
-pac = nan(M,group);
-
-clear h
-
-for jj= 1: nodes
+    saveas(gca,fullfile(pwd, [vals,'_',T.String,'.pdf']))
     
-    pac(:,1)= val_AC(:,jj);
-    pac(1:8,2)= val_AMD(:,jj);
+    %% RD
+    %
+    vals ='rd';
+    val_AC = rd(AMD_Ctl,:);
+    val_AMD = rd(AMD,:);
     
-    [p(jj),h(jj),~] = signrank(pac(:,1),pac(:,2));
-    [H(jj),P(jj),~] = ttest2(fa(1:8,jj),fa(9:20,jj),'Alpha', Alpha);
+    AMD_data  = val_AMD;
     
-    %     co = multcompare(stats(jj),'display','off');
-    %     C{jj}=co;
-end
-
-% change logical to double
-h = h+0;
-
-%%
-G = figure; hold on;
-X = 1:nodes;
-c = lines(length(AMD));
-
-% Control
-st = nanstd(val_AC);
-m   = nanmean(val_AC,1);
-
-% render control subjects range
-A1 = plot(m+st,':','color',[0.6 0.6 0.6]);
-A2 = plot(m-st,':','color',[0.6 0.6 0.6]);
-A3 = plot(m+2*st,':','color',[0.8 0.8 0.8]);
-A4 = plot(m-2*st,':','color',[0.8 0.8 0.8]);
-
-% % set color and style
-% set(A1,'FaceColor',[0.6 0.6 0.6],'linestyle','none')
-% set(A2,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
-% set(A3,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
-% set(A4,'FaceColor',[1 1 1],'linestyle','none')
-
-plot(m,'color',[0 0 0], 'linewidth',3 )
-
-% add individual FA plot
-for k = 1:length(AMD) %1:length(subDir)
-    plot(X,AMD_data(k,:),'Color',c(k,:),...
-        'linewidth',1);
-end
-m   = nanmean(AMD_data,1);
-plot(X,m,'Color',c(3,:) ,'linewidth',3)
-
-T = title(sprintf('%s comparing to AMD_C', fbName{kk}(3:end)));
-ylabel(upper(vals))
-xlabel('Location')
-
-% axis
-% if b(1)<0;b(1)=0;end;
-% switch vals
-%     case {}
-switch kk
-    case {1}
-        b=[0.8, 1.8];
-        % set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
-        set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
-        bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
-        hold off;
-    case {3}
-        b=[0.8,1.8];
-        set(gca,'ylim',b,'yTick',b,'xLim',[11,90],'XTick',[11 90],'xtickLabel','');
-        bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
-        hold off;
-    case {5,7,9}
-        b=[0.8, 1.8];
-        set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
-        bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
-        hold off;
-end
-clear h
-% % Save current figure
-% if ~isempty(SavePath)
-%     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
-%     %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
-% end
-
-%% RD
-%
-vals ='rd';
-val_AC = rd(AMD_Ctl,:);
-val_AMD = rd(AMD,:);
-
-AMD_data  = val_AMD;
-
-%% Wilcoxon rank sum test
-% container
-group =2;
-M = length(AMD_Ctl);
-pac = nan(M,group);
-
-clear h
-
-for jj= 1: nodes
+  
     
-    pac(:,1)= val_AC(:,jj);
-    pac(1:8,2)= val_AMD(:,jj);
+    %% ttest each node
+    for jj= 1: nodes
+        [~,P(jj),~] = ttest2(rd(1:8,jj),rd(9:20,jj),'Alpha', Alpha);
+    end
     
-    [p(jj),h(jj),~] = ranksum(pac(:,1),pac(:,2));
-    %     co = multcompare(stats(jj),'display','off');
-    %     C{jj}=co;
+    %A bonferroni
+    %     h = P < Alpha/nodes;
+    h = P < Alpha/nodes;
+    
+    % logical 2 double
+    H = h+0;
+    
+    %%
+    G = figure; hold on;
+    X = 1:nodes;
+    c = lines(length(AMD));
+    
+    % Control
+    st = nanstd(val_AC);
+    m   = nanmean(val_AC,1);
+    
+    % render control subjects range
+    A1 = plot(m+st,':','color',[0.6 0.6 0.6]);
+    A2 = plot(m-st,':','color',[0.6 0.6 0.6]);
+    A3 = plot(m+2*st,':','color',[0.8 0.8 0.8]);
+    A4 = plot(m-2*st,':','color',[0.8 0.8 0.8]);
+    
+    % % set color and style
+    % set(A1,'FaceColor',[0.6 0.6 0.6],'linestyle','none')
+    % set(A2,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
+    % set(A3,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
+    % set(A4,'FaceColor',[1 1 1],'linestyle','none')
+    
+    plot(m,'color',[0 0 0], 'linewidth',3 )
+    
+    % add individual FA plot
+    for k = 1:length(AMD) %1:length(subDir)
+        plot(X,AMD_data(k,:),'Color',c(k,:),...
+            'linewidth',1);
+    end
+    m   = nanmean(AMD_data,1);
+    plot(X,m,'Color',c(3,:) ,'linewidth',3)
+    
+    T = title(sprintf('%s comparing to AMD_C', fbName{kk}(3:end)));
+    ylabel(upper(vals))
+    xlabel('Location')
+    
+    % axis
+    % if b(1)<0;b(1)=0;end;
+    % switch vals
+    %     case {}
+    switch kk
+        case {1}
+            b=[0.8, 1.8];
+            % set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
+            set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
+            bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
+            hold off;
+        case {3}
+            b=[0.2,1.1];
+            set(gca,'ylim',b,'yTick',b,'xLim',[11,90],'XTick',[11 90],'xtickLabel','');
+            bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
+            hold off;
+        case {5,7,9}
+            b=[0.2,1.1];
+            set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
+            bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
+            hold off;
+    end
+    clear H
+    % % Save current figure
+    % if ~isempty(SavePath)
+    %     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
+    %     %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
+    % end
+    saveas(gca,fullfile(pwd, [vals,'_',T.String,'.pdf']))
+    
+    
+    %% MD
+    %
+    vals ='md';
+    val_AC = md(AMD_Ctl,:);
+    val_AMD = md(AMD,:);
+    
+    AMD_data  = val_AMD;
+    
+    % %% Wilcoxon rank sum test
+    % % container
+    % clear h
+    %
+    % for jj= 1: nodes
+    %     [p(jj),h(jj),~] = ranksum(val_AC(:,jj),val_AMD(:,jj));
+    %     [H(jj),P(jj),~] = ttest2(val_AC(:,jj),val_AMD(:,jj));
+    % end
+    %
+    % % logical 2 double
+    % h = h+0;
+    
+    %% ttest each node
+    for jj= 1: nodes
+        [~,P(jj),~] = ttest2(md(1:8,jj),md(9:20,jj),'Alpha', Alpha);
+    end
+    
+    %A bonferroni
+    %     h = P < Alpha/nodes;
+    h = P < Alpha/nodes;
+    
+    % logical 2 double
+    H = h+0;
+    
+    %%
+    G = figure; hold on;
+    X = 1:nodes;
+    c = lines(length(AMD));
+    
+    % Control
+    st = nanstd(val_AC);
+    m   = nanmean(val_AC,1);
+    
+    % render control subjects range
+    A1 = plot(m+st,':','color',[0.6 0.6 0.6]);
+    A2 = plot(m-st,':','color',[0.6 0.6 0.6]);
+    A3 = plot(m+2*st,':','color',[0.8 0.8 0.8]);
+    A4 = plot(m-2*st,':','color',[0.8 0.8 0.8]);
+    
+    plot(m,'color',[0 0 0], 'linewidth',3 )
+    
+    % add individual FA plot
+    for k = 1:length(AMD) %1:length(subDir)
+        plot(X,AMD_data(k,:),'--r',...
+            'linewidth',1);
+    end
+    m   = nanmean(AMD_data,1);
+    plot(X,m,'r' ,'linewidth',3)
+    
+    T = title(sprintf('%s comparing to AMD_C', fbName{kk}(3:end)));
+    ylabel(upper(vals))
+    xlabel('Location')
+    
+    % axis
+    % if b(1)<0;b(1)=0;end;
+    % switch vals
+    %     case {}
+    switch kk
+        case {1}
+            b=[0.8, 1.8];
+            % set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
+            set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
+            bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
+            hold off;
+        case {3}
+            b=[0.6,1.1];
+            set(gca,'ylim',b,'yTick',b,'xLim',[11,90],'XTick',[11 90],'xtickLabel','');
+            bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
+            hold off;
+        case {5,7,9}
+            b=[0.3,1.3];
+            set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
+            bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
+            hold off;
+    end
+    clear H
+    % Save current figure
+    % if ~isempty(SavePath)
+    %     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
+    %         saveas(G,fullfile(SavePath, [vals,'_',T.String]),'png')
+    %         !mv *eps DiffusivionPropertyPlot/
+    %         !mv *png DiffusivionPropertyPlot/
+    % end
+    saveas(gca,fullfile(pwd, [vals,'_',T.String,'.pdf']))
 end
-
-% logical 2 double
-h = h+0;
-
-%%
-G = figure; hold on;
-X = 1:nodes;
-c = lines(length(AMD));
-
-% Control
-st = nanstd(val_AC);
-m   = nanmean(val_AC,1);
-
-% render control subjects range
-A1 = plot(m+st,':','color',[0.6 0.6 0.6]);
-A2 = plot(m-st,':','color',[0.6 0.6 0.6]);
-A3 = plot(m+2*st,':','color',[0.8 0.8 0.8]);
-A4 = plot(m-2*st,':','color',[0.8 0.8 0.8]);
-
-% % set color and style
-% set(A1,'FaceColor',[0.6 0.6 0.6],'linestyle','none')
-% set(A2,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
-% set(A3,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
-% set(A4,'FaceColor',[1 1 1],'linestyle','none')
-
-plot(m,'color',[0 0 0], 'linewidth',3 )
-
-% add individual FA plot
-for k = 1:length(AMD) %1:length(subDir)
-    plot(X,AMD_data(k,:),'Color',c(k,:),...
-        'linewidth',1);
-end
-m   = nanmean(AMD_data,1);
-plot(X,m,'Color',c(3,:) ,'linewidth',3)
-
-T = title(sprintf('%s comparing to AMD_C', fbName{kk}(3:end)));
-ylabel(upper(vals))
-xlabel('Location')
-
-% axis
-% if b(1)<0;b(1)=0;end;
-% switch vals
-%     case {}
-switch kk
-    case {1}
-        b=[0.8, 1.8];
-        % set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
-        set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
-        bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
-        hold off;
-    case {3}
-        b=[0.2,1.1];
-        set(gca,'ylim',b,'yTick',b,'xLim',[11,90],'XTick',[11 90],'xtickLabel','');
-        bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
-        hold off;
-    case {5,7,9}
-        b=[0.2,1.1];
-        set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
-        bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
-        hold off;
-end
-clear h
-% % Save current figure
-% if ~isempty(SavePath)
-%     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
-%     %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
-% end
-
-%% MD
-%
-vals ='md';
-val_AC = md(AMD_Ctl,:);
-val_AMD = md(AMD,:);
-
-AMD_data  = val_AMD;
-
-%% Wilcoxon rank sum test
-% container
-clear h
-
-for jj= 1: nodes
-    [p(jj),h(jj),~] = ranksum(val_AC(:,jj),val_AMD(:,jj));
-    [H(jj),P(jj),~] = ttest2(val_AC(:,jj),val_AMD(:,jj));
-end
-
-% logical 2 double
-h = h+0;
-
-%%
-G = figure; hold on;
-X = 1:nodes;
-c = lines(length(AMD));
-
-% Control
-st = nanstd(val_AC);
-m   = nanmean(val_AC,1);
-
-% render control subjects range
-A1 = plot(m+st,':','color',[0.6 0.6 0.6]);
-A2 = plot(m-st,':','color',[0.6 0.6 0.6]);
-A3 = plot(m+2*st,':','color',[0.8 0.8 0.8]);
-A4 = plot(m-2*st,':','color',[0.8 0.8 0.8]);
-
-plot(m,'color',[0 0 0], 'linewidth',3 )
-
-% add individual FA plot
-for k = 1:length(AMD) %1:length(subDir)
-    plot(X,AMD_data(k,:),'--r',...
-        'linewidth',1);
-end
-m   = nanmean(AMD_data,1);
-plot(X,m,'r' ,'linewidth',3)
-
-T = title(sprintf('%s comparing to AMD_C', fbName{kk}(3:end)));
-ylabel(upper(vals))
-xlabel('Location')
-
-% axis
-% if b(1)<0;b(1)=0;end;
-% switch vals
-%     case {}
-switch kk
-    case {1}
-        b=[0.8, 1.8];
-        % set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
-        set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
-        bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
-        hold off;
-    case {3}
-        b=[0.6,1.1];
-        set(gca,'ylim',b,'yTick',b,'xLim',[11,90],'XTick',[11 90],'xtickLabel','');
-        bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
-        hold off;
-    case {5,7,9}
-        b=[0.2,1.1];
-        set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
-        bar(X,h*(b(1)+0.1),1.0,'EdgeColor','none')
-        hold off;
-end
-clear h
-% Save current figure
-% if ~isempty(SavePath)
-%     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
-%         saveas(G,fullfile(SavePath, [vals,'_',T.String]),'png')
-%         !mv *eps DiffusivionPropertyPlot/
-%         !mv *png DiffusivionPropertyPlot/
-% end
-
 return
 
 %% cl
