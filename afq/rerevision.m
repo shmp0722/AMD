@@ -115,7 +115,7 @@ figure;
 % FG_analized = [1,3,5,7,11,13,15,17,19,9,10, 21:28];
 FG_analized = [1,3,5,7,11,13,15,17,19,9,10];
 
-for ii =  FG_analized;
+for ii =  FG_analized
     tmp = find(FG_analized == ii);
     
 %     subplot(4,5,tmp); hold on;
@@ -294,6 +294,7 @@ for ii =  FG_analized;
     % add stats
     for jj = 1:100
         [h(jj),p(jj)] = ttest2(pt(:,jj), ctl(:,jj), 'Alpha',Alpha/50);
+        [p,anovatab,stats] = kruskalwallis(pt(:,jj), ctl(:,jj));
     end
     
     bar(1:100,h*0.25,1.0,'EdgeColor','none')
@@ -317,19 +318,19 @@ AFQ_MakeFiberGroupMontage(afq, selected); %%,'numfibers',500)
 
 %% compare tract profile with AMD_Ctl
 
-% % ANOVA
-%  group =2;
-%  M = length(AMD_Ctl);
-%  pac = nan(M,group);
-%
-%
-% for jj= 1: nodes
-%     pac(:,1)= val_AC(:,jj);
-%     pac(1:8,2)= val_AMD(:,jj);
-%     [p(jj),~,stats(jj)] = anova1(pac,[],'off');
-% %     co = multcompare(stats(jj),'display','off');
-% %     C{jj}=co;
-% end
+% ANOVA
+ group =2;
+ M = length(AMD_Ctl);
+ pac = nan(M,group);
+
+
+for jj= 1: nodes
+    pac(:,1)= val_AC(:,jj);
+    pac(1:8,2)= val_AMD(:,jj);
+    [p(jj),~,stats(jj)] = anova1(pac,[],'off');
+%     co = multcompare(stats(jj),'display','off');
+%     C{jj}=co;
+end
 % Portion =  p<0.05; % where is most effected
 %
 % Portion = Portion+0;
