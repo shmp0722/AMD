@@ -1,6 +1,8 @@
 function Merged_AMD_plot_multicompare2(fibID, Alpha)
-% individual FA value along the core of OR and optic tract.
-%
+% Return figure with tract profile.  
+% 
+% fbName = {'L-OT','R-OT','L-OR','R-OR','LOR0-3','ROR0-3','LOR15-30','ROR15-30'...
+%    'LOR30-90','ROR30-90'};
 %
 % Shumpei Ogawa 2019.4
 
@@ -123,17 +125,10 @@ for kk = fibID
     m   = nanmean(val_AC,1);
     
     % render control subjects range
-    
     A1 = plot(m+st,':','color',[0.6 0.6 0.6]);
     A2 = plot(m-st,':','color',[0.6 0.6 0.6]);
     A3 = plot(m+2*st,':','color',[0.8 0.8 0.8]);
     A4 = plot(m-2*st,':','color',[0.8 0.8 0.8]);
-    %
-    % % set color and style
-    % set(A1,'C',[0.6 0.6 0.6],'linestyle','none')
-    % set(A2,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
-    % set(A3,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
-    % set(A4,'FaceColor',[1 1 1],'linestyle','none')
     
     plot(m,'color',[0 0 0], 'linewidth',3 )
     
