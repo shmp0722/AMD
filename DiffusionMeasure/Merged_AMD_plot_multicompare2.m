@@ -18,7 +18,7 @@ if notDefined('fibID')
 end
 
 if notDefined('Alpha')
-    Alpha = 0.05;
+    Alpha = 0.01;
 end
 
 fbName = {'L-OT','R-OT','L-OR','R-OR','LOR0-3','ROR0-3','LOR15-30','ROR15-30'...
@@ -104,16 +104,12 @@ for kk = fibID
     
     %% ttest each node
     for jj= 1: nodes
-        [~,P(jj),~] = ttest2(fa(1:8,jj),fa(9:20,jj),'Alpha', Alpha);
+        [H(jj),P(jj),~] = ttest2(fa(1:8,jj),fa(9:20,jj),'Alpha', Alpha);
 %         [h,p,sigPairs] = ttest_bonf([fa(1:8,jj),fa(9:20,jj)],pairs,alpha,tail)
     end
     
-    %A bonferroni
-    %     h = P < Alpha/nodes;
-    h = P < Alpha/nodes;
-    
     % logical 2 double
-    H = h+0;
+    H = H+0;
     
     %% FA
     %     G = figure; hold on;
@@ -163,12 +159,11 @@ for kk = fibID
             bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
             
             % add infromation
-            text(20, .3, 'P<0.001')
+%             text(20, .3, 'P<0.001')
             hold off;
     end
     clear h H
     % Save current figure
-    %     if ~isempty(SavePath)
     saveas(gca,fullfile(pwd, [vals,'_',T.String,'.pdf']))
     
     %% AD
@@ -179,15 +174,11 @@ for kk = fibID
     
     %% ttest each node
     for jj= 1: nodes
-        [~,P(jj),~] = ttest2(ad(1:8,jj),ad(9:20,jj),'Alpha', Alpha);
+        [H(jj),P(jj),~] = ttest2(ad(1:8,jj),ad(9:20,jj),'Alpha', Alpha);
     end
-    
-    %A bonferroni
-    %     h = P < Alpha/nodes;
-    h = P < Alpha/nodes;
-    
+
     % logical 2 double
-    H = h+0;
+    H = H+0;
     
     %%
     G = figure; hold on;
@@ -237,11 +228,7 @@ for kk = fibID
             hold off;
     end
     clear H
-    % % Save current figure
-    % if ~isempty(SavePath)
-    %     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
-    %     %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
-    % end
+   
     saveas(gca,fullfile(pwd, [vals,'_',T.String,'.pdf']))
     
     %% RD
@@ -252,19 +239,13 @@ for kk = fibID
     
     AMD_data  = val_AMD;
     
-    
-    
     %% ttest each node
     for jj= 1: nodes
-        [~,P(jj),~] = ttest2(rd(1:8,jj),rd(9:20,jj),'Alpha', Alpha);
+        [H(jj),P(jj),~] = ttest2(rd(1:8,jj),rd(9:20,jj),'Alpha', Alpha);
     end
     
-    %A bonferroni
-    %     h = P < Alpha/nodes;
-    h = P < Alpha/nodes;
-    
     % logical 2 double
-    H = h+0;
+    H = H+0;
     
     %%
     G = figure; hold on;
@@ -316,10 +297,7 @@ for kk = fibID
     end
     clear H
     % % Save current figure
-    % if ~isempty(SavePath)
-    %     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
-    %     %     saveas(G,fullfile(SavePath, [vals,'_',T.String]),'bmp')
-    % end
+
     saveas(gca,fullfile(pwd, [vals,'_',T.String,'.pdf']))
     
     
@@ -333,14 +311,11 @@ for kk = fibID
     
     %% ttest each node
     for jj= 1: nodes
-        [~,P(jj),~] = ttest2(md(1:8,jj),md(9:20,jj),'Alpha', Alpha);
+        [H(jj),P(jj),~] = ttest2(md(1:8,jj),md(9:20,jj),'Alpha', Alpha);
     end
-    
-    %A bonferroni
-    h = P < Alpha/nodes;
-    
+   
     % logical 2 double
-    H = h+0;
+    H = H+0;
     
     %%
     G = figure; hold on;
@@ -393,12 +368,6 @@ for kk = fibID
     end
     clear H
     % Save current figure
-    % if ~isempty(SavePath)
-    %     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
-    %         saveas(G,fullfile(SavePath, [vals,'_',T.String]),'png')
-    %         !mv *eps DiffusivionPropertyPlot/
-    %         !mv *png DiffusivionPropertyPlot/
-    % end
     saveas(gca,fullfile(pwd, [vals,'_',T.String,'.pdf']))
     % end
     % return
@@ -411,7 +380,7 @@ for kk = fibID
     
     AMD_data  = val_AMD;
     
-    % Wilcoxon rank sum test
+    % stats
     % container
     clear h
     
@@ -421,7 +390,7 @@ for kk = fibID
     end
     
     % logical 2 double
-    h = P < Alpha/nodes;
+%     h = P < Alpha/nodes;
     
     H = h+0;
     
@@ -467,7 +436,7 @@ for kk = fibID
             
             hold off;
         case {3}
-            b=[0.6,1.1];
+            b=[0, .4];
             set(gca,'ylim',b,'yTick',b,'xLim',[11,90],'XTick',[11 90],'xtickLabel','');
             bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
             hold off;
@@ -479,8 +448,6 @@ for kk = fibID
     end
     clear h
     % Save current figure
-    %     if ~isempty(SavePath)
-    %     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
     saveas(G,fullfile(pwd, [vals,'_',T.String]),'png')
     %     end
     
@@ -492,19 +459,16 @@ for kk = fibID
     
     AMD_data  = val_AMD;
     
-    % Wilcoxon rank sum test
-    % container
+    % stats
     clear h
     
     for jj= 1: nodes
         %     [p(jj),h(jj),~] = ranksum(val_AC(:,jj),val_AMD(:,jj));
-        [~,P(jj),~] = ttest2(val_AC(:,jj),val_AMD(:,jj));
+        [H(jj),P(jj),~] = ttest2(val_AC(:,jj),val_AMD(:,jj));
     end
     
     % logical 2 double
-    h = P < Alpha/nodes;
-    
-    H = h+0;
+    H = H+0;
     
     % figure
     G = figure; hold on;
@@ -512,8 +476,7 @@ for kk = fibID
     c = lines(length(AMD));
     
     bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
-    
-    
+       
     % Control
     st = nanstd(val_AC);
     m   = nanmean(val_AC,1);
@@ -551,7 +514,7 @@ for kk = fibID
             
             hold off;
         case {3}
-            b=[0.6,1.1];
+            b=[0.3,.8];
             set(gca,'ylim',b,'yTick',b,'xLim',[11,90],'XTick',[11 90],'xtickLabel','');
             bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
             hold off;
@@ -563,13 +526,8 @@ for kk = fibID
     end
     clear h
     % Save current figure
-    %     if ~isempty(SavePath)
-    %     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
     saveas(G,fullfile(pwd, [vals,'_',T.String]),'pdf')
-%     !mv *eps DiffusivionPropertyPlot/
-%     !mv *png DiffusivionPropertyPlot/
-    %     end
-    
+
     %% pl
     % Westin peoperties sp
     %
@@ -585,13 +543,13 @@ for kk = fibID
     
     for jj= 1: nodes
         %     [p(jj),h(jj),~] = ranksum(val_AC(:,jj),val_AMD(:,jj));
-        [~,P(jj),~] = ttest2(val_AC(:,jj),val_AMD(:,jj));
+        [H(jj),P(jj),~] = ttest2(val_AC(:,jj),val_AMD(:,jj));
     end
     
     % logical 2 double
-    h = P < Alpha/nodes;
+%     h = P < Alpha/nodes;
     
-    H = h+0;
+    H = H+0;
     
     % figure
     G = figure; hold on;
@@ -599,7 +557,6 @@ for kk = fibID
     c = lines(length(AMD));
     
     bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
-    
     
     % Control
     st = nanstd(val_AC);
@@ -638,22 +595,18 @@ for kk = fibID
             
             hold off;
         case {3}
-            b=[0.6,1.1];
+            b=[0,0.5];
             set(gca,'ylim',b,'yTick',b,'xLim',[11,90],'XTick',[11 90],'xtickLabel','');
             bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
             hold off;
         case {5,7,9}
-            b=[0.4, 1.0];
+            b=[0, 0.4];
             set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
             %         bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
             hold off;
     end
     clear h
     % Save current figure
-    %     if ~isempty(SavePath)
-    %     saveas(G,fullfile(SavePath, [vals,'_',T.String,'.eps']),'psc2')
+
     saveas(G,fullfile(pwd, [vals,'_',T.String]),'pdf')
-%     !mv *eps DiffusivionPropertyPlot/
-%     !mv *png DiffusivionPropertyPlot/
-    %     end
 end
