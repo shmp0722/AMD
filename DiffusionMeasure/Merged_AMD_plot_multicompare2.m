@@ -228,7 +228,8 @@ for kk = fibID
             hold off;
     end
     clear H
-   
+    
+    % save figure
     saveas(gca,fullfile(pwd, [vals,'_',T.String,'.pdf']))
     
     %% RD
@@ -296,8 +297,7 @@ for kk = fibID
             hold off;
     end
     clear H
-    % % Save current figure
-
+    % Save current figure
     saveas(gca,fullfile(pwd, [vals,'_',T.String,'.pdf']))
     
     
@@ -316,8 +316,7 @@ for kk = fibID
    
     % logical 2 double
     H = H+0;
-    
-    %%
+    %
     G = figure; hold on;
     X = 1:nodes;
     c = lines(length(AMD));
@@ -390,8 +389,6 @@ for kk = fibID
     end
     
     % logical 2 double
-%     h = P < Alpha/nodes;
-    
     H = h+0;
     
     % figure
@@ -547,8 +544,6 @@ for kk = fibID
     end
     
     % logical 2 double
-%     h = P < Alpha/nodes;
-    
     H = H+0;
     
     % figure
