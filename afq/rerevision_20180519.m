@@ -25,7 +25,7 @@ if notDefined('property')
 end
 
 if notDefined('Alpha')
-    Alpha = 0.05;
+    Alpha = 0.01;
 end
 
 FgNum = 1:length(fgNames);
@@ -58,11 +58,11 @@ for ii =  FG_analized
                     T = title(fgNames{ii}); % Graph title for subplot
                     
                     % render control subjects range
-                    A3 = area(m_c(ii,:)+2*st_c(ii,:));
-                    A1 = area(m_c(ii,:)+st_c(ii,:));
-                    A2 = area(m_c(ii,:)-st_c(ii,:));
-                    A4 = area(m_c(ii,:)-2*st_c(ii,:));
-                    
+                    A3 = plot(m_c(ii,:)+2*st_c(ii,:));
+                    A1 = plot(m_c(ii,:)+st_c(ii,:));
+                    A2 = plot(m_c(ii,:)-st_c(ii,:));
+                    A4 = plot(m_c(ii,:)-2*st_c(ii,:));
+                     
                 case 'rd'
                     st_c = afq.norms.sdRD';
                     m_c   = afq.norms.meanRD';
@@ -73,10 +73,10 @@ for ii =  FG_analized
                     T = title(fgNames{ii}); % Graph title for subplot
                     
                     % render control subjects range
-                    A3 = area(m_c(ii,:)+2*st_c(ii,:));
-                    A1 = area(m_c(ii,:)+st_c(ii,:));
-                    A2 = area(m_c(ii,:)-st_c(ii,:));
-                    A4 = area(m_c(ii,:)-2*st_c(ii,:));
+                    A3 = plot(m_c(ii,:)+2*st_c(ii,:));
+                    A1 = plot(m_c(ii,:)+st_c(ii,:));
+                    A2 = plot(m_c(ii,:)-st_c(ii,:));
+                    A4 = plot(m_c(ii,:)-2*st_c(ii,:));
                     
                 case 'ad'
                     st_c = afq.norms.sdAD';
@@ -88,10 +88,10 @@ for ii =  FG_analized
                     T = title(fgNames{ii}); % Graph title for subplot
                     
                     % render control subjects range
-                    A3 = area(m_c(ii,:)+2*st_c(ii,:));
-                    A1 = area(m_c(ii,:)+st_c(ii,:));
-                    A2 = area(m_c(ii,:)-st_c(ii,:));
-                    A4 = area(m_c(ii,:)-2*st_c(ii,:));
+                    A3 = plot(m_c(ii,:)+2*st_c(ii,:));
+                    A1 = plot(m_c(ii,:)+st_c(ii,:));
+                    A2 = plot(m_c(ii,:)-st_c(ii,:));
+                    A4 = plot(m_c(ii,:)-2*st_c(ii,:));
                     
                 case 'md'
                     st_c = afq.norms.sdMD';
@@ -103,10 +103,10 @@ for ii =  FG_analized
                     T = title(fgNames{ii}); % Graph title for subplot
                     
                     % render control subjects range
-                    A3 = area(m_c(ii,:)+2*st_c(ii,:));
-                    A1 = area(m_c(ii,:)+st_c(ii,:));
-                    A2 = area(m_c(ii,:)-st_c(ii,:));
-                    A4 = area(m_c(ii,:)-2*st_c(ii,:));
+                    A3 = plot(m_c(ii,:)+2*st_c(ii,:));
+                    A1 = plot(m_c(ii,:)+st_c(ii,:));
+                    A2 = plot(m_c(ii,:)-st_c(ii,:));
+                    A4 = plot(m_c(ii,:)-2*st_c(ii,:));
                     
             end
             
@@ -127,10 +127,10 @@ for ii =  FG_analized
                     T = title(fgNames{ii}( Space(1)+1:end)); % Graph title for subplot
                     
                     % render control subjects range
-                    A3 = area(m_c(ii,:) + st_c(ii,:)+st_c(ii+1,:) );
-                    A1 = area(m_c(ii,:) + (st_c(ii,:)+st_c(ii+1,:))./2 );
-                    A2 = area(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:))./2 );
-                    A4 = area(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:)) );
+                    A3 = plot(m_c(ii,:) + st_c(ii,:)+st_c(ii+1,:) );
+                    A1 = plot(m_c(ii,:) + (st_c(ii,:)+st_c(ii+1,:))./2 );
+                    A2 = plot(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:))./2 );
+                    A4 = plot(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:)) );
                     
                 case 'rd'
                     st_c = afq.norms.sdRD';
@@ -146,10 +146,10 @@ for ii =  FG_analized
                     Space = strfind(fgNames{ii},' ');
                     T = title(fgNames{ii}( Space(1)+1:end));
                     % render control subjects range
-                    A3 = area(m_c(ii,:) + st_c(ii,:)+st_c(ii+1,:) );
-                    A1 = area(m_c(ii,:) + (st_c(ii,:)+st_c(ii+1,:))./2 );
-                    A2 = area(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:))./2 );
-                    A4 = area(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:)) );
+                    A3 = plot(m_c(ii,:) + st_c(ii,:)+st_c(ii+1,:) );
+                    A1 = plot(m_c(ii,:) + (st_c(ii,:)+st_c(ii+1,:))./2 );
+                    A2 = plot(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:))./2 );
+                    A4 = plot(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:)) );
                     
                 case 'ad'
                     st_c = afq.norms.sdAD';
@@ -165,10 +165,10 @@ for ii =  FG_analized
                     Space = strfind(fgNames{ii},' ');
                     T = title(fgNames{ii}( Space(1)+1:end));
                     % render control subjects range
-                    A3 = area(m_c(ii,:) + st_c(ii,:)+st_c(ii+1,:) );
-                    A1 = area(m_c(ii,:) + (st_c(ii,:)+st_c(ii+1,:))./2 );
-                    A2 = area(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:))./2 );
-                    A4 = area(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:)) );
+                    A3 = plot(m_c(ii,:) + st_c(ii,:)+st_c(ii+1,:) );
+                    A1 = plot(m_c(ii,:) + (st_c(ii,:)+st_c(ii+1,:))./2 );
+                    A2 = plot(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:))./2 );
+                    A4 = plot(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:)) );
                     
                 case 'md'
                     st_c = afq.norms.sdMD';
@@ -184,24 +184,24 @@ for ii =  FG_analized
                     Space = strfind(fgNames{ii},' ');
                     T = title(fgNames{ii}( Space(1)+1:end));
                     % render control subjects range
-                    A3 = area(m_c(ii,:) + st_c(ii,:)+st_c(ii+1,:) );
-                    A1 = area(m_c(ii,:) + (st_c(ii,:)+st_c(ii+1,:))./2 );
-                    A2 = area(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:))./2 );
-                    A4 = area(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:)) );
+                    A3 = plot(m_c(ii,:) + st_c(ii,:)+st_c(ii+1,:) );
+                    A1 = plot(m_c(ii,:) + (st_c(ii,:)+st_c(ii+1,:))./2 );
+                    A2 = plot(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:))./2 );
+                    A4 = plot(m_c(ii,:) - (st_c(ii,:)+st_c(ii+1,:)) );
             end
     end
     
     % set color and style
-    set(A1,'FaceColor',[0.6 0.6 0.6],'linestyle','none')
-    set(A2,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
-    set(A3,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
-    set(A4,'FaceColor',[1 1 1],'linestyle','none')
+%     set(A1,'FaceColor',[0.6 0.6 0.6],'linestyle','none')
+%     set(A2,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
+%     set(A3,'FaceColor',[0.8 0.8 0.8],'linestyle','none')
+%     set(A4,'FaceColor',[1 1 1],'linestyle','none')
     
     plot(m_c(ii,:),'color',[0 0 0], 'linewidth',3 )
     
     % add individual FA plot
     for k = 1: sum(afq.sub_group) %1:length(subDir)
-        plot(1:length(pt(k,:)), pt(k,:),'--','Color',[1  0  0],...
+        plot(1:length(pt(k,:)), pt(k,:),'-','Color',[1  0  0],...
             'linewidth',1);
     end
     m  = nanmean(pt,1);

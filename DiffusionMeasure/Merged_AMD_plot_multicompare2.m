@@ -143,7 +143,7 @@ for kk = fibID
     % axis
     switch kk
         case {1}
-            b=[0,0.6];
+            b=[0,0.7];
             % set(gca,'ylim',b,'yTick',b,'xLim',[0,length(X)],'xtickLabel','');
             set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
             bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
