@@ -438,14 +438,14 @@ for kk = fibID
             bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
             hold off;
         case {5,7,9}
-            b=[0, .4];
+            b=[0, .5];
             set(gca,'ylim',b,'yTick',b,'xLim',[6,45],'XTick',[6,45],'xtickLabel','');
             %         bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
             hold off;
     end
     clear h
     % Save current figure
-    saveas(G,fullfile(pwd, [vals,'_',T.String]),'png')
+    saveas(G,fullfile(pwd, [vals,'_',T.String]),'pdf')
     %     end
     
     %% Westin peoperties sp
