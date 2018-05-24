@@ -472,7 +472,9 @@ for kk = fibID
     X = 1:nodes;
     c = lines(length(AMD));
     
-    bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
+%     bar(X,H*(b(1)+0.1),1.0,'EdgeColor','none')
+    bar(X,H,1.0,'EdgeColor','none')
+
        
     % Control
     st = nanstd(val_AC);
