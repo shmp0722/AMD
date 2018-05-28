@@ -23,6 +23,10 @@ if notDefined('savefig')
     savefig = false;
 end
 
+VA = readtable('AMD_VA.csv')
+
+VA.logBoth = mean([VA.rightlogMAR, VA.leftlogMAR])
+
 %% remind fiber name ordering and give merged name
 fbName = {'L-OT','R-OT','L-OR','R-OR','LOR0-3','ROR0-3','LOR15-30','ROR15-30'...
     'LOR30-90','ROR30-90'};

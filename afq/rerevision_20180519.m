@@ -221,6 +221,13 @@ for ii =  FG_analized
     bar(1:length(pt(k,:)),h*0.25,1.0,'EdgeColor','none')
     
     set(gca,'YLim',[0.1 1],'xLim',nnodes,'xtickLabel','');
+    
+    Pos= h(6:45)==1;
+    
+    X = get(gca, 'xlim');
+    Y = get(gca, 'YLim');
+    
+    text(mean(X), Y(2)-0.1,  num2str( sum(Pos)) )
     hold off;
     
   

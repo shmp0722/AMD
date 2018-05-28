@@ -125,8 +125,7 @@ for k = 1%:length(valname) ;% only fa
         end
         
         
-    end
-    
+    end    
     
     ci = prctile(bootstat03,[2.5,50,97.5]);
     plot(ci(1,:),'--','color',c(1,:));
