@@ -67,7 +67,7 @@ ni = readFileNifti(t1File);
 ni1 = niftiSetQto(ni,ni.sto_xyz);
 writeFileNifti(ni1);
 
-%% Selecting different file names between 1st and 2nd scans
+%% Select file names
 switch option
     case 0,
         rawdtiFile = fullfile(subjectpath, 'raw', 'dwi.nii.gz');
@@ -132,7 +132,6 @@ ni = niftiSetQto(ni,ni.sto_xyz);
 writeFileNifti(ni);
 
 %% Run dtiInit
-% Execute dtiInit
 switch option
     case {0,1,2}
         [dt6FileName, outBaseDir] = dtiInit(rawdtiFile, t1File, dwParams);
